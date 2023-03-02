@@ -12,6 +12,7 @@ import { EscribanosScreen } from '../screens/escribanosScreens/EscribanosScreen'
 import { IconRouteTitle } from '../components/IconRouteTitle';
 import { CrearInmueble } from '../screens/inmuebleScreeens/CrearInmueble';
 import { VerInmueble } from '../screens/inmuebleScreeens/VerInmueble';
+import { CarouselScreen } from '../screens/CarouselScreen';
 
 export type RootStackParams = {
     Login:undefined,
@@ -19,6 +20,7 @@ export type RootStackParams = {
     Inmueble:undefined,
     Vehiculo:undefined,
     Comercio:undefined,
+    Carousel:undefined,
     Cementerio:undefined,
     ObrasPrivadas:undefined,
     Escribanos:undefined,
@@ -39,7 +41,8 @@ export const StackNavigation = () => {
         headerTintColor:'#ffffff',
         headerTitleAlign:'center'
     }}
-    >
+    >       
+            <Stack.Screen name="Carousel" options={{headerShown:false}} component={CarouselScreen}/>
             <Stack.Screen name="Login" options={{headerShown:false}} component={LoginScreen} />
             <Stack.Screen name="Home" options={{headerShown:false}} component={DrawerNavigation}/>
             <Stack.Screen name="Inmueble" options={{headerTitle:()=>(<IconRouteTitle icono='home-city' titulo={'INMUEBLE'}/>)}} component={InmuebleScreen}/>

@@ -4,6 +4,7 @@ import { Divider, Box, Text, Pressable, Checkbox, Button } from 'native-base';
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import * as Animatable from 'react-native-animatable';
 
+
 export const VerInmueble = () => {
     const [show, setShow] = useState(false)
     const [selected, setSelected] = useState(false)
