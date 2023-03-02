@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Center, Divider, Text, Pressable, Flex } from 'native-base';
+import { Box, Divider, Text, Pressable } from 'native-base';
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 
@@ -32,7 +32,7 @@ export const HomeScreen = () => {
                     width={120} 
                     backgroundColor={'#2596be'}>
                     <Icon 
-                        name="home-city" 
+                        name="home" 
                         size={70} 
                         color="#fff" />
                 </Box>
@@ -54,7 +54,7 @@ export const HomeScreen = () => {
                     width={120} 
                     backgroundColor={'#2596be'}>
                     <Icon 
-                        name="car-side" 
+                        name="car" 
                         size={70} 
                         color="#fff" />
                 </Box>
@@ -100,7 +100,7 @@ export const HomeScreen = () => {
                     width={120} 
                     backgroundColor={'#2596be'}>
                     <Icon 
-                        name="grave-stone" 
+                        name="bank" 
                         size={70} 
                         color="#fff" />
                 </Box>

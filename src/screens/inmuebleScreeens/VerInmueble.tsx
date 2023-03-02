@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import {View} from 'react-native';
 import { Divider, Box, Text, Pressable, Checkbox, Button } from 'native-base';
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
+import * as Animatable from 'react-native-animatable';
 
 export const VerInmueble = () => {
     const [show, setShow] = useState(false)
@@ -172,7 +174,7 @@ export const VerInmueble = () => {
 
                 {/********************MOSTRAR DEUDA*************************/}
                     { show?
-                    <>
+                    <Animatable.View animation='fadeInDown' style={{backgroundColor:'white'}}>
                          <Box  mt={2} alignSelf={'center'} width={'95%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
                     <Text width={'24%'} color={'purple.800'} textAlign={'center'} fontWeight={'bold'}>
                         CUOTA
@@ -290,7 +292,7 @@ export const VerInmueble = () => {
                             $3000
                         </Text>
                     </Box>
-                    </>
+                    </Animatable.View>
                     : null}
                 {/*********************METODOS DE PAGO************/}
                     <Box width={'70%'} mt={5} alignSelf={'center'} >
