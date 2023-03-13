@@ -13,6 +13,7 @@ import { IconRouteTitle } from '../components/IconRouteTitle';
 import { CrearInmueble } from '../screens/inmuebleScreeens/CrearInmueble';
 import { VerInmueble } from '../screens/inmuebleScreeens/VerInmueble';
 import { CarouselScreen } from '../screens/CarouselScreen';
+import { RegisterScreen } from '../screens/RegisterScreen';
 
 export type RootStackParams = {
     Login:undefined,
@@ -26,6 +27,7 @@ export type RootStackParams = {
     Escribanos:undefined,
     CrearInmueble:undefined
     VerInmueble:undefined,
+    Registro:undefined
 }
 
 const Stack = createStackNavigator<RootStackParams>();
@@ -45,6 +47,7 @@ export const StackNavigation = () => {
             <Stack.Screen name="Carousel" options={{headerShown:false}} component={CarouselScreen}/>
             <Stack.Screen name="Login" options={{headerShown:false}} component={LoginScreen} />
             <Stack.Screen name="Home" options={{headerShown:false}} component={DrawerNavigation}/>
+            <Stack.Screen name="Registro" options={{headerTitle:'Registro'}} component={RegisterScreen}/>
             <Stack.Screen name="Inmueble" options={{headerTitle:()=>(<IconRouteTitle icono='home-city' titulo={'INMUEBLE'}/>)}} component={InmuebleScreen}/>
             <Stack.Screen name="CrearInmueble" options={{headerTitle:()=>(<IconRouteTitle icono='home-city' titulo={'INMUEBLE'}/>)}} component={CrearInmueble}/>
             <Stack.Screen name="VerInmueble" options={{headerTitle:()=>(<IconRouteTitle icono='home-city' titulo={'INMUEBLE'}/>)}} component={VerInmueble}/>
