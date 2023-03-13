@@ -1,12 +1,22 @@
-import React from 'react'
-import { Text, Box, Divider, Button,Pressable, Center } from 'native-base';
+import React, { useContext } from 'react'
+import { Text, Box, Divider, Button,Pressable, Center, FlatList } from 'native-base';
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import { RootStackParams } from '../../navigation/StackNavigation';
 import { StackScreenProps } from '@react-navigation/stack';
+import {Inmuebles, UserContext } from '../../context/Usercontext';
+import { TableItem } from '../../components/TableItem';
 
 interface Props extends StackScreenProps<RootStackParams,'Inmueble'>{}
 
 export const InmuebleScreen = ({navigation}:Props) => {
+
+        const {inmuebles, setInmuebles} = useContext(UserContext);
+
+        var renderItem = (item:Inmuebles)=> (<TableItem nombre={item.nombre} cuenta={item.cuenta} deuda={item.deuda}/>);  
+        var keyExtractor = (item:Inmuebles, index:number)=> `${item.id}${index}` 
+
+        console.log('estos son los inmuebles ', inmuebles)
+
   return (
     <Box flex={1} backgroundColor={'gray.200'}>
         <Divider backgroundColor={'purple.800'} height={'1.5'}/>
@@ -50,59 +60,11 @@ export const InmuebleScreen = ({navigation}:Props) => {
                     </Text>
                 </Box>
                 <Divider mt={1}/>
-                <Box mt={2} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
-                    <Box width={'27%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'}>
-                        <Pressable>
-                            <Text textAlign={'center'} fontSize={12}>
-                                Casa de lucy
-                            </Text>
-                        </Pressable>
-                        <Pressable 
-                            height={4}
-                            borderWidth={1}
-                            borderColor={'purple.800'} 
-                            borderRadius={'4'}
-                            alignItems={'center'}
-                            justifyContent={'center'} 
-                            width={4}>
-                                <Icon name={'pencil'} size={12}/>
-                        </Pressable>
-                    </Box>
-                    <Box width={'25%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
-                        <Text textAlign={'center'} fontSize={12} >
-                            456254/4
-                        </Text>
-                        <Pressable 
-                            height={4}
-                            borderWidth={1}
-                            borderColor={'purple.800'} 
-                            borderRadius={'4'}
-                            alignItems={'center'}
-                            justifyContent={'center'} 
-                            width={4}>
-                                <Icon name={'information-variant'} size={12}/>
-                        </Pressable>
-                    </Box>
-                    <Box width={'27%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'center'}>
-                        <Text textAlign={'center'} fontSize={12} fontWeight={'bold'}>
-                            $ 58.234
-                        </Text>
-                    </Box>
-                    <Box width={'10%'} display={'flex'} flexDirection={'row'} alignItems={'center'}>
-                    <Pressable 
-                            alignSelf={'center'}
-                            ml={1}
-                            height={4}
-                            backgroundColor={'#2596be'}
-                            borderRadius={'4'} 
-                            alignItems={'center'}
-                            justifyContent={'center'} 
-                            width={4}>
-                                <Icon name={'printer'} color={'#fff'} size={14}/>
-                        </Pressable>
-                    </Box>
-                </Box>
-                <Divider mt={1}/>
+                <FlatList
+                    data={inmuebles}
+                    renderItem={renderItem}
+                    keyExtractor={keyExtractor}
+                />
                     {/*BORRAR DESDE ACA*/}
                 <Box mt={2} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
                     <Box width={'27%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'}>

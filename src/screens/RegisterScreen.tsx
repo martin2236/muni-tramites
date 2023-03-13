@@ -25,13 +25,8 @@ interface FormValues {
 
 export const RegisterScreen = ({navigation}:Props) => {
 
-    const {makePost} = useFetch()
-
    const onRegister = (values:FormValues) => {
-     values.cuit = Number(values.cuit);
-     const {verificacion,...rest} = values
-     rest.token = "asdasdasd"
-        makePost('auth/register', rest)
+     navigation.navigate('Home')
    }
   return (
     <Box flex={1} alignItems={'center'}>

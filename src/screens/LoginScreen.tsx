@@ -17,17 +17,10 @@ interface Login {
 
 export const LoginScreen = ({navigation}:Props) => {
 
-    const {makePost, data} = useFetch();
-
-    useEffect(() => {
-      console.log('useEffect',data)
-      data ? navigation.navigate('Home') : null;
-    }, [data])
-
     
     const onLogin = async (values : Login) =>{
-        console.log('se hizo login')
-       makePost('auth/login', {cuit:Number(values.cuit), clave:values.clave})
+        console.log('se hizo login');
+        navigation.navigate('Home');
     }
 
   return (
