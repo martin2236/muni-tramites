@@ -18,7 +18,7 @@ interface Login {
 export const LoginScreen = ({navigation}:Props) => {
 
     
-    const onLogin = async (values : Login) =>{
+    const onLogin = (values : Login) =>{
         console.log('se hizo login');
         navigation.navigate('Home');
     }

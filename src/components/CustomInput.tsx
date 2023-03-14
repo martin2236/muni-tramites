@@ -20,6 +20,7 @@ interface Props{
 }
 
 export const CustomInput = ({handleChange, errors, value, placeholder,keyboardType, type, margin = 0 ,errorCheck, width = '100%'}:Props) => {
+  console.log('Custom input', type);
   return (
     <FormControl  width={width} isRequired isInvalid={type in errors}>
         <Input

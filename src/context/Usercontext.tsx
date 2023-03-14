@@ -17,6 +17,8 @@ export interface Inmuebles {
   };
 }
 interface ContextProps  {
+    inmuebleId:number | null,
+    setInmuebleId:(id:number | null) => void
     inmuebles:Inmuebles[] | null,
     setInmuebles: (inmuebles: Inmuebles[] | null) => void
   };

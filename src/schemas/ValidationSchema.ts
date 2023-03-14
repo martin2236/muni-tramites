@@ -7,11 +7,11 @@ export const loginSchema = object({
     string()
     .required('Ingrese un numero de CUIT')
     .max(12,'El CUIT debe tener menos de 11 caracteres')
-    .test('isvalidCUIT','El cuit ingresado no es valido', function(value){return new Promise((resolve, reject) => {
-        axios.get(`https://backend.tramites.lacosta.gob.ar/users/controlCuit/${parseInt(value)}`)
-        .then(res => {resolve(res.data)})
-    })}
-    )
+    // .test('isvalidCUIT','El cuit ingresado no es valido', function(value){return new Promise((resolve, reject) => {
+    //     axios.get(`https://backend.tramites.lacosta.gob.ar/users/controlCuit/${parseInt(value)}`)
+    //     .then(res => {resolve(res.data)})
+    // })}
+    // )
     ,
     clave: string().min(5,'La contraseña debe tener mas de 5 caracteres').required('ingrese una contraseña'),
   });
