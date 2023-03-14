@@ -6,20 +6,16 @@ import { CustomInput } from './CustomInput';
 
 export const CustomModal = () => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const {inmuebleId} = useContext(UserContext);
+  const {inmuebleId, setInmuebleId} = useContext(UserContext);
 
   useEffect(() => {
     console.log('customModal',inmuebleId)
     if(inmuebleId){
-      setModalVisible(!modalVisible)
+      setModalVisible(!modalVisible);
+      setInmuebleId(null);
     }
   }, [inmuebleId])
   
-
-  const handleSizeClick = () => {
-    setModalVisible(!modalVisible);
-  };
- 
     return (<>
       <Modal isOpen={modalVisible} onClose={setModalVisible} >
         <Modal.Content maxH="212">

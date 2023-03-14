@@ -24,7 +24,7 @@ export interface Info {
 
 export const InmuebleScreen = ({navigation}:Props) => {
 
-        const {inmuebles, setInmuebles ,modalVisible, setModalVisible} = useContext(UserContext);
+        const {inmuebles, setInmuebles } = useContext(UserContext);
         const [info, setInfo] = useState<Info | null>(null);
 
         var renderItem = (item:ListProps)=> {return (<TableItem item={item}  setData={setInfo}/>)};  
