@@ -15,7 +15,9 @@ interface Props{
 }
 
 export const TableItem = ({item, setData}:Props) => {
+
     const {setInmuebleId} = useContext(UserContext);
+
     const navigation = useNavigation();
     const nombre = item.item.nombre;
     const cuenta = item.item.cuenta;
@@ -23,8 +25,11 @@ export const TableItem = ({item, setData}:Props) => {
     const info = item.item.info;
 
     const guardarId = ()=>{
-        console.log('guardando el item', item.item.id)
         setInmuebleId(item.item.id)
+    }
+    const guardarInfo = () => {
+        setData(info);
+        console.log(info);
     }
 
   return (
@@ -55,7 +60,7 @@ export const TableItem = ({item, setData}:Props) => {
                     {cuenta}
                 </Text>
                 <Pressable 
-                onPress={()=> setData(info)}
+                onPress={()=> guardarInfo()}
                     height={4}
                     borderWidth={1}
                     borderColor={'purple.800'} 

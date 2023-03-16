@@ -24,9 +24,11 @@ export interface Info {
 
 export const InmuebleScreen = ({navigation}:Props) => {
 
-        const {inmuebles, setInmuebles } = useContext(UserContext);
-        const [info, setInfo] = useState<Info | null>(null);
+        const { inmuebles , setInmuebles } = useContext(UserContext);
 
+        const [info, setInfo] = useState<Info | null>(null);
+        
+        console.log({info})
         var renderItem = (item:ListProps)=> {return (<TableItem item={item}  setData={setInfo}/>)};  
         var keyExtractor = (item:Inmuebles, index:number)=> `${item.id}${index}` 
 

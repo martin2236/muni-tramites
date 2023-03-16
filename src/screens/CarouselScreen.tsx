@@ -9,7 +9,7 @@ const {height : screenHeight, width : screenWidth } = Dimensions.get('window')
 
 interface Slide {
   title:string,
-  desc:string,
+  desc?:string,
   lista:string[]
   img:ImageSourcePropType
 }
@@ -21,22 +21,21 @@ export const CarouselScreen = ({navigation}:Props) => {
   const [defaultIndex, setDefaultIndex] = useState(0)
   const items: Slide[] = [
     {
-      title:"DE UNA FORMA MÁS FÁCIL",
-      desc:"Vas a poder:",
+      title:"Fácilmente podrás",
       lista:['- Crearte un usuario', '- consultar tus deudas' , '- realizar pagos', '- y más'],
-      img:require("../assets/accepted.png")
+      img:require("../assets/primera.jpeg")
     },
     {
       title:"Pagos en el acto",
-      desc:"Realizá tus pagos de una forma simple y sencilla desde tu celular",
+      desc:"Realizá tus pagos de una manera simple y sencilla desde tu celular",
       lista:[],
-      img:require("../assets/online-payment.png")
+      img:require("../assets/segunda.jpeg")
     },
     {
-      title:"Imprimí tus recibos fácilmente",
-      desc:"obtené el recibo desde la comodidad de tu casa",
+      title:"Imprimí tus recibos",
+      desc:"Obtené tus recibos desde la comodidad de tu casa",
       lista:[],
-      img:require("../assets/printer.png")
+      img:require("../assets/tercera.jpeg")
     },
   ]
   const nextSlide: ()=>void = ():void => {
@@ -51,20 +50,24 @@ export const CarouselScreen = ({navigation}:Props) => {
 
   const renderItem = ( item : Slide) => {
   return (
-    <Center flex={1} >
+    <Box flex={1}  backgroundColor={'white'}>
       
-      <Box justifyContent={'space-around'} alignItems={'center'}> 
-        <Image mb={5} width={200} height={200} source={item.img} alt={'una imagen'}/>
-        <Text mb={5} fontSize={'22'} color={'#2596be'} fontWeight={'bold'}>
+      <Box mt={10} justifyContent={'space-around'} alignItems={'center'}> 
+        <Image mb={5} mt={5} width={300} height={300} source={item.img} alt={'una imagen'}/>
+        <Text mb={5} fontSize={'27'}  fontWeight={'bold'}>
           {item.title}
         </Text>
-        <Text mb={2} fontSize={16} fontWeight={'semibold'} color={'#2596be'} textAlign={'center'}>
-          {item.desc}
-        </Text>
+        {item.desc ?
+            <Text width={180} mb={2} fontSize={18} fontWeight={'semibold'}  textAlign={'center'}>
+                { item.desc}
+            </Text>
+        : 
+        null}
+        
           {item.lista.length ? 
             item.lista.map((item, index) => {
               return(
-                <Text mb={1} fontSize={16} fontWeight={'semibold'} color={'#2596be'} key={index}>{item}</Text>
+                <Text mb={1} fontSize={18} fontWeight={'semibold'}  key={index}>{item}</Text>
                 )
             })
             :
@@ -72,7 +75,7 @@ export const CarouselScreen = ({navigation}:Props) => {
           }
       </Box>
       
-    </Center>
+    </Box>
    )
   }
 
