@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { StackNavigation } from './src/navigation/StackNavigation';
 import { NativeBaseProvider} from "native-base";
 import { UserProvider } from './src/context/UserProvider';
+import SplashScreen from 'react-native-splash-screen'
 
 const AppState = ({children}:any) =>{
   return(
