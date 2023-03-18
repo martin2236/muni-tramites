@@ -92,8 +92,8 @@ export const CarouselScreen = ({navigation}:Props) => {
         width={screenWidth}
         height={screenHeight - 50}
       />
-      <Box width={'full'} height={'12'} bg={'white'} alignItems={'center'} flexDirection={'row'} justifyContent={'flex-end'}>
-        <Box width={'30%' }>
+      <Box width={'full'} height={'12'} bg={'white'} alignItems={'center'} flexDirection={'row'} >
+        <Box width={'25%' }>
           <Button onPress={() => navigation.replace('Login')} bg={'white'}>
             <Text fontSize={18} fontWeight={'bold'}>
               Omitir
@@ -105,7 +105,7 @@ export const CarouselScreen = ({navigation}:Props) => {
           <Pressable onPress={() => selectSlide(1)} height={3} borderRadius={'full'} width={3} bg={posicion == 1 ? '#2596be' : 'primary.200'}/>
           <Pressable onPress={() => selectSlide(2)} height={3} borderRadius={'full'} width={3} bg={posicion == 2 ? '#2596be' : 'primary.200'}/>
         </Box>
-        <Box width={'30%'} bg={'red.100'}>
+        <Box width={'35%'} bg={'red.100'}>
           {posicion === 2 ? 
           <Button onPress={() => navigation.replace('Login')} p={0} bg={'white'} >
             <Text fontSize={18} fontWeight={'bold'}>Empezar</Text>

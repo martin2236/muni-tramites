@@ -46,31 +46,32 @@ export const InmuebleScreen = ({navigation}:Props) => {
                     alignSelf={'center'}
                     color={'purple.800'}
                     fontWeight={'bold'} 
-                    fontSize={20}>
+                    fontSize={'2xl'}>
                     MIS INMUEBLES
                 </Text>
                 <Button 
                     onPress={()=> navigation.navigate('CrearInmueble')}
                     height={'30px'}
-                    p={0}
+                    py={0}
+                    px={4}
                     mt={2}
                     borderRadius={'3xl'}
                     alignSelf={'center'}
                     backgroundColor={'purple.800'}
-                    width={'42%'}>
-                    <Text fontWeight={'bold'}  color={'white'}>NUEVO INMUEBLE</Text>
+                    >
+                    <Text fontWeight={'bold'} fontSize={'sm'} color={'white'}>NUEVO INMUEBLE</Text>
                 </Button>
                 <Box mt={10} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
-                    <Text width={'27%'} textAlign={'center'} fontWeight={'bold'}>
+                    <Text width={'30%'} fontSize={'10px'} textAlign={'center'} fontWeight={'bold'}>
                         REFERENCIA
                     </Text>
-                    <Text width={'25%'} textAlign={'center'} fontWeight={'bold'}>
+                    <Text width={'28%'} fontSize={'10px'}  textAlign={'center'} fontWeight={'bold'}>
                         CUENTA
                     </Text>
-                    <Text width={'27%'} textAlign={'center'} fontWeight={'bold'}>
-                        DEUDA TOTAL
+                    <Text width={'27%'} fontSize={'10px'}  textAlign={'center'} fontWeight={'bold'}>
+                        DEUDA
                     </Text>
-                    <Text width={'15%'} textAlign={'center'} fontWeight={'bold'}>
+                    <Text width={'15%'} fontSize={'10px'}  textAlign={'center'} fontWeight={'bold'}>
                         PAGAR
                     </Text>
                 </Box>
@@ -93,7 +94,7 @@ export const InmuebleScreen = ({navigation}:Props) => {
                             flexDirection={'row'} 
                             borderWidth={1}
                             borderColor={'cyan.500'} 
-                            width={'60%'}
+                            width={'80%'}
                             shadow={'6'}
                             backgroundColor={'white'}
                             borderRadius={'3xl'} 
@@ -111,11 +112,11 @@ export const InmuebleScreen = ({navigation}:Props) => {
                                     width={4}>
                                         <Icon name={'information-variant'} size={12}/>
                                 </Pressable>
-                                <Text fontWeight={'bold'} color={'cyan.500'}>Información del inmueble</Text>
+                                <Text fontWeight={'bold'} fontSize={13} color={'cyan.500'}>Información del inmueble</Text>
                                 </Box>
                                 <Box mt={7} width={'90%'} borderColor={'cyan.500'} borderRadius={'md'} borderWidth={1} position={'absolute'} alignSelf={'center'} zIndex={10}>
                                     <Box mt={5} flexDirection={'row'}>
-                                        <Text ml={2} fontWeight={'bold'} color={'cyan.500'}>Cuenta municipal :</Text>
+                                        <Text ml={2} fontSize={12} fontWeight={'bold'} color={'cyan.500'}>Cuenta municipal :</Text>
                                         <Text ml={2}>{info.cuentaMunicipal}</Text>
                                     </Box>
                                     <Box mt={1} flexDirection={'row'}>
@@ -123,11 +124,11 @@ export const InmuebleScreen = ({navigation}:Props) => {
                                         <Text ml={2}>{info.partidaPovincial}</Text>
                                     </Box>
                                     <Box mt={1} flexDirection={'row'}>
-                                        <Text ml={2} fontWeight={'bold'} color={'cyan.500'}>Categoria :</Text>
+                                        <Text ml={2} fontSize={12} fontWeight={'bold'} color={'cyan.500'}>Categoria :</Text>
                                         <Text ml={2}>{info.categoria}</Text>
                                     </Box>
                                     <Box mt={1} flexDirection={'row'}>
-                                        <Text ml={2} fontWeight={'bold'} color={'cyan.500'}>Código de servicio :</Text>
+                                        <Text ml={2} fontSize={12} fontWeight={'bold'} color={'cyan.500'}>Código de servicio :</Text>
                                         <Text ml={2}>{info.codigoServicio}</Text>
                                     </Box>
                                     <Box mt={1} flexDirection={'row'}>
@@ -135,7 +136,7 @@ export const InmuebleScreen = ({navigation}:Props) => {
                                         <Text ml={2}>{info.baseImponible}</Text>
                                     </Box>
                                     <Box mt={1} flexDirection={'row'}>
-                                        <Text ml={2} fontWeight={'bold'} color={'cyan.500'}>Nomenclatura catastral :</Text>
+                                        <Text ml={2} fontSize={12} fontWeight={'bold'} color={'cyan.500'}>N/ catastral :</Text>
                                         <Text ml={1} fontSize={12} >{info.nomenclaturaCatastral}</Text>
                                     </Box>
                             </Box>

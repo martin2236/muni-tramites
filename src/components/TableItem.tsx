@@ -35,16 +35,18 @@ export const TableItem = ({item, setData}:Props) => {
   return (
     <>
     <Box mt={2} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
-            <Box width={'27%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'}>
+            <Box width={'30%'} >
                 <Pressable
-                     onPress={()=> navigation.navigate('VerInmueble' as never)}
+                    display={'flex'} 
+                    flexDirection={'row'} 
+                    alignItems={'center'} 
+                    justifyContent={'space-between'}
+                     onPress={()=> guardarId()}
                 >
-                    <Text textAlign={'center'} fontSize={12}>
+                    <Text textAlign={'center'} fontSize={10}>
                         {nombre}
                     </Text>
-                </Pressable>
-                <Pressable 
-                   onPress={()=> guardarId()}
+                <Box
                     height={4}
                     borderWidth={1}
                     borderColor={'purple.800'} 
@@ -53,32 +55,43 @@ export const TableItem = ({item, setData}:Props) => {
                     justifyContent={'center'} 
                     width={4}>
                         <Icon name={'pencil'} size={12}/>
+                </Box>
                 </Pressable>
             </Box>
-            <Box width={'25%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
-                <Text textAlign={'center'} fontSize={12} >
-                    {cuenta}
-                </Text>
+            <Box width={'28%'}>
+                
                 <Pressable 
-                onPress={()=> guardarInfo()}
-                    height={4}
-                    borderWidth={1}
-                    borderColor={'purple.800'} 
-                    borderRadius={'4'}
-                    alignItems={'center'}
-                    justifyContent={'center'} 
-                    width={4}>
-                        <Icon name={'information-variant'} size={12}/>
+                    display={'flex'} 
+                    flexDirection={'row'} 
+                    alignItems={'center'} 
+                    justifyContent={'space-between'}
+                    onPress={()=> guardarInfo()}
+                >
+                        <Text textAlign={'center'} fontSize={10} >
+                            {cuenta}
+                        </Text>
+                        <Box
+                        height={4}
+                        borderWidth={1}
+                        borderColor={'purple.800'} 
+                        borderRadius={'4'}
+                        alignItems={'center'}
+                        justifyContent={'center'} 
+                        width={4}
+                        >
+                           <Icon name={'information-variant'} size={10}/> 
+                        </Box>
+                        
                 </Pressable>
             </Box>
             <Box width={'27%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'center'}>
-                <Text textAlign={'center'} fontSize={12} fontWeight={'bold'}>
-                    $ {deuda}
+                <Text textAlign={'center'} fontSize={10} fontWeight={'bold'}>
+                    $ {deuda.total}
                 </Text>
             </Box>
             <Box width={'10%'} display={'flex'} flexDirection={'row'} alignItems={'center'}>
             <Pressable 
-                    onPress={() => console.log('Imprimir')}
+                    onPress={() => navigation.navigate('VerInmueble' as never)}
                     alignSelf={'center'}
                     ml={1}
                     height={4}

@@ -1,5 +1,5 @@
 import React,{useState, useEffect} from 'react'
-import { Text, Box, Image, Divider, Button} from 'native-base'
+import { Text, Box, Image, Divider, Button, ScrollView} from 'native-base'
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParams } from '../navigation/StackNavigation';
 const logo = require('../assets/loginLogo.png');
@@ -24,9 +24,10 @@ export const LoginScreen = ({navigation}:Props) => {
     }
 
   return (
-    <Box style={{flex:1, backgroundColor:'#2596be'}}>
-        <Image mt={'16'} mb={10}  alignSelf={'center'} source={logo} alt='logo'/>
-        <Box width={210} alignSelf={'center'} mb={10}>
+    <Box flex={1} backgroundColor={'#2596be'} flexDirection={'column'} justifyContent={'space-around'}>
+        <Image mt={10} alignSelf={'center'} source={logo} alt='logo'/>
+        <ScrollView mt={10}>
+        <Box width={230} alignSelf={'center'}>
             <Text fontSize={32} fontWeight={'bold'} textAlign={'center'} color={'#763E96'} lineHeight={'sm'}>
                 PORTAL DE TRÁMITES
             </Text>
@@ -35,7 +36,7 @@ export const LoginScreen = ({navigation}:Props) => {
                 Secretaria de Recursos Públicos Dirección de Informática
             </Text>
         </Box>
-        <Box width={'80%'} alignSelf={'center'} mt={10}>
+        <Box width={'80%'} mt={5} alignSelf={'center'} backgroundColor={'#2596be'}>
             <Formik
                 initialValues={{ cuit: '', clave:'' }}
                 validationSchema={loginSchema}
@@ -98,6 +99,7 @@ export const LoginScreen = ({navigation}:Props) => {
             )}
             </Formik>
         </Box>
+        </ScrollView>
     </Box>
   )
 }
