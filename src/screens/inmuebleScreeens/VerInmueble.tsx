@@ -1,11 +1,26 @@
 import React, { useState } from 'react';
 import {View} from 'react-native';
-import { Divider, Box, Text, Pressable, Checkbox, Button } from 'native-base';
+import { Divider, Box, Text, Pressable, Checkbox, Button, ScrollView } from 'native-base';
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import * as Animatable from 'react-native-animatable';
+import { RowOne } from '../../components/fakeRowOne/rowOne';
+import { RowTwo } from '../../components/fakeRowOne/RowTwo';
+import { RowThree } from '../../components/fakeRowOne/RowThree';
+import { RowFour } from '../../components/fakeRowOne/RowFour';
+import { RowFive } from '../../components/fakeRowOne/RowFive';
+import { RowSeven } from '../../components/fakeRowOne/RowSeven';
+import { RowEight } from '../../components/fakeRowOne/RowEight';
+import { RowNine } from '../../components/fakeRowOne/RowNine';
+import { RowTen } from '../../components/fakeRowOne/RowTen';
+import { RowEleven } from '../../components/fakeRowOne/RowEleven';
+import { RowTwelve } from '../../components/fakeRowOne/RowTwelve';
+import { RowSix } from '../../components/fakeRowOne/RowSix';
+import { StackScreenProps } from '@react-navigation/stack';
+import { RootStackParams } from '../../navigation/StackNavigation';
 
+interface Props extends StackScreenProps<RootStackParams,'VerInmueble'>{}
 
-export const VerInmueble = () => {
+export const VerInmueble = ({navigation}:Props) => {
     const [show, setShow] = useState(false)
     const [selected, setSelected] = useState(false)
     const handlePress = () =>{
@@ -38,7 +53,7 @@ export const VerInmueble = () => {
                     justifyContent={'center'}
                     borderRadius={'full'}
                     backgroundColor={'purple.800'}>
-                    <Icon name={'home-city'} size={30} color={'#fff'}/>
+                    <Icon name={'home'} size={30} color={'#fff'}/>
                 </Box>
                 <Box 
                     zIndex={10}
@@ -94,7 +109,7 @@ export const VerInmueble = () => {
                 </Box>
                 <Divider mt={1} height={0.5}/>
                 <Box mt={2} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
-                    <Box width={'15%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'}>
+                    <Box width={'17%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'}>
                         <Pressable width={'100%'} flexDirection={'row'}>
                             <Icon name={'chevron-right'} size={15} color={'purple'}/>
                             <Text textAlign={'center'} fontSize={10}>
@@ -102,26 +117,26 @@ export const VerInmueble = () => {
                             </Text>
                         </Pressable>
                     </Box>
-                    <Box width={'25%'} display={'flex'} flexDirection={'row'} alignItems={'center'}>
+                    <Box width={'29%'} display={'flex'} flexDirection={'row'} alignItems={'center'}>
                         <Text textAlign={'center'} fontSize={10} >
-                            $1.242.020
+                            $0
                         </Text>
                     </Box>
-                    <Box width={'27%'} display={'flex'} flexDirection={'row'} alignItems={'center'} >
+                    <Box width={'29%'} display={'flex'} flexDirection={'row'} alignItems={'center'} >
                         <Text textAlign={'center'} fontSize={10} fontWeight={'bold'}>
                             $ 0
                         </Text>
                     </Box>
                     <Box width={'25%'} display={'flex'} flexDirection={'row'} alignItems={'center'}>
                         <Text textAlign={'center'} fontSize={10} >
-                            $1.242.020
+                            $0
                         </Text>
                     </Box>
                 </Box>
                 <Divider mt={1}/>
                 {/*************ROWS REPETIDOS***************/}
                 <Box mt={2} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
-                    <Box width={'15%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'}>
+                    <Box width={'17%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'}>
                         <Pressable width={'100%'} flexDirection={'row'}>
                             <Icon name={'chevron-right'} size={15} color={'purple'}/>
                             <Text textAlign={'center'} fontSize={10}>
@@ -129,45 +144,45 @@ export const VerInmueble = () => {
                             </Text>
                         </Pressable>
                     </Box>
-                    <Box width={'25%'} display={'flex'} flexDirection={'row'} alignItems={'center'}>
+                    <Box width={'29%'} display={'flex'} flexDirection={'row'} alignItems={'center'}>
                         <Text textAlign={'center'} fontSize={10} >
-                            $42.020
+                            $0
                         </Text>
                     </Box>
-                    <Box width={'27%'} display={'flex'} flexDirection={'row'} alignItems={'center'} >
+                    <Box width={'29%'} display={'flex'} flexDirection={'row'} alignItems={'center'} >
                         <Text textAlign={'center'} fontSize={10} fontWeight={'bold'}>
                             $ 0
                         </Text>
                     </Box>
-                    <Box width={'20%'} display={'flex'} flexDirection={'row'} alignItems={'center'}>
+                    <Box width={'25%'} display={'flex'} flexDirection={'row'} alignItems={'center'}>
                         <Text textAlign={'center'} fontSize={10} >
-                            $42.020
+                            $0
                         </Text>
                     </Box>
                 </Box>
                 <Divider mt={1}/>
                 <Box bg={show ? 'purple.300' : 'white'} mt={2} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
-                    <Box  width={'15%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'}>
-                        <Pressable onPress={()=> handlePress()} width={'100%'} flexDirection={'row'}>
+                    <Pressable onPress={()=> handlePress()} width={'17%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'}>
+                        <Box  width={'100%'} flexDirection={'row'}>
                             <Icon name={ show ?'chevron-down' : 'chevron-right' } size={15} color={'purple'}/>
                             <Text textAlign={'center'} fontSize={10}>
                                 2022
                             </Text>
-                        </Pressable>
-                    </Box>
-                    <Box width={'25%'} display={'flex'} flexDirection={'row'} alignItems={'center'}>
+                        </Box>
+                    </Pressable>
+                    <Box width={'29%'} display={'flex'} flexDirection={'row'} alignItems={'center'}>
                         <Text textAlign={'center'} fontSize={10} >
-                            $55.320
+                            $12.000
                         </Text>
                     </Box>
-                    <Box width={'27%'} display={'flex'} flexDirection={'row'} alignItems={'center'} >
+                    <Box width={'29%'} display={'flex'} flexDirection={'row'} alignItems={'center'} >
                         <Text textAlign={'center'} fontSize={10} fontWeight={'bold'}>
                             $ 0
                         </Text>
                     </Box>
-                    <Box width={'20%'} display={'flex'} flexDirection={'row'} alignItems={'center'}>
+                    <Box width={'25%'} display={'flex'} flexDirection={'row'} alignItems={'center'}>
                         <Text textAlign={'center'} fontSize={10} >
-                            $55.320
+                            $12.000
                         </Text>
                     </Box>
                 </Box>
@@ -190,113 +205,60 @@ export const VerInmueble = () => {
                         TOTAL
                     </Text>
                 </Box>
-                <Box alignSelf={'center'} width={'95%'} mt={2} display={'flex'} flexDirection={'row'} alignItems={'center'}>
-                    <Box width={'24%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
-                                <Checkbox value='nuevo' defaultIsChecked={true} accessibilityLabel='algo'/>
-                                <Text textAlign={'center'} fontSize={10}>
-                                    11/2020
-                                </Text>
-                        </Box>
-                        <Box width={'28%'} display={'flex'} alignItems={'center'}>
-                            <Text textAlign={'center'} fontSize={10} >
-                                05/10/2020
-                            </Text>
-                        </Box>
-                        <Box  width={'24%'} display={'flex'}  alignItems={'center'} >
-                            <Text textAlign={'center'} fontSize={10} >
-                                impago
-                            </Text>
-                        </Box>
-                        <Box  width={'24%'} display={'flex'}  alignItems={'center'}>
-                            <Text textAlign={'center'} fontSize={10} >
-                                $3000
-                            </Text>
-                        </Box>
-                    </Box>
+                       <ScrollView height={'40'} >
 
-                    {/*************ROWS REPETIDOS******************/}
+                       <RowOne/>
+                       <Divider mt={1}/>
 
-                    <Box alignSelf={'center'} width={'95%'} mt={2} display={'flex'} flexDirection={'row'} alignItems={'center'}>
-                    <Box width={'24%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
-                                <Checkbox value='nuevo' accessibilityLabel='algo'/>
-                                <Text textAlign={'center'} fontSize={10}>
-                                    11/2020
-                                </Text>
-                        </Box>
-                        <Box width={'28%'} display={'flex'} alignItems={'center'}>
-                            <Text textAlign={'center'} fontSize={10} >
-                                05/12/2020
+                       <RowTwo/>
+                       <Divider mt={1}/>
+
+                       <RowThree/>
+                       <Divider mt={1}/>
+
+                       <RowFour/>
+                       <Divider mt={1}/>
+
+                       <RowFive/>
+                       <Divider mt={1}/>
+
+                       <RowSix/>
+                       <Divider mt={1}/>
+
+                       <RowSeven/>
+                       <Divider mt={1}/>
+
+                       <RowEight/>
+                       <Divider mt={1}/>
+
+                       <RowNine/>
+                       <Divider mt={1}/>
+
+                       <RowTen/>
+                       <Divider mt={1}/>
+
+                       <RowEleven/>
+                       <Divider mt={1}/>
+
+                       <RowTwelve/>
+                       <Divider mt={1}/>
+                       
+                       </ScrollView>
+
+                        <Box mt={2} bg={'purple.300'} flexDirection={'row'} justifyContent={'flex-end'}>
+                            <Text  fontSize={12} fontWeight={'bold'}>
+                                TOTAL A PAGAR
+                            </Text>
+                            <Text width={"27%"} textAlign={'center'}  fontSize={12} fontWeight={'bold'}>
+                                $12.000
                             </Text>
                         </Box>
-                        <Box  width={'24%'} display={'flex'}  alignItems={'center'} >
-                            <Text textAlign={'center'} fontSize={10} >
-                                impago
-                            </Text>
-                        </Box>
-                        <Box  width={'24%'} display={'flex'}  alignItems={'center'}>
-                            <Text textAlign={'center'} fontSize={10} >
-                                $3000
-                            </Text>
-                        </Box>
-                    </Box>
-                    <Box alignSelf={'center'} width={'95%'} mt={2} display={'flex'} flexDirection={'row'} alignItems={'center'}>
-                    <Box width={'24%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
-                                <Checkbox value='nuevo' accessibilityLabel='algo'/>
-                                <Text textAlign={'center'} fontSize={10}>
-                                    11/2020
-                                </Text>
-                        </Box>
-                        <Box width={'28%'} display={'flex'} alignItems={'center'}>
-                            <Text textAlign={'center'} fontSize={10} >
-                                05/10/2020
-                            </Text>
-                        </Box>
-                        <Box  width={'24%'} display={'flex'}  alignItems={'center'} >
-                            <Text textAlign={'center'} fontSize={10} >
-                                impago
-                            </Text>
-                        </Box>
-                        <Box  width={'24%'} display={'flex'}  alignItems={'center'}>
-                            <Text textAlign={'center'} fontSize={10} >
-                                $3000
-                            </Text>
-                        </Box>
-                    </Box>
-                    <Box alignSelf={'center'} width={'95%'} mt={2} display={'flex'} flexDirection={'row'} alignItems={'center'}>
-                    <Box width={'24%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
-                                <Checkbox value='nuevo' accessibilityLabel='algo'/>
-                                <Text textAlign={'center'} fontSize={10}>
-                                    11/2020
-                                </Text>
-                        </Box>
-                        <Box width={'28%'} display={'flex'} alignItems={'center'}>
-                            <Text textAlign={'center'} fontSize={10} >
-                                05/12/2020
-                            </Text>
-                        </Box>
-                        <Box  width={'24%'} display={'flex'}  alignItems={'center'} >
-                            <Text textAlign={'center'} fontSize={10} >
-                                impago
-                            </Text>
-                        </Box>
-                        <Box  width={'24%'} display={'flex'}  alignItems={'center'}>
-                            <Text textAlign={'center'} fontSize={10} >
-                                $3000
-                            </Text>
-                        </Box>
-                    </Box>
-                    <Box mt={2} bg={'gray.200'} flexDirection={'row'} justifyContent={'flex-end'}>
-                        <Text color={'purple.800'} fontSize={12} fontWeight={'bold'}>
-                            TOTAL A PAGAR
-                        </Text>
-                        <Text width={"27%"} fontSize={12} textAlign={'center'} color={'purple.800'} fontWeight={'bold'}>
-                            $3000
-                        </Text>
-                    </Box>
+
+                    
                     </Animatable.View>
                     : null}
                 {/*********************METODOS DE PAGO************/}
-                    <Box width={'80%'} mt={5} alignSelf={'center'} >
+                    <Box width={'80%'} mt={3} alignSelf={'center'} >
                         <Box flexDirection={'row'} mt={2} alignItems={'center'} justifyContent={'space-around'}>
                             <Checkbox value='nuevo' accessibilityLabel='algo2'/>
                             <Text width={'60%'} fontSize={10} fontWeight={'bold'} lineHeight={'sm'}>PAGAR CON TARJETA DE CREDITO/DEBITO</Text>
@@ -306,7 +268,7 @@ export const VerInmueble = () => {
                             <Text width={'60%'} fontSize={10} fontWeight={'bold'} lineHeight={'sm'}>DESCARGAR/IMPRIMIR RECIBO PARA PAGO</Text>
                         </Box>
                     </Box>
-                    <Button alignSelf={'center'} borderRadius={'2xl'} py={0} height={8} mt={3} backgroundColor={'purple.800'} width='30%'>
+                    <Button onPress={()=> navigation.navigate('Pagos')} alignSelf={'center'} borderRadius={'2xl'} py={0} height={8} mt={3} backgroundColor={'purple.800'} width='30%'>
                         <Text color={'white'} fontSize={12} my={0}>
                             PAGAR
                         </Text>

@@ -46,7 +46,7 @@ export const UserProvider = ({children}:Props) => {
             nombre:'Duplex 1',
             cuenta:"986254/4",
             deuda:{
-                total:4.243,
+                total:26.243,
                 periodos:[
                     {
                         fecha:{

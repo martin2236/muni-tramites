@@ -14,10 +14,12 @@ import { CrearInmueble } from '../screens/inmuebleScreeens/CrearInmueble';
 import { VerInmueble } from '../screens/inmuebleScreeens/VerInmueble';
 import { CarouselScreen } from '../screens/CarouselScreen';
 import { RegisterScreen } from '../screens/RegisterScreen';
+import { PagoScreen } from '../screens/PagoScreen';
 
 export type RootStackParams = {
     Login:undefined,
     Home:undefined,
+    Pagos:undefined,
     Inmueble:undefined,
     Vehiculo:undefined,
     Comercio:undefined,
@@ -48,12 +50,13 @@ export const StackNavigation = () => {
             <Stack.Screen name="Login" options={{headerShown:false}} component={LoginScreen} />
             <Stack.Screen name="Home" options={{headerShown:false}} component={DrawerNavigation}/>
             <Stack.Screen name="Registro" options={{headerTitle:'Registro'}} component={RegisterScreen}/>
-            <Stack.Screen name="Inmueble" options={{headerTitle:()=>(<IconRouteTitle icono='home-city' titulo={'INMUEBLE'}/>)}} component={InmuebleScreen}/>
-            <Stack.Screen name="CrearInmueble" options={{headerTitle:()=>(<IconRouteTitle icono='home-city' titulo={'INMUEBLE'}/>)}} component={CrearInmueble}/>
-            <Stack.Screen name="VerInmueble" options={{headerTitle:()=>(<IconRouteTitle icono='home-city' titulo={'INMUEBLE'}/>)}} component={VerInmueble}/>
-            <Stack.Screen name="Vehiculo" options={{headerTitle:()=>(<IconRouteTitle icono='car-side' titulo={'VEHICULO'}/>)}} component={VehiculoScreen}/>
+            <Stack.Screen name="Pagos" options={{headerTitle:'Metodos de Pago'}} component={PagoScreen}/>
+            <Stack.Screen name="Inmueble" options={{headerTitle:()=>(<IconRouteTitle icono='home' titulo={'INMUEBLE'}/>)}} component={InmuebleScreen}/>
+            <Stack.Screen name="CrearInmueble" options={{headerTitle:()=>(<IconRouteTitle icono='home' titulo={'INMUEBLE'}/>)}} component={CrearInmueble}/>
+            <Stack.Screen name="VerInmueble" options={{headerTitle:()=>(<IconRouteTitle icono='home' titulo={'INMUEBLE'}/>)}} component={VerInmueble}/>
+            <Stack.Screen name="Vehiculo" options={{headerTitle:()=>(<IconRouteTitle icono='car' titulo={'VEHICULO'}/>)}} component={VehiculoScreen}/>
             <Stack.Screen name="Comercio" options={{headerTitle:()=>(<IconRouteTitle icono='file-document' titulo={'COMERCIO'}/>)}} component={ComercioScreen}/>
-            <Stack.Screen name="Cementerio" options={{headerTitle:()=>(<IconRouteTitle icono='grave-stone' titulo={'CEMENTERIO'}/>)}} component={CementerioScreen}/>
+            <Stack.Screen name="Cementerio" options={{headerTitle:()=>(<IconRouteTitle icono='bank' titulo={'CEMENTERIO'}/>)}} component={CementerioScreen}/>
             <Stack.Screen name="ObrasPrivadas" options={{headerTitle:()=>(<IconRouteTitle icono='paperclip' titulo={'OBRAS PRIVADAS'}/>)}} component={ObrasPrivadasScreen}/>
             <Stack.Screen name="Escribanos" options={{headerTitle:()=>(<IconRouteTitle icono='scale-balance' titulo={'ESCRIBANOS'}/>)}} component={EscribanosScreen}/>
     </Stack.Navigator>
