@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { Text, Box, Divider, Button,Pressable, Center, FlatList, ScrollView } from 'native-base';
+//@ts-ignore
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import { RootStackParams } from '../../navigation/StackNavigation';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -24,11 +25,10 @@ export interface Info {
 
 export const InmuebleScreen = ({navigation}:Props) => {
 
-        const { inmuebles , setInmuebles } = useContext(UserContext);
+        const { inmuebles} = useContext(UserContext);
 
         const [info, setInfo] = useState<Info | null>(null);
         
-        console.log({info})
         var renderItem = (item:ListProps)=> {return (<TableItem item={item}  setData={setInfo}/>)};  
         var keyExtractor = (item:Inmuebles, index:number)=> `${item.id}${index}` 
 

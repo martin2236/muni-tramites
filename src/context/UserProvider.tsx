@@ -1,5 +1,5 @@
 import React,{useEffect, useState} from 'react'
-import { UserContext } from './Usercontext'
+import { User, UserContext } from './Usercontext'
 import { Inmuebles } from './Usercontext'
 
 interface Props{
@@ -8,7 +8,7 @@ interface Props{
 
 export const UserProvider = ({children}:Props) => {
     const [inmuebleId, setInmuebleId] = useState<number | null>(null);
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState<User | null >(null);
     const [inmuebles, setInmuebles] = useState<Inmuebles[] | null>(null);
 
     useEffect(() => {
@@ -20,7 +20,7 @@ export const UserProvider = ({children}:Props) => {
             nombre:'Mi casa',
             cuenta:"476254/4",
             deuda:{
-                total:4.243,
+                total:12.000,
                 periodos:[
                     {
                         fecha:{
@@ -176,6 +176,8 @@ export const UserProvider = ({children}:Props) => {
   return (
    <UserContext.Provider
     value={{
+        user,
+        setUser,
         inmuebleId,
         setInmuebleId,
         inmuebles,

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const instance = axios.create({
-    baseURL: 'https://backend.tramites.lacosta.gob.ar/'
+    baseURL: 'http://11.11.15.8:4000/'
   });
   //? NUBE
   //baseURL: 'https://backend.tramites.lacosta.gob.ar/'

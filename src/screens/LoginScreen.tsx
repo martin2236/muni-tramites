@@ -1,5 +1,5 @@
-import React,{useState, useEffect} from 'react'
-import { Text, Box, Image, Divider, Button, ScrollView} from 'native-base'
+import React,{useState, useEffect, useContext} from 'react'
+import { Text, Box, Image, Divider, Button, ScrollView, KeyboardAvoidingView, Spinner} from 'native-base'
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParams } from '../navigation/StackNavigation';
 const logo = require('../assets/loginLogo.png');
@@ -7,6 +7,10 @@ import { Formik } from 'formik';
 import { CustomInput } from '../components/CustomInput';
 import { loginSchema } from '../schemas/ValidationSchema';
 import { useFetch } from '../hooks/useFetch';
+import { Dimensions } from 'react-native';
+import { User, UserContext } from '../context/Usercontext';
+
+const height = Dimensions.get('window').height;
 
 interface Props extends StackScreenProps<RootStackParams,'Login'>{}
 
@@ -14,26 +18,39 @@ interface Login {
     cuit:string,
     clave:string
 }
+export interface LoginReq {
+    user:  User[];
+    token: string;
+}
 
 export const LoginScreen = ({navigation}:Props) => {
 
-    const {makePost, data} = useFetch()
+    const {makePost, data, cargando, setCargando} = useFetch()
+
+    const {setUser} = useContext(UserContext)
 
     useEffect(() => {
-     data ? navigation.navigate('Home') : null;
+        if(data){
+            const usuario = {
+                ...(data as LoginReq).user[0], token:(data as LoginReq).token
+            }
+            setUser(usuario);
+            navigation.replace('Home')
+        } 
     }, [data])
     
-    
     const onLogin = (values : Login) =>{
-        console.log('se hizo login');
-       makePost('/auth/login',{cuit:Number(values.cuit), clave:values.clave})
+        setCargando(true);
+       makePost('/auth/login',{cuit:Number(values.cuit), clave:values.clave});
     }
 
   return (
     <Box flex={1} backgroundColor={'#2596be'} flexDirection={'column'} justifyContent={'space-around'}>
-        <Image mt={10} alignSelf={'center'} source={logo} alt='logo'/>
-        <ScrollView mt={10}>
-        <Box width={230} alignSelf={'center'}>
+       <KeyboardAvoidingView behavior='height'>
+       <Image mt={10} alignSelf={'center'} source={logo} alt='logo'/>
+        <Box height={height * 75 / 100}>
+        <ScrollView mt={10} >
+        <Box width={230} mb={5} alignSelf={'center'}>
             <Text fontSize={32} fontWeight={'bold'} textAlign={'center'} color={'#763E96'} lineHeight={'sm'}>
                 PORTAL DE TRÁMITES
             </Text>
@@ -43,7 +60,16 @@ export const LoginScreen = ({navigation}:Props) => {
             </Text>
         </Box>
         <Box width={'80%'} mt={5} alignSelf={'center'} backgroundColor={'#2596be'}>
-            <Formik
+            {
+                cargando ? 
+                <Box backgroundColor={'#2596be'}>
+                    <Spinner mt={10} size={50} color={"white"}/>
+                    <Text mt={8} fontWeight={'bold'} fontSize={22} alignSelf={'center'} color={'white'}>
+                        Iniciando sesión
+                    </Text>
+                </Box>
+                :
+                <Formik
                 initialValues={{ cuit: '', clave:'' }}
                 validationSchema={loginSchema}
                 validateOnChange={false}
@@ -104,8 +130,11 @@ export const LoginScreen = ({navigation}:Props) => {
                 </>
             )}
             </Formik>
+            }
         </Box>
         </ScrollView>
+        </Box>
+       </KeyboardAvoidingView>
     </Box>
   )
 }

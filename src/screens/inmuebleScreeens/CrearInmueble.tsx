@@ -1,7 +1,38 @@
+import { Formik } from 'formik'
 import { Box, Button, Center, Divider, Input, Text } from 'native-base'
-import React from 'react'
+import React, { useEffect, useContext } from 'react'
+import { CustomInputForm } from '../../components/CustomInputForm'
+import { UserContext } from '../../context/Usercontext'
+import { useFetch } from '../../hooks/useFetch'
+import { AgregarInmuebleSchema } from '../../schemas/ValidationSchema'
+
+interface NuevoInmueble{
+    cuenta:string,
+    partida:string,
+    descripcion:string
+}
 
 export const CrearInmueble = () => {
+
+    const {makePost, data} = useFetch()
+    const {user} = useContext(UserContext);
+
+    useEffect(() => {
+        console.log('crear inmueble data',data)
+    }, [data])
+    
+
+    const crearInmueble = ( values: NuevoInmueble) => {
+        let datos = {
+            cuenta: Number(values.cuenta),
+            d_vefi: 4,
+            partida: Number(values.partida),
+            descripcion: values.descripcion,
+            titular: true
+        }
+        makePost('/inmuebles', datos, user?.token);
+    }
+
   return (
     <Box flex={1} backgroundColor={'gray.200'}>
     <Divider backgroundColor={'purple.800'} height={'1.5'}/>
@@ -24,43 +55,61 @@ export const CrearInmueble = () => {
                     width={'90%'}
                     alignSelf={'center'}
                 >
-                    <Input
-                        mb={3}
-                        borderRadius={'2xl'}
-                        height={'10'}
-                        backgroundColor={'white'}
-                        placeholder='CUENTA MUNICIPAL'
-                        borderColor={'purple.800'}
-                    />
-                    <Input
-                        mb={3}
-                        borderRadius={'2xl'}
-                        height={'10'}
-                        backgroundColor={'white'}
-                        placeholder='PARTIDA'
-                        borderColor={'purple.800'}
-                    />
-                    <Input
-                        mb={3}
-                        borderRadius={'2xl'}
-                        height={'10'}
-                        backgroundColor={'white'}
-                        placeholder='DESCRIPCIÓN/NOMBRE DE REFERENCIA'
-                        borderColor={'purple.800'}
-                    />
+                   <Formik
+                        initialValues={{ cuenta:'', partida:'', descripcion:'' }}
+                        validateOnChange={false}
+                        onSubmit={crearInmueble}
+                        validationSchema={AgregarInmuebleSchema}
+                   >
+                    {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
+                        <>
+                            <CustomInputForm
+                                 handleChange={handleChange}
+                                 errors={errors}
+                                 value={values.cuenta}
+                                 placeholder={'CUENTA MUNICIPAL'}
+                                 type={'cuenta'}
+                                 errorCheck={errors.cuenta}
+                                 margin={5}
+                            />
 
-                    <Button
-                        mt={5}
-                        borderRadius={'2xl'}
-                        height={'8'}
-                        backgroundColor={'purple.800'}
-                        py={0}
-                        px={8}
-                    >
-                        <Text
-                            color={'white'}
-                        >GUARDAR DATOS</Text>
-                    </Button>
+                            <CustomInputForm
+                                 handleChange={handleChange}
+                                 errors={errors}
+                                 value={values.partida}
+                                 placeholder={'PARTIDA'}
+                                 type={'partida'}
+                                 errorCheck={errors.partida}
+                                 margin={5}
+                            />
+                            
+                            <CustomInputForm
+                                handleChange={handleChange}
+                                errors={errors}
+                                value={values.descripcion}
+                                placeholder={'DESCRIPCIÓN/NOMBRE DE REFERENCIA'}
+                                type={'descripcion'}
+                                errorCheck={errors.descripcion}
+                                margin={5}
+                            />
+
+                            <Button
+                                onPress={()=> handleSubmit()}
+                                mt={8}
+                                borderRadius={'2xl'}
+                                height={'8'}
+                                width={'80%'}
+                                backgroundColor={'purple.800'}
+                                py={0}
+                                px={8}
+                            >
+                                <Text
+                                    color={'white'}
+                                >GUARDAR DATOS</Text>
+                            </Button>
+                        </>
+                    )}
+                   </Formik>
                 </Center>
         </Box>
     </Box>

@@ -86,7 +86,7 @@ export const TableItem = ({item, setData}:Props) => {
             </Box>
             <Box width={'27%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'center'}>
                 <Text textAlign={'center'} fontSize={10} fontWeight={'bold'}>
-                    $ {deuda.total}
+                    $ {deuda.total.toFixed(3)}
                 </Text>
             </Box>
             <Box width={'10%'} display={'flex'} flexDirection={'row'} alignItems={'center'}>

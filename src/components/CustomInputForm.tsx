@@ -19,21 +19,20 @@ interface Props{
     width?: ResponsiveValue<"px" | "0" | "sm" | "md" | "lg" | "xl" | "2xl" | (string & {}) | (number & {}) | "container" | "3xs" | "2xs" | "xs" | "0.5" | "1" | "1.5" | "2" | "2.5" | "3" | "3.5" | "4" | "5" | "6"  | "full">
 }
 
-export const CustomInput = ({handleChange, errors, value, placeholder,keyboardType, type, margin = 0 ,errorCheck, width = '100%'}:Props) => {
+export const CustomInputForm = ({handleChange, errors, value, placeholder,keyboardType, type, margin = 0 ,errorCheck, width = '100%'}:Props) => {
  
   return (
     <FormControl  width={width} isRequired isInvalid={type in errors}>
         <Input
-           
             onChangeText={handleChange(type)}
-            borderRadius={'3xl'}
+            borderRadius={'2xl'}
             backgroundColor={'white'}
             placeholder={placeholder}
-            placeholderTextColor={'black'}
             keyboardType={keyboardType}
             value={value}
-            textAlign={'center'}
-            fontSize={18}
+            borderColor={'purple.800'}
+            fontSize={14}
+            height={10}
             mt={margin}
         />
         {type in errors ? <Text ml={4} color={'red.500'}> {errorCheck} </Text> : null}  
