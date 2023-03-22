@@ -1,12 +1,37 @@
-import React from 'react'
-import { Text, Box, Divider, Button,Pressable, Center } from 'native-base';
+import React, { useContext, useState } from 'react'
+import { Text, Box, Divider, Button,Pressable, Center, FlatList, ScrollView } from 'native-base';
+//@ts-ignore
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import { RootStackParams } from '../../navigation/StackNavigation';
 import { StackScreenProps } from '@react-navigation/stack';
+import {Inmuebles, UserContext } from '../../context/Usercontext';
+import { TableItem } from '../../components/TableItem';
+import { CustomModal } from '../../components/CustomModal';
 
 interface Props extends StackScreenProps<RootStackParams,'Inmueble'>{}
+interface ListProps{
+    index:number,
+    item:Inmuebles
+}
+export interface Info {
+    cuentaMunicipal: string;
+    partidaPovincial: string;
+    categoria: string;
+    codigoServicio: string;
+    baseImponible: number;
+    nomenclaturaCatastral: string;
+}
+
 
 export const InmuebleScreen = ({navigation}:Props) => {
+
+        const { inmuebles} = useContext(UserContext);
+
+        const [info, setInfo] = useState<Info | null>(null);
+        
+        var renderItem = (item:ListProps)=> {return (<TableItem item={item}  setData={setInfo}/>)};  
+        var keyExtractor = (item:Inmuebles, index:number)=> `${item.id}${index}` 
+
   return (
     <Box flex={1} backgroundColor={'gray.200'}>
         <Divider backgroundColor={'purple.800'} height={'1.5'}/>
@@ -21,249 +46,106 @@ export const InmuebleScreen = ({navigation}:Props) => {
                     alignSelf={'center'}
                     color={'purple.800'}
                     fontWeight={'bold'} 
-                    fontSize={20}>
+                    fontSize={'2xl'}>
                     MIS INMUEBLES
                 </Text>
                 <Button 
                     onPress={()=> navigation.navigate('CrearInmueble')}
                     height={'30px'}
-                    p={0}
+                    py={0}
+                    px={4}
                     mt={2}
                     borderRadius={'3xl'}
                     alignSelf={'center'}
                     backgroundColor={'purple.800'}
-                    width={'42%'}>
-                    <Text fontWeight={'bold'}  color={'white'}>NUEVO INMUEBLE</Text>
+                    >
+                    <Text fontWeight={'bold'} fontSize={'sm'} color={'white'}>NUEVO INMUEBLE</Text>
                 </Button>
                 <Box mt={10} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
-                    <Text width={'27%'} textAlign={'center'} fontWeight={'bold'}>
+                    <Text width={'30%'} fontSize={'10px'} textAlign={'center'} fontWeight={'bold'}>
                         REFERENCIA
                     </Text>
-                    <Text width={'25%'} textAlign={'center'} fontWeight={'bold'}>
+                    <Text width={'28%'} fontSize={'10px'}  textAlign={'center'} fontWeight={'bold'}>
                         CUENTA
                     </Text>
-                    <Text width={'27%'} textAlign={'center'} fontWeight={'bold'}>
-                        DEUDA TOTAL
+                    <Text width={'27%'} fontSize={'10px'}  textAlign={'center'} fontWeight={'bold'}>
+                        DEUDA
                     </Text>
-                    <Text width={'15%'} textAlign={'center'} fontWeight={'bold'}>
+                    <Text width={'15%'} fontSize={'10px'}  textAlign={'center'} fontWeight={'bold'}>
                         PAGAR
                     </Text>
                 </Box>
                 <Divider mt={1}/>
-                <Box mt={2} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
-                    <Box width={'27%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'}>
-                        <Pressable>
-                            <Text textAlign={'center'} fontSize={12}>
-                                Casa de lucy
-                            </Text>
-                        </Pressable>
-                        <Pressable 
-                            height={4}
-                            borderWidth={1}
-                            borderColor={'purple.800'} 
-                            borderRadius={'4'}
-                            alignItems={'center'}
-                            justifyContent={'center'} 
-                            width={4}>
-                                <Icon name={'pencil'} size={12}/>
-                        </Pressable>
-                    </Box>
-                    <Box width={'25%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
-                        <Text textAlign={'center'} fontSize={12} >
-                            456254/4
-                        </Text>
-                        <Pressable 
-                            height={4}
-                            borderWidth={1}
-                            borderColor={'purple.800'} 
-                            borderRadius={'4'}
-                            alignItems={'center'}
-                            justifyContent={'center'} 
-                            width={4}>
-                                <Icon name={'information-variant'} size={12}/>
-                        </Pressable>
-                    </Box>
-                    <Box width={'27%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'center'}>
-                        <Text textAlign={'center'} fontSize={12} fontWeight={'bold'}>
-                            $ 58.234
-                        </Text>
-                    </Box>
-                    <Box width={'10%'} display={'flex'} flexDirection={'row'} alignItems={'center'}>
-                    <Pressable 
-                            alignSelf={'center'}
-                            ml={1}
-                            height={4}
-                            backgroundColor={'#2596be'}
-                            borderRadius={'4'} 
-                            alignItems={'center'}
-                            justifyContent={'center'} 
-                            width={4}>
-                                <Icon name={'printer'} color={'#fff'} size={14}/>
-                        </Pressable>
-                    </Box>
+                <Box height={'56'}>
+                        <FlatList
+                            data={inmuebles}
+                            renderItem={renderItem}
+                            keyExtractor={keyExtractor}
+                        />
                 </Box>
-                <Divider mt={1}/>
-                    {/*BORRAR DESDE ACA*/}
-                <Box mt={2} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
-                    <Box width={'27%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'}>
-                        <Text textAlign={'center'} fontSize={12}>
-                            Depto Toninas
-                        </Text>
-                        <Pressable 
-                            
-                            height={4}
+                    
+                <Box mt={5}>
+                    {
+                        info ? 
+                        <>
+                            <Box 
+                            height={'10'}
+                            display={'flex'} 
+                            flexDirection={'row'} 
                             borderWidth={1}
-                            borderColor={'purple.800'} 
-                            borderRadius={'4'}
-                            alignItems={'center'}
-                            justifyContent={'center'} 
-                            width={4}>
-                                <Icon name={'pencil'} size={12}/>
-                        </Pressable>
-                    </Box>
-                    <Box width={'25%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
-                        <Text textAlign={'center'} fontSize={12}>
-                            456254/4
-                        </Text>
-                        <Pressable 
-                            height={4}
-                            borderWidth={1}
-                            borderColor={'purple.800'} 
-                            borderRadius={'4'}
-                            alignItems={'center'}
-                            justifyContent={'center'} 
-                            width={4}>
-                                <Icon name={'information-variant'} size={12}/>
-                        </Pressable>
-                    </Box>
-                    <Box width={'27%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'center'}>
-                        <Text textAlign={'center'} fontSize={12} fontWeight={'bold'}>
-                            $ 25.654
-                        </Text>
-                    </Box>
-                    <Box width={'10%'} display={'flex'} flexDirection={'row'} alignItems={'center'}>
-                    <Pressable 
-                            alignSelf={'center'}
-                            ml={1}
-                            height={4}
-                            backgroundColor={'#2596be'}
-                            borderRadius={'4'} 
-                            alignItems={'center'}
-                            justifyContent={'center'} 
-                            width={4}>
-                                <Icon name={'printer'} color={'#fff'} size={14}/>
-                        </Pressable>
-                    </Box>
-                </Box>
-                <Divider mt={1}/>
-                <Box mt={2} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
-                    <Box width={'27%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'}>
-                        <Pressable
-                        onPress={()=> navigation.navigate('VerInmueble')}>
-                            <Text textAlign={'center'} fontSize={12}>
-                                Mi casa
-                            </Text>
-                        </Pressable>
-                        <Pressable 
-                            height={4}
-                            borderWidth={1}
-                            borderColor={'purple.800'} 
-                            borderRadius={'4'}
-                            alignItems={'center'}
-                            justifyContent={'center'} 
-                            width={4}>
-                                <Icon name={'pencil'} size={12}/>
-                        </Pressable>
-                    </Box>
-                    <Box width={'25%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
-                        <Text textAlign={'center'} fontSize={12}>
-                            456254/4
-                        </Text>
-                        <Pressable 
-                            height={4}
-                            borderWidth={1}
-                            borderColor={'purple.800'} 
-                            borderRadius={'4'}
-                            alignItems={'center'}
-                            justifyContent={'center'} 
-                            width={4}>
-                                <Icon name={'information-variant'} size={12}/>
-                        </Pressable>
-                    </Box>
-                    <Box width={'27%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'center'}>
-                        <Text textAlign={'center'} fontSize={12} fontWeight={'bold'}>
-                            $ 44.200
-                        </Text>
-                    </Box>
-                    <Box width={'10%'} display={'flex'} flexDirection={'row'} alignItems={'center'}>
-                    <Pressable 
-                            alignSelf={'center'}
-                            ml={1}
-                            height={4}
-                            backgroundColor={'#2596be'}
-                            borderRadius={'4'} 
-                            alignItems={'center'}
-                            justifyContent={'center'} 
-                            width={4}>
-                                <Icon name={'printer'} color={'#fff'} size={14}/>
-                        </Pressable>
-                    </Box>
-                </Box>
-                <Divider mt={1}/>
-                <Box mt={10}>
-                    <Box 
-                        height={'10'}
-                        display={'flex'} 
-                        flexDirection={'row'} 
-                        borderWidth={1}
-                        borderColor={'cyan.500'} 
-                        width={'60%'}
-                        shadow={'6'}
-                        backgroundColor={'white'}
-                        borderRadius={'3xl'} 
-                        alignSelf={'center'}
-                        alignItems={'center'}
-                        zIndex={200}
-                        justifyContent={'space-around'}>
-                        <Pressable 
-                            height={4}
-                            borderWidth={2}
                             borderColor={'cyan.500'} 
-                            borderRadius={'4'}
+                            width={'80%'}
+                            shadow={'6'}
+                            backgroundColor={'white'}
+                            borderRadius={'3xl'} 
+                            alignSelf={'center'}
                             alignItems={'center'}
-                            justifyContent={'center'} 
-                            width={4}>
-                                <Icon name={'information-variant'} size={12}/>
-                        </Pressable>
-                        <Text fontWeight={'bold'} color={'cyan.500'}>Información del inmueble</Text>
-                    </Box>
-                    <Box mt={7} width={'90%'} borderColor={'cyan.500'} borderRadius={'md'} borderWidth={1} position={'absolute'} alignSelf={'center'} zIndex={10}>
-                        <Box mt={5} flexDirection={'row'}>
-                            <Text ml={2} fontWeight={'bold'} color={'cyan.500'}>Cuenta municipal :</Text>
-                            <Text ml={2}>153423/4</Text>
-                        </Box>
-                        <Box mt={1} flexDirection={'row'}>
-                            <Text ml={2} fontWeight={'bold'} color={'cyan.500'}>Partida provincial :</Text>
-                            <Text ml={2}>153423</Text>
-                        </Box>
-                        <Box mt={1} flexDirection={'row'}>
-                            <Text ml={2} fontWeight={'bold'} color={'cyan.500'}>Categoria :</Text>
-                            <Text ml={2}>UrbanoEdificado</Text>
-                        </Box>
-                        <Box mt={1} flexDirection={'row'}>
-                            <Text ml={2} fontWeight={'bold'} color={'cyan.500'}>Código de servicio :</Text>
-                            <Text ml={2}>luz Merc C/Ab</Text>
-                        </Box>
-                        <Box mt={1} flexDirection={'row'}>
-                            <Text ml={2} fontWeight={'bold'} color={'cyan.500'}>Base imponible :</Text>
-                            <Text ml={2}>1342343</Text>
-                        </Box>
-                        <Box mt={1} flexDirection={'row'}>
-                            <Text ml={2} fontWeight={'bold'} color={'cyan.500'}>Nomenclatura catastral :</Text>
-                            <Text ml={1} fontSize={12} >IV-J-0159-0011-5-0000----</Text>
-                        </Box>
-                    </Box>
+                            zIndex={200}
+                            justifyContent={'space-around'}>
+                                <Pressable 
+                                    height={4}
+                                    borderWidth={2}
+                                    borderColor={'cyan.500'} 
+                                    borderRadius={'4'}
+                                    alignItems={'center'}
+                                    justifyContent={'center'} 
+                                    width={4}>
+                                        <Icon name={'information-variant'} size={12}/>
+                                </Pressable>
+                                <Text fontWeight={'bold'} fontSize={13} color={'cyan.500'}>Información del inmueble</Text>
+                                </Box>
+                                <Box mt={7} width={'90%'} borderColor={'cyan.500'} borderRadius={'md'} borderWidth={1} position={'absolute'} alignSelf={'center'} zIndex={10}>
+                                    <Box mt={5} flexDirection={'row'}>
+                                        <Text ml={2} fontSize={12} fontWeight={'bold'} color={'cyan.500'}>Cuenta municipal :</Text>
+                                        <Text ml={2}>{info.cuentaMunicipal}</Text>
+                                    </Box>
+                                    <Box mt={1} flexDirection={'row'}>
+                                        <Text ml={2} fontWeight={'bold'} color={'cyan.500'}>Partida provincial :</Text>
+                                        <Text ml={2}>{info.partidaPovincial}</Text>
+                                    </Box>
+                                    <Box mt={1} flexDirection={'row'}>
+                                        <Text ml={2} fontSize={12} fontWeight={'bold'} color={'cyan.500'}>Categoria :</Text>
+                                        <Text ml={2}>{info.categoria}</Text>
+                                    </Box>
+                                    <Box mt={1} flexDirection={'row'}>
+                                        <Text ml={2} fontSize={12} fontWeight={'bold'} color={'cyan.500'}>Código de servicio :</Text>
+                                        <Text ml={2}>{info.codigoServicio}</Text>
+                                    </Box>
+                                    <Box mt={1} flexDirection={'row'}>
+                                        <Text ml={2} fontWeight={'bold'} color={'cyan.500'}>Base imponible :</Text>
+                                        <Text ml={2}>{info.baseImponible}</Text>
+                                    </Box>
+                                    <Box mt={1} flexDirection={'row'}>
+                                        <Text ml={2} fontSize={12} fontWeight={'bold'} color={'cyan.500'}>N/ catastral :</Text>
+                                        <Text ml={1} fontSize={12} >{info.nomenclaturaCatastral}</Text>
+                                    </Box>
+                            </Box>
+                        </>
+                        :
+                        null
+                    }
                 </Box>
+                <CustomModal/>
         </Box>
     </Box>
   )

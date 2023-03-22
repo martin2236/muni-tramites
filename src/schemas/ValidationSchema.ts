@@ -1,7 +1,7 @@
 import { object, string, ref } from 'yup';
 import axios from 'axios';
 
-
+//* LOGIN
 export const loginSchema = object({
     cuit: 
     string()
@@ -16,6 +16,8 @@ export const loginSchema = object({
     clave: string().min(5,'La contraseña debe tener mas de 5 caracteres').required('ingrese una contraseña'),
   });
 
+
+//*REGISTRO  
   export const registerSchema = object({
     nombre:
     string()
@@ -55,3 +57,20 @@ export const loginSchema = object({
     string()
     .required('ingrese un nombre'),
   })
+
+//* CREAR INMUEBLE
+export const AgregarInmuebleSchema = object({
+  cuenta:
+  string()
+  .required('Ingrese una cuenta')
+  .min(1,'La cuenta debe tener más de 1 caracterer'),
+  partida:
+  string()
+  .required('Ingrese una partida')
+  .min(4,'La partida debe tener más de 4 caracteres'),
+  descripcion:
+  string()
+  .required('Ingrese una descripcion o nombre')
+  .min(5,'El nombre debe tener más de 5 caracteres'),
+  
+})
