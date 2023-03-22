@@ -34,8 +34,8 @@ export const InmuebleScreen = ({navigation}:Props) => {
 
   return (
     <Box flex={1} backgroundColor={'gray.200'}>
-        <Divider backgroundColor={'purple.800'} height={'1.5'}/>
-        <Divider position={'absolute'} width={'90%'} height={'1.5'} backgroundColor={'purple.600'} alignSelf={'center'}/>
+        <Divider backgroundColor={'gray.600'} height={'1.5'}/>
+        <Divider position={'absolute'} width={'90%'} height={'1.5'} backgroundColor={'gray.400'} alignSelf={'center'}/>
         <Box 
             height={'100%'}
             width={'90%'} 
@@ -44,7 +44,6 @@ export const InmuebleScreen = ({navigation}:Props) => {
                 <Text
                     mt={7}
                     alignSelf={'center'}
-                    color={'purple.800'}
                     fontWeight={'bold'} 
                     fontSize={'2xl'}>
                     MIS INMUEBLES
@@ -57,21 +56,18 @@ export const InmuebleScreen = ({navigation}:Props) => {
                     mt={2}
                     borderRadius={'3xl'}
                     alignSelf={'center'}
-                    backgroundColor={'purple.800'}
+                    backgroundColor={'gray.500'}
                     >
-                    <Text fontWeight={'bold'} fontSize={'sm'} color={'white'}>NUEVO INMUEBLE</Text>
+                    <Text fontWeight={'bold'} fontSize={'sm'} color={'white'}>AGREGAR INMUEBLE</Text>
                 </Button>
                 <Box mt={10} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
-                    <Text width={'30%'} fontSize={'10px'} textAlign={'center'} fontWeight={'bold'}>
+                    <Text width={'40%'} fontSize={'12px'} textAlign={'center'} fontWeight={'bold'}>
                         REFERENCIA
                     </Text>
-                    <Text width={'28%'} fontSize={'10px'}  textAlign={'center'} fontWeight={'bold'}>
-                        CUENTA
-                    </Text>
-                    <Text width={'27%'} fontSize={'10px'}  textAlign={'center'} fontWeight={'bold'}>
+                    <Text width={'47%'} fontSize={'12px'}  textAlign={'center'} fontWeight={'bold'}>
                         DEUDA
                     </Text>
-                    <Text width={'15%'} fontSize={'10px'}  textAlign={'center'} fontWeight={'bold'}>
+                    <Text width={'20%'} fontSize={'12px'}   fontWeight={'bold'}>
                         PAGAR
                     </Text>
                 </Box>

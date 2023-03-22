@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {View} from 'react-native';
 import { Divider, Box, Text, Pressable, Checkbox, Button, ScrollView } from 'native-base';
+//@ts-ignore
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import * as Animatable from 'react-native-animatable';
 import { RowOne } from '../../components/fakeRowOne/rowOne';
@@ -28,8 +29,8 @@ export const VerInmueble = ({navigation}:Props) => {
     }
   return (
     <Box flex={1} backgroundColor={'gray.200'}>
-    <Divider backgroundColor={'purple.800'} height={'1.5'}/>
-    <Divider position={'absolute'} width={'90%'} height={'1.5'} backgroundColor={'purple.600'} alignSelf={'center'}/>
+    <Divider backgroundColor={'gray.600'} height={'1.5'}/>
+    <Divider position={'absolute'} width={'90%'} height={'1.5'} backgroundColor={'gray.500'} alignSelf={'center'}/>
         <Box 
             height={'100%'} 
             width={'90%'} 
@@ -38,7 +39,6 @@ export const VerInmueble = ({navigation}:Props) => {
             <Text
                 mt={7}
                 alignSelf={'center'}
-                color={'purple.800'}
                 fontWeight={'bold'} 
                 fontSize={20}>
                 MIS INMUEBLES
@@ -47,13 +47,13 @@ export const VerInmueble = ({navigation}:Props) => {
                 <Box 
                     position={'absolute'}
                     zIndex={100}
-                    width={'50px'}
-                    height={'50px'}
+                    width={'60px'}
+                    height={'60px'}
                     alignItems={'center'}
                     justifyContent={'center'}
                     borderRadius={'full'}
-                    backgroundColor={'purple.800'}>
-                    <Icon name={'home'} size={30} color={'#fff'}/>
+                    backgroundColor={'#2596be'}>
+                    <Icon name={'home'} size={50} color={'#fff'}/>
                 </Box>
                 <Box 
                     zIndex={10}
@@ -61,16 +61,32 @@ export const VerInmueble = ({navigation}:Props) => {
                     width={'90%'}
                     flexDirection={'row'}
                     alignItems={'center'}
-                    justifyContent={'flex-end'}
-                    backgroundColor={'purple.300'}>
-                    <Text width={'30%'} textAlign={'center'} fontSize={10} fontWeight={'bold'}>
+                    justifyContent={'flex-start'}
+                    backgroundColor={'gray.300'}>
+                    <Box width={'15%'}></Box>
+                    <Text  width={'30%'}  fontSize={10} fontWeight={'bold'}>
                         REFERENCIA
                     </Text>
                     <Text width={'30%'} textAlign={'center'} fontSize={10} fontWeight={'bold'}>
+                        Mi casa
+                    </Text>
+                    
+                </Box>
+                <Box 
+                    mt={'0.5'}
+                    zIndex={10}
+                    alignSelf={'flex-end'}
+                    width={'90%'}
+                    flexDirection={'row'}
+                    alignItems={'center'}
+                    justifyContent={'flex-start'}
+                    backgroundColor={'gray.300'}>
+                        <Box width={'15%'}></Box>
+                    <Text  width={'30%'} fontWeight={'bold'} fontSize={10} >
                         CUENTA
                     </Text>
-                    <Text width={'30%'} textAlign={'center'} fontSize={10} fontWeight={'bold'}>
-                        PARTIDA
+                    <Text width={'30%'} fontSize={10} textAlign={'center'}>
+                        456254/4
                     </Text>
                 </Box>
                 <Box 
@@ -80,16 +96,14 @@ export const VerInmueble = ({navigation}:Props) => {
                     width={'90%'}
                     flexDirection={'row'}
                     alignItems={'center'}
-                    justifyContent={'flex-end'}
-                    backgroundColor={'purple.300'}>
-                    <Text width={'30%'} fontSize={10} textAlign={'center'}>
-                        Mi casa
+                    justifyContent={'flex-start'}
+                    backgroundColor={'gray.300'}>
+                        <Box width={'15%'}></Box>
+                    <Text width={'30%'} fontWeight={'bold'} fontSize={10} >
+                        PARTIDA
                     </Text>
                     <Text width={'30%'} fontSize={10} textAlign={'center'}>
-                        456254/4
-                    </Text>
-                    <Text width={'30%'} fontSize={10} textAlign={'center'}>
-                        123223
+                        157420
                     </Text>
                 </Box>
             </Box>
@@ -111,7 +125,7 @@ export const VerInmueble = ({navigation}:Props) => {
                 <Box mt={2} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
                     <Box width={'17%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'}>
                         <Pressable width={'100%'} flexDirection={'row'}>
-                            <Icon name={'chevron-right'} size={15} color={'purple'}/>
+                            <Icon name={'chevron-right'} size={15} color={'cyan'}/>
                             <Text textAlign={'center'} fontSize={10}>
                                 2020
                             </Text>
@@ -138,7 +152,7 @@ export const VerInmueble = ({navigation}:Props) => {
                 <Box mt={2} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
                     <Box width={'17%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'}>
                         <Pressable width={'100%'} flexDirection={'row'}>
-                            <Icon name={'chevron-right'} size={15} color={'purple'}/>
+                            <Icon name={'chevron-right'} size={15} color={'cyan'}/>
                             <Text textAlign={'center'} fontSize={10}>
                                 2021
                             </Text>
@@ -161,10 +175,10 @@ export const VerInmueble = ({navigation}:Props) => {
                     </Box>
                 </Box>
                 <Divider mt={1}/>
-                <Box bg={show ? 'purple.300' : 'white'} mt={2} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
+                <Box bg={show ? 'gray.300' : 'white'} mt={2} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
                     <Pressable onPress={()=> handlePress()} width={'17%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'}>
                         <Box  width={'100%'} flexDirection={'row'}>
-                            <Icon name={ show ?'chevron-down' : 'chevron-right' } size={15} color={'purple'}/>
+                            <Icon name={ show ?'chevron-down' : 'chevron-right' } size={15} color={'cyan'}/>
                             <Text textAlign={'center'} fontSize={10}>
                                 2022
                             </Text>
@@ -172,7 +186,7 @@ export const VerInmueble = ({navigation}:Props) => {
                     </Pressable>
                     <Box width={'29%'} display={'flex'} flexDirection={'row'} alignItems={'center'}>
                         <Text textAlign={'center'} fontSize={10} >
-                            $12.000
+                            $10.000
                         </Text>
                     </Box>
                     <Box width={'29%'} display={'flex'} flexDirection={'row'} alignItems={'center'} >
@@ -182,7 +196,7 @@ export const VerInmueble = ({navigation}:Props) => {
                     </Box>
                     <Box width={'25%'} display={'flex'} flexDirection={'row'} alignItems={'center'}>
                         <Text textAlign={'center'} fontSize={10} >
-                            $12.000
+                            $10.000
                         </Text>
                     </Box>
                 </Box>
@@ -192,16 +206,14 @@ export const VerInmueble = ({navigation}:Props) => {
                     { show?
                     <Animatable.View animation='fadeInDown' style={{backgroundColor:'white'}}>
                          <Box  mt={2} alignSelf={'center'} width={'95%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
-                    <Text width={'24%'}fontSize={10} color={'purple.800'} textAlign={'center'} fontWeight={'bold'}>
+                    <Text width={'24%'}fontSize={10} color={'#2596be'} textAlign={'center'} fontWeight={'bold'}>
                         CUOTA
                     </Text>
-                    <Text width={'28%'} fontSize={10} color={'purple.800'} textAlign={'center'} fontWeight={'bold'} lineHeight={'sm'}>
-                        VCTO.
+                    <Text width={'28%'} fontSize={10} color={'#2596be'} textAlign={'center'} fontWeight={'bold'} lineHeight={'sm'}>
+                        VENCIMIENTO.
                     </Text>
-                    <Text width={'24%'} fontSize={10} color={'purple.800'} textAlign={'center'} fontWeight={'bold'} lineHeight={'sm'}>
-                        ESTADO
-                    </Text>
-                    <Text width={'24%'} fontSize={10} color={'purple.800'} textAlign={'center'} fontWeight={'bold'} lineHeight={'sm'}>
+                    
+                    <Text width={'24%'} fontSize={10} color={'#2596be'} textAlign={'center'} fontWeight={'bold'} lineHeight={'sm'}>
                         TOTAL
                     </Text>
                 </Box>
@@ -245,12 +257,12 @@ export const VerInmueble = ({navigation}:Props) => {
                        
                        </ScrollView>
 
-                        <Box mt={2} bg={'purple.300'} flexDirection={'row'} justifyContent={'flex-end'}>
-                            <Text  fontSize={12} fontWeight={'bold'}>
+                        <Box mt={2} bg={'gray.300'} flexDirection={'row'} justifyContent={'flex-end'}>
+                            <Text  fontSize={10} fontWeight={'bold'}>
                                 TOTAL A PAGAR
                             </Text>
-                            <Text width={"27%"} textAlign={'center'}  fontSize={12} fontWeight={'bold'}>
-                                $12.000
+                            <Text width={"27%"} textAlign={'center'}  fontSize={10} fontWeight={'bold'}>
+                                $10.000
                             </Text>
                         </Box>
 
@@ -268,8 +280,8 @@ export const VerInmueble = ({navigation}:Props) => {
                             <Text width={'60%'} fontSize={10} fontWeight={'bold'} lineHeight={'sm'}>DESCARGAR/IMPRIMIR RECIBO PARA PAGO</Text>
                         </Box>
                     </Box>
-                    <Button onPress={()=> navigation.navigate('Pagos')} alignSelf={'center'} borderRadius={'2xl'} py={0} height={8} mt={3} backgroundColor={'purple.800'} width='30%'>
-                        <Text color={'white'} fontSize={12} my={0}>
+                    <Button onPress={()=> navigation.navigate('Pagos')} alignSelf={'center'} borderRadius={'2xl'} py={0} height={8} mt={3} backgroundColor={'#2596be'} width='30%'>
+                        <Text color={'white'} fontSize={10} my={0}>
                             PAGAR
                         </Text>
                     </Button>

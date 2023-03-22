@@ -1,5 +1,5 @@
 import { Formik } from 'formik'
-import { Box, Button, Center, Divider, Input, Text } from 'native-base'
+import { Alert, Box, Button, Center, Divider, Input, Text } from 'native-base'
 import React, { useEffect, useContext } from 'react'
 import { CustomInputForm } from '../../components/CustomInputForm'
 import { UserContext } from '../../context/Usercontext'
@@ -11,6 +11,11 @@ interface NuevoInmueble{
     partida:string,
     descripcion:string
 }
+interface Data {
+    estado: boolean;
+    msj:    string;
+}
+
 
 export const CrearInmueble = () => {
 

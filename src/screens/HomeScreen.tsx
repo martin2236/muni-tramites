@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Divider, Text, Pressable } from 'native-base';
+//@ts-ignore
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 
@@ -9,8 +10,8 @@ export const HomeScreen = () => {
     const navigation = useNavigation();
   return (
     <Box flex={1} backgroundColor={'gray.200'}>
-        <Divider backgroundColor={'purple.800'} height={'1.5'}/>
-        <Divider position={'absolute'} width={'90%'} height={'1.5'} backgroundColor={'purple.400'} alignSelf={'center'}/>
+        <Divider backgroundColor={'gray.600'} height={'1.5'}/>
+        <Divider position={'absolute'} width={'90%'} height={'1.5'} backgroundColor={'gray.400'} alignSelf={'center'}/>
         <Box 
             height={'100%'}
             width={'90%'}  
@@ -22,10 +23,12 @@ export const HomeScreen = () => {
             backgroundColor={'white'}>
             <Divider mb={10}/>
             <Pressable 
+                width={'50%'}
                 mb={5} 
                 onPress={()=> navigation.navigate('Inmueble' as never)}>
                 <Box 
                     height={120} 
+                    alignSelf={'center'}
                     justifyContent={'center'} 
                     alignItems={'center'} 
                     borderRadius={'3xl'} 
@@ -44,10 +47,12 @@ export const HomeScreen = () => {
                 </Text>
             </Pressable>
             <Pressable 
+            width={'50%'}
                 mb={5} 
                 onPress={()=> navigation.navigate("Vehiculo" as never)}>
                 <Box 
                     height={120} 
+                    alignSelf={'center'}
                     justifyContent={'center'} 
                     alignItems={'center'} 
                     borderRadius={'3xl'} 
@@ -66,11 +71,13 @@ export const HomeScreen = () => {
                 </Text>
             </Pressable>
             <Pressable 
+             width={'50%'}
                 mb={5}
                 onPress={()=> navigation.navigate("Comercio" as never)}
                 >
                 <Box 
                     height={120} 
+                    alignSelf={'center'}
                     justifyContent={'center'} 
                     alignItems={'center'} 
                     borderRadius={'3xl'} 
@@ -89,11 +96,13 @@ export const HomeScreen = () => {
                 </Text>
             </Pressable>
             <Pressable 
+             width={'50%'}
                 mb={5}
                 onPress={()=> navigation.navigate("Cementerio" as never)}
                 >
                 <Box 
                     height={120} 
+                    alignSelf={'center'}
                     justifyContent={'center'} 
                     alignItems={'center'} 
                     borderRadius={'3xl'} 
@@ -112,11 +121,13 @@ export const HomeScreen = () => {
                 </Text>
             </Pressable>
             <Pressable 
+             width={'50%'}
                 mb={5}
                 onPress={()=> navigation.navigate("ObrasPrivadas" as never)}
                 >
                 <Box 
                     height={120} 
+                    alignSelf={'center'}
                     justifyContent={'center'} 
                     alignItems={'center'} 
                     borderRadius={'3xl'} 
@@ -135,11 +146,13 @@ export const HomeScreen = () => {
                 </Text>
             </Pressable>
             <Pressable 
+             width={'50%'}
                 mb={5}
                 onPress={()=> navigation.navigate("Escribanos" as never)}
                 >
                 <Box 
                     height={120} 
+                    alignSelf={'center'}
                     justifyContent={'center'} 
                     alignItems={'center'} 
                     borderRadius={'3xl'} 
