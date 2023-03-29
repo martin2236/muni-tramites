@@ -54,18 +54,10 @@ export interface User {
 export interface ContextProps  {
     user: User | null,
     setUser: (user: User | null) => void,
-    inmuebleId:number | null,
-    setInmuebleId:(id:number | null) => void,
-    inmuebles:Inmuebles[] | null,
-    setInmuebles: (inmuebles: Inmuebles[] | null) => void
   };
 
   const initialState = {
     user:null,
     setUser:() => {},
-    inmuebleId:null,
-    setInmuebleId:() => {},
-    inmuebles: null,
-    setInmuebles: () => {}
   }
 export const UserContext = createContext<ContextProps>(initialState);

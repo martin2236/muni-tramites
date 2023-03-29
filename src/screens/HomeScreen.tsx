@@ -1,176 +1,232 @@
-import React from 'react';
+import React,{useContext, useEffect, useState} from 'react';
 import { Box, Divider, Text, Pressable } from 'native-base';
 //@ts-ignore
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
+import { useFetch } from '../hooks/useFetch';
+import { UserContext } from '../context/usuario/Usercontext';
+import { StackScreenProps } from '@react-navigation/stack';
+import { RootStackParams } from '../navigation/StackNavigation';
 
+interface Props extends StackScreenProps<RootStackParams,'Home'>{}
 
+export const HomeScreen = ({navigation}:Props) => {
+    const {user} = useContext(UserContext);
+    const [cuenta, setCuenta]= useState(null);
+    const [pantalla, setPantalla] = useState('')
+    const {makeGet,makePost, data, cargando} = useFetch();
 
-export const HomeScreen = () => {
-    const navigation = useNavigation();
+    useEffect(() => {
+        console.log('usando useEffect')
+      if(data && data.Inmueble){
+        console.log('HOME',data)
+        const cuenta = data.Inmueble[0].cuenta;
+       setCuenta(cuenta) 
+      }
+    }, [data])
+
+    useEffect(()=>{
+        if(cuenta){
+           navigation.navigate('Inmueble',cuenta)
+           setCuenta(null)
+        }
+    },[cuenta])
+    
+    const pedirInformacion = (data: string) =>{
+        switch (data) {
+            case 'Inmueble':
+                makeGet('/inmuebles/traerInmuebles', user?.token, undefined, 'Inmueble')
+                setPantalla('VerInmueble');
+              break;
+            case 'Comercio':
+              break;
+            case 'Vehiculo':
+              break;
+            default:
+              console.log(`No se encontro el tipo ${data}.`);
+          }
+    };
+
+    const traerCuotas = () =>{
+        const data = {
+         cuenta,
+         vencimiento: "2023-03-27T15:33:33.902Z"
+        }
+         makePost('/inmuebles/traerCuotas',data, user?.token, 'deudas' )
+     }
+
   return (
     <Box flex={1} backgroundColor={'gray.200'}>
         <Divider backgroundColor={'gray.600'} height={'1.5'}/>
         <Divider position={'absolute'} width={'90%'} height={'1.5'} backgroundColor={'gray.400'} alignSelf={'center'}/>
-        <Box 
-            height={'100%'}
-            width={'90%'}  
-            display={'flex'} 
-            flexDir={'row'} 
-            flexWrap={'wrap'} 
-            justifyContent={'space-around'}
-            alignSelf={'center'} 
-            backgroundColor={'white'}>
-            <Divider mb={10}/>
-            <Pressable 
+       {
+        !cargando ? 
+        <>
+            <Box 
+                height={'100%'}
+                width={'90%'}  
+                display={'flex'} 
+                flexDir={'row'} 
+                flexWrap={'wrap'} 
+                justifyContent={'space-around'}
+                alignSelf={'center'} 
+                backgroundColor={'white'}>
+                <Divider mb={10}/>
+                <Pressable 
+                    width={'50%'}
+                    mb={5} 
+                    onPress={()=> pedirInformacion('Inmueble')}>
+                    <Box 
+                        height={120} 
+                        alignSelf={'center'}
+                        justifyContent={'center'} 
+                        alignItems={'center'} 
+                        borderRadius={'3xl'} 
+                        width={120} 
+                        backgroundColor={'#2596be'}>
+                        <Icon 
+                            name="home" 
+                            size={70} 
+                            color="#fff" />
+                    </Box>
+                    <Text 
+                        mt={1} 
+                        fontWeight={'bold'} 
+                        textAlign={'center'}>
+                            Inmueble
+                    </Text>
+                </Pressable>
+                <Pressable 
                 width={'50%'}
-                mb={5} 
-                onPress={()=> navigation.navigate('Inmueble' as never)}>
-                <Box 
-                    height={120} 
-                    alignSelf={'center'}
-                    justifyContent={'center'} 
-                    alignItems={'center'} 
-                    borderRadius={'3xl'} 
-                    width={120} 
-                    backgroundColor={'#2596be'}>
-                    <Icon 
-                        name="home" 
-                        size={70} 
-                        color="#fff" />
-                </Box>
-                <Text 
-                    mt={1} 
-                    fontWeight={'bold'} 
-                    textAlign={'center'}>
-                        Inmueble
-                </Text>
-            </Pressable>
-            <Pressable 
-            width={'50%'}
-                mb={5} 
-                onPress={()=> navigation.navigate("Vehiculo" as never)}>
-                <Box 
-                    height={120} 
-                    alignSelf={'center'}
-                    justifyContent={'center'} 
-                    alignItems={'center'} 
-                    borderRadius={'3xl'} 
-                    width={120} 
-                    backgroundColor={'#2596be'}>
-                    <Icon 
-                        name="car" 
-                        size={70} 
-                        color="#fff" />
-                </Box>
-                <Text 
-                    mt={1} 
-                    fontWeight={'bold'} 
-                    textAlign={'center'}>
-                        Vehiculo
-                </Text>
-            </Pressable>
-            <Pressable 
-             width={'50%'}
-                mb={5}
-                onPress={()=> navigation.navigate("Comercio" as never)}
-                >
-                <Box 
-                    height={120} 
-                    alignSelf={'center'}
-                    justifyContent={'center'} 
-                    alignItems={'center'} 
-                    borderRadius={'3xl'} 
-                    width={120} 
-                    backgroundColor={'#2596be'}>
-                    <Icon 
-                        name="file-document" 
-                        size={70} 
-                        color="#fff" />
-                </Box>
-                <Text 
-                    mt={1} 
-                    fontWeight={'bold'} 
-                    textAlign={'center'}>
-                        Comercio
-                </Text>
-            </Pressable>
-            <Pressable 
-             width={'50%'}
-                mb={5}
-                onPress={()=> navigation.navigate("Cementerio" as never)}
-                >
-                <Box 
-                    height={120} 
-                    alignSelf={'center'}
-                    justifyContent={'center'} 
-                    alignItems={'center'} 
-                    borderRadius={'3xl'} 
-                    width={120} 
-                    backgroundColor={'#2596be'}>
-                    <Icon 
-                        name="bank" 
-                        size={70} 
-                        color="#fff" />
-                </Box>
-                <Text 
-                    mt={1} 
-                    fontWeight={'bold'} 
-                    textAlign={'center'}>
-                        Cementerio
-                </Text>
-            </Pressable>
-            <Pressable 
-             width={'50%'}
-                mb={5}
-                onPress={()=> navigation.navigate("ObrasPrivadas" as never)}
-                >
-                <Box 
-                    height={120} 
-                    alignSelf={'center'}
-                    justifyContent={'center'} 
-                    alignItems={'center'} 
-                    borderRadius={'3xl'} 
-                    width={120} 
-                    backgroundColor={'gray.400'}>
-                    <Icon 
-                        name="paperclip" 
-                        size={70} 
-                        color="#fff" />
-                </Box>
-                <Text 
-                    mt={1} 
-                    fontWeight={'bold'} 
-                    textAlign={'center'}>
-                        Obras privadas
-                </Text>
-            </Pressable>
-            <Pressable 
-             width={'50%'}
-                mb={5}
-                onPress={()=> navigation.navigate("Escribanos" as never)}
-                >
-                <Box 
-                    height={120} 
-                    alignSelf={'center'}
-                    justifyContent={'center'} 
-                    alignItems={'center'} 
-                    borderRadius={'3xl'} 
-                    width={120} 
-                    backgroundColor={'gray.400'}>
-                    <Icon 
-                        name="scale-balance" 
-                        size={70} 
-                        color="#fff" />
-                </Box>
-                <Text 
-                    mt={1} 
-                    fontWeight={'bold'} 
-                    textAlign={'center'}>
-                        Escribanos
-                </Text>
-            </Pressable>
+                    mb={5} 
+                    onPress={()=> navigation.navigate("Vehiculo" as never)}>
+                    <Box 
+                        height={120} 
+                        alignSelf={'center'}
+                        justifyContent={'center'} 
+                        alignItems={'center'} 
+                        borderRadius={'3xl'} 
+                        width={120} 
+                        backgroundColor={'#2596be'}>
+                        <Icon 
+                            name="car" 
+                            size={70} 
+                            color="#fff" />
+                    </Box>
+                    <Text 
+                        mt={1} 
+                        fontWeight={'bold'} 
+                        textAlign={'center'}>
+                            Vehiculo
+                    </Text>
+                </Pressable>
+                <Pressable 
+                width={'50%'}
+                    mb={5}
+                    onPress={()=> navigation.navigate("Comercio" as never)}
+                    >
+                    <Box 
+                        height={120} 
+                        alignSelf={'center'}
+                        justifyContent={'center'} 
+                        alignItems={'center'} 
+                        borderRadius={'3xl'} 
+                        width={120} 
+                        backgroundColor={'#2596be'}>
+                        <Icon 
+                            name="file-document" 
+                            size={70} 
+                            color="#fff" />
+                    </Box>
+                    <Text 
+                        mt={1} 
+                        fontWeight={'bold'} 
+                        textAlign={'center'}>
+                            Comercio
+                    </Text>
+                </Pressable>
+                <Pressable 
+                width={'50%'}
+                    mb={5}
+                    onPress={()=> navigation.navigate("Cementerio" as never)}
+                    >
+                    <Box 
+                        height={120} 
+                        alignSelf={'center'}
+                        justifyContent={'center'} 
+                        alignItems={'center'} 
+                        borderRadius={'3xl'} 
+                        width={120} 
+                        backgroundColor={'#2596be'}>
+                        <Icon 
+                            name="bank" 
+                            size={70} 
+                            color="#fff" />
+                    </Box>
+                    <Text 
+                        mt={1} 
+                        fontWeight={'bold'} 
+                        textAlign={'center'}>
+                            Cementerio
+                    </Text>
+                </Pressable>
+                <Pressable 
+                width={'50%'}
+                    mb={5}
+                    onPress={()=> navigation.navigate("ObrasPrivadas" as never)}
+                    >
+                    <Box 
+                        height={120} 
+                        alignSelf={'center'}
+                        justifyContent={'center'} 
+                        alignItems={'center'} 
+                        borderRadius={'3xl'} 
+                        width={120} 
+                        backgroundColor={'gray.400'}>
+                        <Icon 
+                            name="paperclip" 
+                            size={70} 
+                            color="#fff" />
+                    </Box>
+                    <Text 
+                        mt={1} 
+                        fontWeight={'bold'} 
+                        textAlign={'center'}>
+                            Obras privadas
+                    </Text>
+                </Pressable>
+                <Pressable 
+                width={'50%'}
+                    mb={5}
+                    onPress={()=> navigation.navigate("Escribanos" as never)}
+                    >
+                    <Box 
+                        height={120} 
+                        alignSelf={'center'}
+                        justifyContent={'center'} 
+                        alignItems={'center'} 
+                        borderRadius={'3xl'} 
+                        width={120} 
+                        backgroundColor={'gray.400'}>
+                        <Icon 
+                            name="scale-balance" 
+                            size={70} 
+                            color="#fff" />
+                    </Box>
+                    <Text 
+                        mt={1} 
+                        fontWeight={'bold'} 
+                        textAlign={'center'}>
+                            Escribanos
+                    </Text>
+                </Pressable>
+            </Box>
+        </>
+        :
+        <Box>
+            cargando
         </Box>
+       }
     </Box>
   )
 }

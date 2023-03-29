@@ -8,7 +8,7 @@ import { CustomInput } from '../components/CustomInput';
 import { loginSchema } from '../schemas/ValidationSchema';
 import { useFetch } from '../hooks/useFetch';
 import { Dimensions } from 'react-native';
-import { User, UserContext } from '../context/Usercontext';
+import { User, UserContext } from '../context/usuario/Usercontext';
 
 const height = Dimensions.get('window').height;
 
@@ -29,9 +29,21 @@ export const LoginScreen = ({navigation}:Props) => {
 
     const {setUser} = useContext(UserContext)
 
+    useEffect(() => {
+        if(data){
+            const usuario = {
+                ...(data as LoginReq).user[0], token:(data as LoginReq).token
+            };
+            if(usuario){
+                setUser(usuario);
+                navigation.replace('Home');
+            };
+        } 
+    }, [data])
     
     const onLogin = (values : Login) =>{
-       navigation.navigate('Home');
+        setCargando(true);
+       makePost('/auth/login',{cuit:Number(values.cuit), clave:values.clave});
     }
 
   return (

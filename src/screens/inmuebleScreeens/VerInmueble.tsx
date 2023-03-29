@@ -21,12 +21,29 @@ import { RootStackParams } from '../../navigation/StackNavigation';
 
 interface Props extends StackScreenProps<RootStackParams,'VerInmueble'>{}
 
-export const VerInmueble = ({navigation}:Props) => {
+export const VerInmueble = ({navigation, route}:Props) => {
     const [show, setShow] = useState(false)
     const [selected, setSelected] = useState(false)
     const handlePress = () =>{
         setShow(show => !show)
     }
+    const datos =  route.params;
+
+    console.log(datos!.deuda.cuotas)
+    
+    
+    const infoByAnio = {};
+
+    datos!.deuda.cuotas.forEach( item => {
+    if (!infoByAnio[item.anio]) {
+        infoByAnio[item.anio] = [];
+    }
+    infoByAnio[item.anio].push(item);
+    });
+
+    console.log(infoByAnio);
+
+
   return (
     <Box flex={1} backgroundColor={'gray.200'}>
     <Divider backgroundColor={'gray.600'} height={'1.5'}/>
@@ -68,7 +85,7 @@ export const VerInmueble = ({navigation}:Props) => {
                         REFERENCIA
                     </Text>
                     <Text width={'30%'} textAlign={'center'} fontSize={10} fontWeight={'bold'}>
-                        Mi casa
+                        {datos!.referencia}
                     </Text>
                     
                 </Box>

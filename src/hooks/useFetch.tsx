@@ -3,27 +3,55 @@ import { instance } from '../connection/connection'
 
 export const useFetch = () => {
 
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<any>(null);
   const [cargando, setCargando] = useState(false);
 
-    const makeGet = async(uri:string, token = '') => {
+    const makeGet = async(uri:string, token = '' , id?:number, tipo?:string) => {
       let config = {
         headers: {
           'Authorization':`Bearer ${token}`,
         }
       }
-       try {
-        const res = await instance.get(uri, config);
-        const datos = res.data;
-        setData(datos)
-        setCargando(false);
-       } catch (error) {
-        console.log(error)
-        setCargando(false);
-       }
+      if(token && tipo){
+        try {
+          console.log(`pidiendo ${tipo}`)
+          const res = await instance.get(uri , config);
+          const datos = await res.data;
+          const objData = {[`${tipo}`]: datos}
+          setData(objData);
+          setCargando(false);
+        } catch (error) {
+          console.log(error);
+          setCargando(false);
+        }
+      }else if(token && id){
+        try {
+            console.log(`pidiendo ${tipo}`)
+            console.log(uri, token, id, tipo)
+          const res = await instance.get(uri+`/${id}` , config);
+          const datos = await res.data;
+          const objData = {[`${tipo}`]: datos}
+          setData(objData);
+          setCargando(false);
+        } catch (error) {
+          console.log(error);
+          setCargando(false);
+        }
+      }else{
+        try {
+          const res = await instance.get(uri, config);
+          const datos = res.data;
+          setData(datos)
+          setCargando(false);
+         } catch (error) {
+          console.log(error)
+          setCargando(false);
+         }
+      }
+       
     }
 
-    const makePost = async(uri:string ,data:{}, token= '') => {
+    const makePost = async(uri:string ,data:{}, token= '', tipo?:string) => {
         let config = {
           headers: {
             'Authorization':`Bearer ${token}`,
@@ -42,16 +70,18 @@ export const useFetch = () => {
           setCargando(false);
         }
       }
-      try {
-        const res = await instance.post(uri, data, config);
-        console.log('en envio el token', token)
-        const datos = await res.data;
-        setData(datos);
-        setCargando(false);
-      } catch (error) {
-        console.log(error);
-        setCargando(false);
-      }
+         try {
+          const res = await instance.post(uri, data, config);
+          console.log('en envio el token', token)
+          const datos = await res.data;
+          const objData = {[`${tipo}`]: datos}
+          setData(objData);
+          setCargando(false);
+        } catch (error) {
+          console.log(error);
+          setCargando(false);
+        }
+      
     }
 
     const makePut =  async(uri:string ,data:{}) => {
