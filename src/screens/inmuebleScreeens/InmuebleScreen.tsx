@@ -3,15 +3,16 @@ import { Text, Box, Divider, Button,Pressable, Center, FlatList, ScrollView, Spi
 //@ts-ignore
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import { RootStackParams } from '../../navigation/StackNavigation';
-import { StackScreenProps } from '@react-navigation/stack';
+import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
 import { TableItem } from '../../components/TableItem';
 import { CustomModal } from '../../components/CustomModal';
 import { Inmueble,DatosContext } from '../../context/datos/DatosContext';
 import { useFetch } from '../../hooks/useFetch';
 import { UserContext } from '../../context/usuario/Usercontext';
 
-interface Props extends StackScreenProps<RootStackParams,'Inmueble'>{
-    item:any
+interface Props {
+    navigation: StackNavigationProp<RootStackParams, "Inmueble", undefined>,
+    route:any
 }
 interface ListProps{
     index:number,
@@ -39,7 +40,7 @@ export const InmuebleScreen = ({navigation,route}:Props) => {
         const [deuda, setDeuda] = useState(null);
         const { makePost, data} = useFetch();
        
-        const renderItem = (item:ListProps)=> {return (<TableItem item={item}  setData={setInfo} deuda={deuda}/>)};  
+        const renderItem = (item:ListProps)=> {return (<TableItem item={item}  setData={setInfo} deuda={deuda} navigation={navigation}/>)};  
         const keyExtractor = (item:Inmueble, index:number)=> `${item.pkinmueble}${index}` 
 
         useEffect(() => {

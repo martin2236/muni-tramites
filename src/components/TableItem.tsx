@@ -3,25 +3,24 @@ import {Box, Divider, Pressable, Text} from 'native-base';
 //@ts-ignore
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import {Info} from '../screens/inmuebleScreeens/InmuebleScreen';
-import { useNavigation } from '@react-navigation/native';
 import { DatosContext,Inmueble } from '../context/datos/DatosContext';
 import { Deuda } from '../interfaces/inmuebles/deuda';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParams } from '../navigation/StackNavigation';
 
 interface ListItem{
     item:Inmueble
 }
 
-
-
 interface Props{
     setData:React.Dispatch<React.SetStateAction< Info|null>>,
     item:ListItem,
-    deuda: {deudas:Deuda} | null
+    deuda: {deudas:Deuda} | null,
+    navigation: StackNavigationProp<RootStackParams, "Inmueble", undefined>
 }
 
-export const TableItem = ({item, setData,deuda}:Props) => {
+export const TableItem = ({item, setData,deuda, navigation}:Props) => {
     const {setInmuebleId} = useContext(DatosContext);
-    const navigation = useNavigation();
     const nombre = item.item.descripcion;
     const {deudas} = deuda!;
 
@@ -85,7 +84,7 @@ export const TableItem = ({item, setData,deuda}:Props) => {
             </Box>
             <Box width={'20%'} display={'flex'}  alignItems={'center'}>
             <Pressable      
-                    onPress={() => navigation.navigate('VerInmueble' as never, data as never)}
+                    onPress={() => navigation.navigate('VerInmueble', data )}
                     alignSelf={'center'}
                     ml={1}
                     height={5}

@@ -15,6 +15,7 @@ import { VerInmueble } from '../screens/inmuebleScreeens/VerInmueble';
 import { CarouselScreen } from '../screens/CarouselScreen';
 import { RegisterScreen } from '../screens/RegisterScreen';
 import { PagoScreen } from '../screens/PagoScreen';
+import { Deuda } from '../interfaces/inmuebles/deuda';
 
 export type RootStackParams = {
     Login:undefined,
@@ -28,7 +29,7 @@ export type RootStackParams = {
     ObrasPrivadas:undefined,
     Escribanos:undefined,
     CrearInmueble:undefined
-    VerInmueble:undefined,
+    VerInmueble: { deuda: Deuda; referencia: string; },
     Registro:undefined
 }
 
