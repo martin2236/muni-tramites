@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import { Cuota } from '../interfaces/inmuebles/deuda';
 import { RowListaCuotas } from './RowListaCuotas';
 
+
 interface Props {
     item:Cuota[]
 }   
@@ -15,8 +16,9 @@ export const RowAnios = ({item}:Props) => {
         anio:'',
         mostrar:false
      })
+     const [cuota, setCuotas] = useState<Cuota[] | []>([])
      const total = item.reduce((acc,curr)=> acc + curr.totalcuota,0);
-
+     const recargo = item.reduce((acc,curr)=> acc + curr.totalcuota + curr.recargo,0);
   return (
     <>
         <Box mt={2} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
@@ -35,7 +37,7 @@ export const RowAnios = ({item}:Props) => {
             </Box>
             <Box width={'29%'} display={'flex'} alignItems={'center'} >
                 <Text textAlign={'center'} fontSize={'sm'} fontWeight={'bold'}>
-                {total.toFixed(2)}
+                {recargo.toFixed(2) }
                 </Text>
             </Box>
             <Box width={'27%'} display={'flex'}  alignItems={'center'}>
@@ -70,16 +72,16 @@ export const RowAnios = ({item}:Props) => {
                                 flex={1}
                                 data={item}
                                 keyExtractor={(item, index) => item.cunica + index.toString()}
-                                renderItem={({item}) => <RowListaCuotas item={item}/>}
+                                renderItem={({item}) => <RowListaCuotas item={item} cuota={cuota} setCuotas={setCuotas}/>}
                                 nestedScrollEnabled={true}
                             />
                        </ScrollView>
             
                         <Box mt={2} bg={'gray.300'} flexDirection={'row'} justifyContent={'flex-end'}>
-                            <Text  fontSize={10} fontWeight={'bold'}>
+                            <Text  fontSize={'sm'} fontWeight={'bold'}>
                                 TOTAL A PAGAR
                             </Text>
-                            <Text width={"27%"} textAlign={'center'}  fontSize={10} fontWeight={'bold'}>
+                            <Text width={"27%"} textAlign={'center'}  fontSize={'sm'} fontWeight={'bold'}>
                                 $10.000
                             </Text>
                         </Box>

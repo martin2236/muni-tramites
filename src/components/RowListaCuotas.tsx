@@ -1,12 +1,15 @@
 import { Box, Checkbox, Text } from 'native-base'
 import React,{useEffect, useState} from 'react'
+import { Cuota } from '../../interfaces/inmuebles/deuda';
 
 interface Props {
-    item: any
+    item: any,
+    cuota: Cuota[] | [],
+    setCuotas: React.Dispatch<React.SetStateAction<[] | Cuota[]>>
 }
 
-export const RowListaCuotas = ({item}:Props) => {
-    const [cuota, setCuotas] = useState([])
+export const RowListaCuotas = ({item,cuota ,setCuotas}:Props) => {
+    
 
     const ordenarFecha = (fecha:string) => {
         if(fecha){
@@ -18,11 +21,11 @@ export const RowListaCuotas = ({item}:Props) => {
     }
     // checkbox onChange si es true setCuotas item si es false eliminar el item del estado
      const handleCheck = (value:boolean) => {
-            
+           
       if(value){
-          setCuotas([...cuota as never, item as never])
+          setCuotas([...cuota as Cuota[], item as Cuota])
        }else{
-            const newCuotas = cuota.filter((cuota:any) => cuota.cuota !== item.cuota)
+            const newCuotas = cuota.filter((cuota:Cuota) => cuota.cuota !== item.cuota)
          setCuotas(newCuotas)
     }
 }

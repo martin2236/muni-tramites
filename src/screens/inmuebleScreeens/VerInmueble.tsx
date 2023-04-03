@@ -144,15 +144,15 @@ export const VerInmueble = ({navigation, route}:Props) => {
                     <Box width={'80%'} mt={3} alignSelf={'center'} >
                         <Box flexDirection={'row'} mt={2} alignItems={'center'} justifyContent={'space-around'}>
                             <Checkbox value='nuevo' accessibilityLabel='algo2'/>
-                            <Text width={'60%'} fontSize={10} fontWeight={'bold'} lineHeight={'sm'}>PAGAR CON TARJETA DE CREDITO/DEBITO</Text>
+                            <Text width={'60%'} fontSize={'sm'} fontWeight={'bold'} lineHeight={'sm'}>PAGAR CON TARJETA DE CREDITO/DEBITO</Text>
                         </Box>
                         <Box flexDirection={'row'} mt={2} alignItems={'center'} justifyContent={'space-around'}>
                             <Checkbox value='nuevo' accessibilityLabel='algo2'/>
-                            <Text width={'60%'} fontSize={10} fontWeight={'bold'} lineHeight={'sm'}>DESCARGAR/IMPRIMIR RECIBO PARA PAGO</Text>
+                            <Text width={'60%'} fontSize={'sm'} lineHeight={'sm'}>DESCARGAR/IMPRIMIR RECIBO PARA PAGO</Text>
                         </Box>
                     </Box>
                     <Button onPress={()=> navigation.navigate('Pagos')} alignSelf={'center'} borderRadius={'2xl'} py={0} height={8} mt={3} backgroundColor={'#2596be'} width='30%'>
-                        <Text color={'white'} fontSize={10} my={0}>
+                        <Text color={'white'} fontSize={'md'} my={0}>
                             PAGAR
                         </Text>
                     </Button>
