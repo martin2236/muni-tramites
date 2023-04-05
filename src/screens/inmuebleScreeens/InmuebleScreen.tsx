@@ -9,6 +9,7 @@ import { CustomModal } from '../../components/CustomModal';
 import { Inmueble,DatosContext } from '../../context/datos/DatosContext';
 import { useFetch } from '../../hooks/useFetch';
 import { UserContext } from '../../context/usuario/Usercontext';
+import { Deuda } from '../../interfaces/inmuebles/deuda';
 
 interface Props {
     navigation: StackNavigationProp<RootStackParams, "Inmueble", undefined>,
@@ -37,11 +38,18 @@ export const InmuebleScreen = ({navigation,route}:Props) => {
         }
 
         const [info, setInfo] = useState<Info | null>(null);
-        const [deuda, setDeuda] = useState(null);
+        const [deuda, setDeuda] = useState<Deuda[] | []>([]);
         const { makePost, data} = useFetch();
        
         const renderItem = (item:ListProps)=> {return (<TableItem item={item}  setData={setInfo} deuda={deuda} navigation={navigation}/>)};  
         const keyExtractor = (item:Inmueble, index:number)=> `${item.pkinmueble}${index}` 
+
+        const addCheckProperty = (deudas:Deuda[]):Deuda[] =>{
+            const newDeudas = deudas.map((deuda:Deuda)=>{
+                return {...deuda, check:false}
+            });
+            return newDeudas;
+        }
 
         useEffect(() => {
             makePost('/inmuebles/traerCuotas',datos, user?.token, 'deudas' )
@@ -49,12 +57,11 @@ export const InmuebleScreen = ({navigation,route}:Props) => {
 
         useEffect(()=>{
             if(data){
-                setDeuda(data);
+               const deudas = addCheckProperty(data.deudas.cuotas);
+               console.log('ESTAS SON LAS DEUDAS',data)
+                setDeuda(deudas);
             }
-        },[data])
-
-
-        
+        },[data]);
 
   return (
     <Box flex={1} backgroundColor={'gray.200'}>

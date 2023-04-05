@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Box, Divider, FlatList, Pressable, ScrollView, Text } from 'native-base'
 import * as Animatable from 'react-native-animatable';
 //@ts-ignore
@@ -19,6 +19,9 @@ export const RowAnios = ({item}:Props) => {
      const [cuota, setCuotas] = useState<Cuota[] | []>([])
      const total = item.reduce((acc,curr)=> acc + curr.totalcuota,0);
      const recargo = item.reduce((acc,curr)=> acc + curr.totalcuota + curr.recargo,0);
+     useEffect(() => {
+        console.log(cuota)
+     }, [cuota]);
   return (
     <>
         <Box mt={2} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>

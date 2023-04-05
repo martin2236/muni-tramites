@@ -17,9 +17,7 @@ export const HomeScreen = ({navigation}:Props) => {
     const {makeGet,makePost, data, cargando} = useFetch();
 
     useEffect(() => {
-        console.log('usando useEffect')
       if(data && data.Inmueble){
-        console.log('HOME',data)
         const cuenta = data.Inmueble[0].cuenta;
        setCuenta(cuenta) 
       }

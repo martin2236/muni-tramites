@@ -19,7 +19,7 @@ export const RowListaCuotas = ({item,cuota ,setCuotas}:Props) => {
         }
         return 'Sin fecha';
     }
-    // checkbox onChange si es true setCuotas item si es false eliminar el item del estado
+    // checkbox onChange si es true setCuotas agrega el item a una lista que contendra a todos los items cuyo checkbox sea true si es false eliminar solamente el item cuyo checbox sea false
      const handleCheck = (value:boolean) => {
            
       if(value){
@@ -29,28 +29,26 @@ export const RowListaCuotas = ({item,cuota ,setCuotas}:Props) => {
          setCuotas(newCuotas)
     }
 }
-useEffect(() => {
-   console.log(cuota)
-}, [cuota])
+
   return (
     <Box alignSelf={'center'} width={'95%'} mt={2} display={'flex'} flexDirection={'row'} justifyContent={'space-around'} alignItems={'center'}>
-                    <Box width={'32%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
-                                <Checkbox value='nuevo' onChange={ handleCheck } accessibilityLabel='algo'/>
-                                <Text textAlign={'center'} fontSize={'sm'}>
-                                    {ordenarFecha(item.fecha_pago)}
-                                </Text>
-                        </Box>
-                        <Box width={'28%'} display={'flex'} alignItems={'center'}>
-                            <Text textAlign={'center'} fontSize={'sm'} >
-                               {ordenarFecha(item.fecha_ven1)}
-                            </Text>
-                        </Box>
-                        
-                        <Box  width={'24%'} display={'flex'}  alignItems={'center'}>
-                            <Text textAlign={'center'} fontSize={'sm'} >
-                                {item.totalcuota.toFixed(2)}
-                            </Text>
-                        </Box>
-                    </Box>
+        <Box width={'32%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
+                    <Checkbox value='nuevo' onChange={ handleCheck } accessibilityLabel='algo'/>
+                    <Text textAlign={'center'} fontSize={'sm'}>
+                        {ordenarFecha(item.fecha_pago)}
+                    </Text>
+            </Box>
+            <Box width={'28%'} display={'flex'} alignItems={'center'}>
+                <Text textAlign={'center'} fontSize={'sm'} >
+                    {ordenarFecha(item.fecha_ven1)}
+                </Text>
+            </Box>
+            
+            <Box  width={'24%'} display={'flex'}  alignItems={'center'}>
+                <Text textAlign={'center'} fontSize={'sm'} >
+                    {item.totalcuota.toFixed(2)}
+                </Text>
+            </Box>
+        </Box>
   )
 }
