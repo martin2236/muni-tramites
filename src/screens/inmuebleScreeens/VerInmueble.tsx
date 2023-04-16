@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Divider, Box, Text, Pressable, Checkbox, Button, ScrollView, FlatList } from 'native-base';
 //@ts-ignore
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import * as Animatable from 'react-native-animatable';
+import {DatosContext } from '../../context/datos/DatosContext';
 
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParams } from '../../navigation/StackNavigation';
@@ -14,6 +15,7 @@ interface Props extends StackScreenProps<RootStackParams,'VerInmueble'>{}
 export const VerInmueble = ({navigation, route}:Props) => {
     const [show, setShow] = useState(false)
     const [selected, setSelected] = useState(false)
+    const {cuotas} = useContext(DatosContext);
     const handlePress = () =>{
         setShow(show => !show)
     }
@@ -21,7 +23,7 @@ export const VerInmueble = ({navigation, route}:Props) => {
 
     const infoByAnio = {};
 
-    deuda.cuotas.forEach( (item:Cuota) => {
+    cuotas.forEach( (item:Cuota) => {
         //@ts-ignore
     if (!infoByAnio[item.anio]) {
         //@ts-ignore

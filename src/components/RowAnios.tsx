@@ -1,32 +1,69 @@
-import React, { useEffect, useState } from 'react'
-import { Box, Divider, FlatList, Pressable, ScrollView, Text } from 'native-base'
+import React, { useContext, useEffect, useState, useCallback, memo} from 'react'
+import { Box, Divider, Pressable, ScrollView, Text } from 'native-base'
+import { FlatList } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 //@ts-ignore
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import { Cuota } from '../interfaces/inmuebles/deuda';
 import { RowListaCuotas } from './RowListaCuotas';
+import { DatosContext } from '../context/datos/DatosContext';
 
 
 interface Props {
     item:Cuota[]
 }   
 
-export const RowAnios = ({item}:Props) => {
+const MemorizedFlatList = React.memo(FlatList);
+// prevent this component from re-rendering
+export const RowAnios = memo(({item}:Props) => {
      const [show, setShow] = useState({
         anio:'',
         mostrar:false
      })
+     const {setNumeroCuota} = useContext(DatosContext)
      const [cuota, setCuotas] = useState<Cuota[] | []>([])
      const total = item.reduce((acc,curr)=> acc + curr.totalcuota,0);
      const recargo = item.reduce((acc,curr)=> acc + curr.totalcuota + curr.recargo,0);
+     console.log('SE REGARGO ANIOS')
      useEffect(() => {
-        console.log(cuota)
+        console.log('ROW ANIOS',cuota)
+        //setNumeroCuota(cuota);
      }, [cuota]);
+
+     const handleShow = async () =>{
+       if(cuota.length){
+       await updateList(item, cuota);
+       
+        setShow({
+        anio:item[0].anio,
+        mostrar:!show.mostrar 
+        });
+       }
+        setShow({
+            anio:item[0].anio,
+            mostrar:!show.mostrar 
+        })
+     }
+
+     const updateList = (list:any, accountNumbers:any) => {
+        console.log('UPDATE LIST')
+        return new Promise(resolve => {
+          const updatedList = list.map((item : any) => {
+            if (accountNumbers.includes(item.cuota)) {
+              return item.checked = true
+            } else {
+              return item.checked = false;
+            }
+          });
+          resolve(updatedList);
+        });
+      };
+      
   return (
     <>
         <Box mt={2} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
             <Box width={'15%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'}>
-                <Pressable onPress={() => setShow({anio:item[0].anio, mostrar:!show.mostrar })} width={'100%'} flexDirection={'row'}>
+                <Pressable onPress={() => handleShow()} width={'100%'} flexDirection={'row'}>
                     <Icon name={'chevron-right'} size={15} color={'cyan'}/>
                     <Text textAlign={'center'} fontSize={'sm'}>
                         {item[0].anio}
@@ -71,11 +108,10 @@ export const RowAnios = ({item}:Props) => {
                         keyboardShouldPersistTaps='always'
                         height={'40'}
                        >
-                            <FlatList
-                                flex={1}
+                            <MemorizedFlatList
                                 data={item}
-                                keyExtractor={(item, index) => item.cunica + index.toString()}
-                                renderItem={({item}) => <RowListaCuotas item={item} cuota={cuota} setCuotas={setCuotas}/>}
+                                keyExtractor={(item: any, index:any) => item.cunica + index.toString()}
+                                renderItem={({item}) => <RowListaCuotas item={item} cuotas={cuota} setCuotas={setCuotas}/>}
                                 nestedScrollEnabled={true}
                             />
                        </ScrollView>
@@ -95,4 +131,4 @@ export const RowAnios = ({item}:Props) => {
     </>
     
   )
-}
+})

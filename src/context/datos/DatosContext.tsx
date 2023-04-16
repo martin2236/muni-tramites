@@ -1,4 +1,5 @@
 import React, { createContext } from 'react';
+import { Cuota } from '../../interfaces/inmuebles/deuda';
 
 export interface Inmueble {
     pkinmueble:     number;
@@ -18,13 +19,21 @@ export interface Inmueble {
 }
 
 interface DatosInterface{
-    inmuebles:Inmueble[] | null
-    inmuebleId:number | null
+    inmuebles:Inmueble[] | null,
+    cuotas:Cuota[] | [],
+    setCuotas:(cuotas:Cuota[] | []) => void,
+    numeroCuota:number[] | [],
+    setNumeroCuota:(lista:number[] | []) => void,
+    inmuebleId:number | null,
     setInmuebleId:(id:number | null) => void,
 }
 
 const initialState = {
     inmuebles:[],
+    cuotas:[],
+    setCuotas:() => {},
+    numeroCuota:[],
+    setNumeroCuota:() => {},
     inmuebleId:null,
     setInmuebleId:() => {},
 }

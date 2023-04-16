@@ -29,6 +29,7 @@ export interface Cuota {
     descuento:   number;
     recargo:     number;
     totalcuota:  number;
+    checked?:    boolean;
 }
 
 export enum EstaDeta {

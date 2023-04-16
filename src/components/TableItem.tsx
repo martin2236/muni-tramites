@@ -15,35 +15,35 @@ interface ListItem{
 interface Props{
     setData:React.Dispatch<React.SetStateAction< Info|null>>,
     item:ListItem,
-    deuda: Deuda[] | [],
+    deuda: {deudas:Deuda} | null,
     navigation: StackNavigationProp<RootStackParams, "Inmueble", undefined>
 }
 
 export const TableItem = ({item, setData,deuda, navigation}:Props) => {
     const {setInmuebleId} = useContext(DatosContext);
     const nombre = item.item.descripcion;
-    //! aca recibo las deudas con la propiedad check
+    const {deudas} = deuda!;
+
     const data = {
-        deuda,
+        deuda: deudas,
         referencia: nombre
     }
 
-    // const guardarInfo = () => {
-    //     const info = {
-    //         cuentaMunicipal: deudas.datosPadron.nro_cta,
-    //         partidaPovincial:deudas.datosPadron.part_prov,
-    //         baseImponible:deudas.datosPadron.baseimpo,
-    //         categoria: deudas.datosPadron.catDeta,
-    //         destino: deudas.datosPadron.destDeta,
-    //         codigoServicio: deudas.datosPadron.servDeta,
-    //         nomenclatura: deudas.datosPadron.nc_circ.trim() +"-"+ deudas.datosPadron.nc_sec.trim() +"-"+ deudas.datosPadron.nc_mzna.trim() +"-"+
-    //         deudas.datosPadron.nc_letmzna.trim() +"-"+ deudas.datosPadron.nc_parc.trim() +"-"+ deudas.datosPadron.nc_letparc.trim() +"-"+
-    //         deudas.datosPadron.nc_uf.trim() +"-"+ deudas.datosPadron.nc_chacra.trim() +"-"+ deudas.datosPadron.nc_lchacra.trim() +"-"+
-    //         deudas.datosPadron.nc_quinta.trim() +"-"+ deudas.datosPadron.nc_fracci.trim() +"-"+ deudas.datosPadron.n_c_serv.trim()
-    //     }   
-    //     setData(info);
-    //     console.log(info);
-    //}
+    const guardarInfo = () => {
+        const info = {
+            cuentaMunicipal: deudas.datosPadron.nro_cta,
+            partidaPovincial:deudas.datosPadron.part_prov,
+            baseImponible:deudas.datosPadron.baseimpo,
+            categoria: deudas.datosPadron.catDeta,
+            destino: deudas.datosPadron.destDeta,
+            codigoServicio: deudas.datosPadron.servDeta,
+            nomenclatura: deudas.datosPadron.nc_circ.trim() +"-"+ deudas.datosPadron.nc_sec.trim() +"-"+ deudas.datosPadron.nc_mzna.trim() +"-"+
+            deudas.datosPadron.nc_letmzna.trim() +"-"+ deudas.datosPadron.nc_parc.trim() +"-"+ deudas.datosPadron.nc_letparc.trim() +"-"+
+            deudas.datosPadron.nc_uf.trim() +"-"+ deudas.datosPadron.nc_chacra.trim() +"-"+ deudas.datosPadron.nc_lchacra.trim() +"-"+
+            deudas.datosPadron.nc_quinta.trim() +"-"+ deudas.datosPadron.nc_fracci.trim() +"-"+ deudas.datosPadron.n_c_serv.trim()
+        }   
+        setData(info);
+    }
 
   return (
     <>
@@ -55,7 +55,7 @@ export const TableItem = ({item, setData,deuda, navigation}:Props) => {
                     flexDirection={'row'} 
                     alignItems={'center'} 
                     justifyContent={'space-between'}
-                    onPress={()=> console.log('algo')}
+                    onPress={()=> guardarInfo()}
                 >
                     <Box
                         mr={2}
@@ -71,14 +71,14 @@ export const TableItem = ({item, setData,deuda, navigation}:Props) => {
                     </Box>
 
                     <Text width={'70%'} ellipsizeMode='tail' numberOfLines={1} textAlign={'center'} fontSize={13} >
-                        nombre 
+                        { nombre }
                     </Text>
                 </Pressable>
             </Box>
            
             <Box width={'40%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'center'}>
                 <Text textAlign={'center'} fontSize={13} fontWeight={'bold'}>
-                    $ deudas.totalCuotas.toFixed(2)
+                    $ {deudas.totalCuotas.toFixed(2)}
                 </Text>
             </Box>
             <Box width={'20%'} display={'flex'}  alignItems={'center'}>

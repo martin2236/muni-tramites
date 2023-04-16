@@ -2,6 +2,7 @@ import React, { useContext, useEffect,useState } from 'react'
 import { useFetch } from '../../hooks/useFetch'
 import { UserContext } from '../usuario/Usercontext'
 import { DatosContext, Inmueble } from './DatosContext'
+import { Cuota } from '../../interfaces/inmuebles/deuda'
 
 interface Props{
     children: JSX.Element | JSX.Element[]
@@ -12,15 +13,27 @@ export const DatosProvider = ({children}:Props) => {
     const {makeGet, makePost, data} = useFetch();
     const [inmuebleId, setInmuebleId] = useState<number | null>(null);
     const [inmuebles, setInmuebles]= useState(null);
-    const [cuenta, setCuenta]= useState(null);
+    const [cuenta, setCuenta]= useState([]);
+    const [numeroCuota, setNumeroCuota]= useState<number[] | []>([]);
     const [comercios, setComercios]= useState(null);
     const [vehiculos, setVehiculos]= useState(null);
+    const [cuotas, setCuotas]= useState<Cuota[]|[]>([]);
 
     useEffect(() => {
       if(user){
         traerInmuebles();
       }
     }, [user])
+
+    useEffect(() => {
+      if(user){
+        traerInmuebles();
+      }
+    }, [user])
+
+    useEffect(() => {
+        console.log('usando traer cuotas',numeroCuota)
+    }, [numeroCuota])
 
     useEffect(() => {
         if(data){
@@ -42,23 +55,22 @@ export const DatosProvider = ({children}:Props) => {
         }
       }, [data])
       
+    
 
     const traerInmuebles = () =>{
         console.log('usando traer inmuebles')
         makeGet('/inmuebles/traerInmuebles', user?.token, undefined, 'inmuebles')
     }
-    const traerCuotas = () =>{
-       const data = {
-        cuenta,
-        vencimiento: "2023-03-27T15:33:33.902Z"
-       }
-        makePost('/inmuebles/traerCuotas',data, user?.token, 'deudas' )
-    }
+    
     
   return (
     <DatosContext.Provider
         value={{
             inmuebles,
+            cuotas,
+            numeroCuota,
+            setNumeroCuota,
+            setCuotas,
             inmuebleId,
             setInmuebleId
         }}

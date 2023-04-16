@@ -9,7 +9,7 @@ import { CustomModal } from '../../components/CustomModal';
 import { Inmueble,DatosContext } from '../../context/datos/DatosContext';
 import { useFetch } from '../../hooks/useFetch';
 import { UserContext } from '../../context/usuario/Usercontext';
-import { Deuda } from '../../interfaces/inmuebles/deuda';
+import { Cuota } from '../../interfaces/inmuebles/deuda';
 
 interface Props {
     navigation: StackNavigationProp<RootStackParams, "Inmueble", undefined>,
@@ -30,7 +30,7 @@ export interface Info {
 
 export const InmuebleScreen = ({navigation,route}:Props) => {
 
-        const { inmuebles} = useContext(DatosContext);
+        const { inmuebles,cuotas, setCuotas} = useContext(DatosContext);
         const {user} = useContext(UserContext);
         const datos ={
             cuenta:route.params,
@@ -38,30 +38,31 @@ export const InmuebleScreen = ({navigation,route}:Props) => {
         }
 
         const [info, setInfo] = useState<Info | null>(null);
-        const [deuda, setDeuda] = useState<Deuda[] | []>([]);
+        const [deuda, setDeuda] = useState(null);
         const { makePost, data} = useFetch();
        
         const renderItem = (item:ListProps)=> {return (<TableItem item={item}  setData={setInfo} deuda={deuda} navigation={navigation}/>)};  
         const keyExtractor = (item:Inmueble, index:number)=> `${item.pkinmueble}${index}` 
-
-        const addCheckProperty = (deudas:Deuda[]):Deuda[] =>{
-            const newDeudas = deudas.map((deuda:Deuda)=>{
-                return {...deuda, check:false}
-            });
-            return newDeudas;
-        }
 
         useEffect(() => {
             makePost('/inmuebles/traerCuotas',datos, user?.token, 'deudas' )
         }, [])
 
         useEffect(()=>{
+
+            //! aca pido la data de la deuda y la seteo en el state de deuda
             if(data){
-               const deudas = addCheckProperty(data.deudas.cuotas);
-               console.log('ESTAS SON LAS DEUDAS',data)
-                setDeuda(deudas);
+                const checkedCuotas = data.deudas.cuotas.map((cuota:Cuota)=>{
+                    return {
+                        ...cuota,
+                        checked:false
+                    }
+                })
+                setDeuda(data);
+                setCuotas(checkedCuotas);
+                
             }
-        },[data]);
+        },[data])
 
   return (
     <Box flex={1} backgroundColor={'gray.200'}>
