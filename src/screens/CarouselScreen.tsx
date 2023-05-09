@@ -50,7 +50,7 @@ export const CarouselScreen = ({navigation}:Props) => {
 
   const renderItem = ( item : Slide) => {
   return (
-    <Box flex={1}  backgroundColor={'white'}>
+    <Box flex={1}  backgroundColor={'white'} >
       
       <Box mt={10} justifyContent={'space-around'} alignItems={'center'}> 
         <Image mb={5} mt={5} width={300} height={300} source={item.img} alt={'una imagen'}/>
@@ -82,7 +82,7 @@ export const CarouselScreen = ({navigation}:Props) => {
   
 
   return (
-    <Box flex={1} width={'full'}>
+    <Box flex={1} width={'full'} justifyContent={'space-around'}>
       <Carousel
         loop={false}
         data={items}

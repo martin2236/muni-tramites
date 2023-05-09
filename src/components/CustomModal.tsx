@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import {  Button, Modal, ScrollView, Text, Center, VStack, Input } from 'native-base';
-import { UserContext } from '../context/Usercontext';
+import { UserContext } from '../context/usuario/Usercontext';
 import { CustomInput } from './CustomInput';
 
 

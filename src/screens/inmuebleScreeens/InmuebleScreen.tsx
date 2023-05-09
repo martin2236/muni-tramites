@@ -1,50 +1,83 @@
-import React, { useContext, useState } from 'react'
-import { Text, Box, Divider, Button,Pressable, Center, FlatList, ScrollView } from 'native-base';
+import React, { useContext, useState, useEffect } from 'react'
+import { Text, Box, Divider, Button,Pressable, Center, FlatList, ScrollView, Spinner } from 'native-base';
 //@ts-ignore
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import { RootStackParams } from '../../navigation/StackNavigation';
-import { StackScreenProps } from '@react-navigation/stack';
-import {Inmuebles, UserContext } from '../../context/Usercontext';
+import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
 import { TableItem } from '../../components/TableItem';
 import { CustomModal } from '../../components/CustomModal';
+import { Inmueble,DatosContext } from '../../context/datos/DatosContext';
+import { useFetch } from '../../hooks/useFetch';
+import { UserContext } from '../../context/usuario/Usercontext';
+import { Cuota } from '../../interfaces/inmuebles/deuda';
 
-interface Props extends StackScreenProps<RootStackParams,'Inmueble'>{}
+interface Props {
+    navigation: StackNavigationProp<RootStackParams, "Inmueble", undefined>,
+    route:any
+}
 interface ListProps{
     index:number,
-    item:Inmuebles
+    item:Inmueble
 }
 export interface Info {
     cuentaMunicipal: string;
-    partidaPovincial: string;
+    partidaPovincial: number;
     categoria: string;
     codigoServicio: string;
     baseImponible: number;
-    nomenclaturaCatastral: string;
+    nomenclatura: string;
 }
 
+export const InmuebleScreen = ({navigation,route}:Props) => {
 
-export const InmuebleScreen = ({navigation}:Props) => {
-
-        const { inmuebles} = useContext(UserContext);
+        const { inmuebles,cuotas, setCuotas} = useContext(DatosContext);
+        const {user} = useContext(UserContext);
+        const datos ={
+            cuenta:route.params,
+            vencimiento: "2023-03-28T15:46:20.265Z"
+        }
 
         const [info, setInfo] = useState<Info | null>(null);
-        
-        var renderItem = (item:ListProps)=> {return (<TableItem item={item}  setData={setInfo}/>)};  
-        var keyExtractor = (item:Inmuebles, index:number)=> `${item.id}${index}` 
+        const [deuda, setDeuda] = useState(null);
+        const { makePost, data} = useFetch();
+       
+        const renderItem = (item:ListProps)=> {return (<TableItem item={item}  setData={setInfo} deuda={deuda} navigation={navigation}/>)};  
+        const keyExtractor = (item:Inmueble, index:number)=> `${item.pkinmueble}${index}` 
+
+        useEffect(() => {
+            makePost('/inmuebles/traerCuotas',datos, user?.token, 'deudas' )
+        }, [])
+
+        useEffect(()=>{
+
+            //! aca pido la data de la deuda y la seteo en el state de deuda
+            if(data){
+                const checkedCuotas = data.deudas.cuotas.map((cuota:Cuota)=>{
+                    return {
+                        ...cuota,
+                        checked:false
+                    }
+                })
+                setDeuda(data);
+                setCuotas(checkedCuotas);
+            }
+        },[data])
 
   return (
     <Box flex={1} backgroundColor={'gray.200'}>
-        <Divider backgroundColor={'purple.800'} height={'1.5'}/>
-        <Divider position={'absolute'} width={'90%'} height={'1.5'} backgroundColor={'purple.600'} alignSelf={'center'}/>
+        <Divider backgroundColor={'gray.600'} height={'1.5'}/>
+        <Divider position={'absolute'} width={'90%'} height={'1.5'} backgroundColor={'gray.400'} alignSelf={'center'}/>
         <Box 
             height={'100%'}
             width={'90%'} 
             alignSelf={'center'} 
             backgroundColor={'white'}>
-                <Text
+            {
+             deuda ? 
+             <>
+                   <Text
                     mt={7}
                     alignSelf={'center'}
-                    color={'purple.800'}
                     fontWeight={'bold'} 
                     fontSize={'2xl'}>
                     MIS INMUEBLES
@@ -57,32 +90,39 @@ export const InmuebleScreen = ({navigation}:Props) => {
                     mt={2}
                     borderRadius={'3xl'}
                     alignSelf={'center'}
-                    backgroundColor={'purple.800'}
+                    backgroundColor={'gray.500'}
                     >
-                    <Text fontWeight={'bold'} fontSize={'sm'} color={'white'}>NUEVO INMUEBLE</Text>
+                    <Text fontWeight={'bold'} fontSize={'sm'} color={'white'}>AGREGAR INMUEBLE</Text>
                 </Button>
-                <Box mt={10} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
-                    <Text width={'30%'} fontSize={'10px'} textAlign={'center'} fontWeight={'bold'}>
-                        REFERENCIA
-                    </Text>
-                    <Text width={'28%'} fontSize={'10px'}  textAlign={'center'} fontWeight={'bold'}>
-                        CUENTA
-                    </Text>
-                    <Text width={'27%'} fontSize={'10px'}  textAlign={'center'} fontWeight={'bold'}>
-                        DEUDA
-                    </Text>
-                    <Text width={'15%'} fontSize={'10px'}  textAlign={'center'} fontWeight={'bold'}>
-                        PAGAR
-                    </Text>
-                </Box>
-                <Divider mt={1}/>
-                <Box height={'56'}>
-                        <FlatList
-                            data={inmuebles}
-                            renderItem={renderItem}
-                            keyExtractor={keyExtractor}
-                        />
-                </Box>
+               {
+                inmuebles ? (
+                  <>
+                      <Box mt={10} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
+                        <Text width={'40%'} fontSize={'12px'} textAlign={'center'} fontWeight={'bold'}>
+                            REFERENCIA
+                        </Text>
+                        <Text width={'40%'} fontSize={'12px'}  textAlign={'center'} fontWeight={'bold'}>
+                            DEUDA
+                        </Text>
+                        <Text width={'20%'} fontSize={'12px'}  textAlign={'center'} fontWeight={'bold'}>
+                            PAGAR
+                        </Text>
+                        </Box>
+                            <Divider mt={1}/>
+                        <Box height={'56'}>
+                                <FlatList
+                                    data={inmuebles}
+                                    renderItem={renderItem}
+                                    keyExtractor={keyExtractor}
+                                />
+                        </Box>
+                  </>
+                )
+                : 
+                (
+                    <Text>No hay inmuebles</Text>
+                )
+               }
                     
                 <Box mt={5}>
                     {
@@ -101,7 +141,7 @@ export const InmuebleScreen = ({navigation}:Props) => {
                             alignSelf={'center'}
                             alignItems={'center'}
                             zIndex={200}
-                            justifyContent={'space-around'}>
+                            justifyContent={'space-evenly'}>
                                 <Pressable 
                                     height={4}
                                     borderWidth={2}
@@ -135,9 +175,9 @@ export const InmuebleScreen = ({navigation}:Props) => {
                                         <Text ml={2} fontWeight={'bold'} color={'cyan.500'}>Base imponible :</Text>
                                         <Text ml={2}>{info.baseImponible}</Text>
                                     </Box>
-                                    <Box mt={1} flexDirection={'row'}>
+                                    <Box mt={1} mb={3} flexDirection={'row'}>
                                         <Text ml={2} fontSize={12} fontWeight={'bold'} color={'cyan.500'}>N/ catastral :</Text>
-                                        <Text ml={1} fontSize={12} >{info.nomenclaturaCatastral}</Text>
+                                        <Text ml={1} fontSize={12} >{info.nomenclatura}</Text>
                                     </Box>
                             </Box>
                         </>
@@ -145,6 +185,15 @@ export const InmuebleScreen = ({navigation}:Props) => {
                         null
                     }
                 </Box>
+             </>
+             :
+             <Center flex={1}>
+                <Spinner size={50} color={'cyan.400'} />
+                <Text mt={5} fontSize={18} fontWeight={'bold'}>
+                    Cargando la Informacion
+                </Text>
+             </Center>
+            }
                 <CustomModal/>
         </Box>
     </Box>

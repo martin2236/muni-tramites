@@ -1,4 +1,4 @@
-import React,{useState, useEffect, useContext} from 'react'
+import React,{useEffect, useContext} from 'react'
 import { Text, Box, Image, Divider, Button, ScrollView, KeyboardAvoidingView, Spinner} from 'native-base'
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParams } from '../navigation/StackNavigation';
@@ -8,7 +8,7 @@ import { CustomInput } from '../components/CustomInput';
 import { loginSchema } from '../schemas/ValidationSchema';
 import { useFetch } from '../hooks/useFetch';
 import { Dimensions } from 'react-native';
-import { User, UserContext } from '../context/Usercontext';
+import { User, UserContext } from '../context/usuario/Usercontext';
 
 const height = Dimensions.get('window').height;
 
@@ -33,13 +33,16 @@ export const LoginScreen = ({navigation}:Props) => {
         if(data){
             const usuario = {
                 ...(data as LoginReq).user[0], token:(data as LoginReq).token
-            }
-            setUser(usuario);
-            navigation.replace('Home')
+            };
+            if(usuario){
+                setUser(usuario);
+                navigation.replace('Home');
+            };
         } 
     }, [data])
     
     const onLogin = (values : Login) =>{
+        console.log(values)
         setCargando(true);
        makePost('/auth/login',{cuit:Number(values.cuit), clave:values.clave});
     }
@@ -51,11 +54,11 @@ export const LoginScreen = ({navigation}:Props) => {
         <Box height={height * 75 / 100}>
         <ScrollView mt={10} >
         <Box width={230} mb={5} alignSelf={'center'}>
-            <Text fontSize={32} fontWeight={'bold'} textAlign={'center'} color={'#763E96'} lineHeight={'sm'}>
+            <Text fontSize={32} fontWeight={'bold'} textAlign={'center'} color={'white'} lineHeight={'sm'}>
                 PORTAL DE TRÁMITES
             </Text>
             <Divider background={'white'} height={'0.5'}/>
-            <Text textAlign={'center'} color={'#763E96'}>
+            <Text textAlign={'center'} color={'white'}>
                 Secretaria de Recursos Públicos Dirección de Informática
             </Text>
         </Box>
@@ -108,7 +111,7 @@ export const LoginScreen = ({navigation}:Props) => {
                         height={'12'}
                         mt={5}
                         borderRadius={'3xl'}
-                        backgroundColor={'#763E96'}>
+                        backgroundColor={'gray.500'}>
                         <Text 
                             color={'white'} 
                             fontWeight={'bold'}>
@@ -120,7 +123,7 @@ export const LoginScreen = ({navigation}:Props) => {
                         height={'12'}
                         mt={3}
                         borderRadius={'3xl'}
-                        backgroundColor={'#763E96'}>
+                        backgroundColor={'gray.500'}>
                         <Text 
                             color={'white'} 
                             fontWeight={'bold'}>

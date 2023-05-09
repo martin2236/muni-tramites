@@ -5,9 +5,10 @@
     android:gravity="center"
     android:background="#FFFFFF"
     android:orientation="vertical">
+
     <FrameLayout
         android:layout_width="262dp"
-        android:layout_height="156dp"
+        android:layout_height="428dp"
         android:background="@drawable/logo_splash">
 
     </FrameLayout>

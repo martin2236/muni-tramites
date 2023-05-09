@@ -3,7 +3,7 @@ import { Text, Box, Divider, Button, Center } from 'native-base';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParams } from '../../navigation/StackNavigation';
 
-interface Props extends StackScreenProps<RootStackParams,'Comercio'>{}
+interface Props extends StackScreenProps<RootStackParams,'Cementerio'>{}
 
 export const CementerioScreen = ({navigation}:Props) => {
   return (

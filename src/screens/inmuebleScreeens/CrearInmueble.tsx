@@ -1,8 +1,8 @@
 import { Formik } from 'formik'
-import { Box, Button, Center, Divider, Input, Text } from 'native-base'
+import { Alert, Box, Button, Center, Divider, Input, Text } from 'native-base'
 import React, { useEffect, useContext } from 'react'
 import { CustomInputForm } from '../../components/CustomInputForm'
-import { UserContext } from '../../context/Usercontext'
+import { UserContext } from '../../context/usuario/Usercontext'
 import { useFetch } from '../../hooks/useFetch'
 import { AgregarInmuebleSchema } from '../../schemas/ValidationSchema'
 
@@ -11,6 +11,11 @@ interface NuevoInmueble{
     partida:string,
     descripcion:string
 }
+interface Data {
+    estado: boolean;
+    msj:    string;
+}
+
 
 export const CrearInmueble = () => {
 
@@ -35,8 +40,8 @@ export const CrearInmueble = () => {
 
   return (
     <Box flex={1} backgroundColor={'gray.200'}>
-    <Divider backgroundColor={'purple.800'} height={'1.5'}/>
-    <Divider position={'absolute'} width={'90%'} height={'1.5'} backgroundColor={'purple.600'} alignSelf={'center'}/>
+    <Divider backgroundColor={'gray.600'} height={'1.5'}/>
+    <Divider position={'absolute'} width={'90%'} height={'1.5'} backgroundColor={'gray.400'} alignSelf={'center'}/>
         <Box 
             height={'100%'} 
             width={'90%'} 
@@ -45,7 +50,6 @@ export const CrearInmueble = () => {
                 <Text
                     mt={7}
                     alignSelf={'center'}
-                    color={'purple.800'}
                     fontWeight={'bold'} 
                     fontSize={20}>
                     AGREGAR INMUEBLES
@@ -99,7 +103,7 @@ export const CrearInmueble = () => {
                                 borderRadius={'2xl'}
                                 height={'8'}
                                 width={'80%'}
-                                backgroundColor={'purple.800'}
+                                backgroundColor={'gray.500'}
                                 py={0}
                                 px={8}
                             >
