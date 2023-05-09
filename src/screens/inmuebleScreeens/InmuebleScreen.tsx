@@ -60,7 +60,6 @@ export const InmuebleScreen = ({navigation,route}:Props) => {
                 })
                 setDeuda(data);
                 setCuotas(checkedCuotas);
-                
             }
         },[data])
 
@@ -142,7 +141,7 @@ export const InmuebleScreen = ({navigation,route}:Props) => {
                             alignSelf={'center'}
                             alignItems={'center'}
                             zIndex={200}
-                            justifyContent={'space-around'}>
+                            justifyContent={'space-evenly'}>
                                 <Pressable 
                                     height={4}
                                     borderWidth={2}
@@ -176,7 +175,7 @@ export const InmuebleScreen = ({navigation,route}:Props) => {
                                         <Text ml={2} fontWeight={'bold'} color={'cyan.500'}>Base imponible :</Text>
                                         <Text ml={2}>{info.baseImponible}</Text>
                                     </Box>
-                                    <Box mt={1} flexDirection={'row'}>
+                                    <Box mt={1} mb={3} flexDirection={'row'}>
                                         <Text ml={2} fontSize={12} fontWeight={'bold'} color={'cyan.500'}>N/ catastral :</Text>
                                         <Text ml={1} fontSize={12} >{info.nomenclatura}</Text>
                                     </Box>

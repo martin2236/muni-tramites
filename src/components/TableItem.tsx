@@ -83,7 +83,7 @@ export const TableItem = ({item, setData,deuda, navigation}:Props) => {
             </Box>
             <Box width={'20%'} display={'flex'}  alignItems={'center'}>
             <Pressable      
-                    onPress={() => navigation.navigate('VerInmueble', data )}
+                    onPress={() => navigation.navigate('VerInmueble' as never, data as never )}
                     alignSelf={'center'}
                     ml={1}
                     height={5}

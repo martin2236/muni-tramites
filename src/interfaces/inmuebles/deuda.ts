@@ -13,8 +13,8 @@ export interface Cuota {
     n_cuenta:    number;
     cuota:       string;
     obra:        number;
-    fecha_pago:  Date | null;
-    fecha_ven1:  Date;
+    fecha_pago:  string;
+    fecha_ven1:  string;
     importe:     number;
     estado:      string;
     luz:         number;

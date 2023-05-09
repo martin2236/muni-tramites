@@ -42,6 +42,7 @@ export const LoginScreen = ({navigation}:Props) => {
     }, [data])
     
     const onLogin = (values : Login) =>{
+        console.log(values)
         setCargando(true);
        makePost('/auth/login',{cuit:Number(values.cuit), clave:values.clave});
     }
