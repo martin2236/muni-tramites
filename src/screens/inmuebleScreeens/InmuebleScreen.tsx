@@ -41,7 +41,7 @@ export const InmuebleScreen = ({navigation,route}:Props) => {
         const [deuda, setDeuda] = useState(null);
         const { makePost, data} = useFetch();
        
-        const renderItem = (item:ListProps)=> {return (<TableItem item={item}  setData={setInfo} deuda={deuda} navigation={navigation}/>)};  
+        const renderItem = (item:ListProps)=> {return (<TableItem item={item} pantalla={'Inmueble'} setData={setInfo} deuda={deuda} navigation={navigation}/>)};  
         const keyExtractor = (item:Inmueble, index:number)=> `${item.pkinmueble}${index}` 
 
         useEffect(() => {

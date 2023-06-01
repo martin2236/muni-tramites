@@ -18,7 +18,43 @@ export interface Inmueble {
     t_web:          string;
 }
 
+export interface Comercio {
+    pkcomercio:     number;
+    fkusuario:      number;
+    padron:         number;
+    descripcion:    string;
+    titular:        number;
+    eliminado:      number;
+    fecha_registro: Date;
+    t_desvie:       string;
+    t_lugar:        string;
+    condicontri:    string;
+    cuit:           string;
+    condicio:       string;
+    razosoci:       string;
+    iniciogc:       null;
+    condi:          string;
+}
+
+export interface Cementerio {
+    pkcementerio:   number;
+    fkusuario:      number;
+    num_orden:      number;
+    eliminado:      number;
+    descripcion:    string;
+    fecha_registro: Date;
+    fnrorden:       number;
+    fapenom:        string;
+}
+
+export interface updateInfo {
+    ruta:string,
+    actualizar:boolean
+}
+
 interface DatosInterface{
+    comercios:Comercio[] | null,
+    cementerios:Cementerio[] | null,
     inmuebles:Inmueble[] | null,
     cuotas:Cuota[] | [],
     setCuotas:(cuotas:Cuota[] | []) => void,
@@ -26,9 +62,15 @@ interface DatosInterface{
     setNumeroCuota:(lista:number[] | []) => void,
     inmuebleId:number | null,
     setInmuebleId:(id:number | null) => void,
+    updated:updateInfo,
+    setUpdated:({}:updateInfo) => void,
+    cuotasSeleccionadas:Cuota[] | [],
+    setCuotasSeleccionadas:(cuotas:Cuota[] | []) => void,
 }
 
 const initialState = {
+    comercios:[],
+    cementerios:[],
     inmuebles:[],
     cuotas:[],
     setCuotas:() => {},
@@ -36,6 +78,10 @@ const initialState = {
     setNumeroCuota:() => {},
     inmuebleId:null,
     setInmuebleId:() => {},
+    updated:{ruta:'',actualizar:false},
+    setUpdated:() => {},
+    cuotasSeleccionadas:[],
+    setCuotasSeleccionadas:() => {},
 }
 
 export const DatosContext = createContext<DatosInterface>(initialState);

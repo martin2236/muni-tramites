@@ -5,6 +5,7 @@ import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import { Cuota } from '../interfaces/inmuebles/deuda';
 import { TouchableOpacity } from 'react-native';
+import { DatosContext } from '../context/datos/DatosContext';
 
 interface Props {
     item:Cuota[],
@@ -14,6 +15,7 @@ interface Props {
 }   
 
 export const RowAnios = ({item, selected, setSelected, setTotalSelected}:Props) => {
+    const{cuotasSeleccionadas,setCuotasSeleccionadas} = useContext(DatosContext)
      const [show, setShow] = useState({
         anio:'',
         mostrar:false,
@@ -26,19 +28,19 @@ export const RowAnios = ({item, selected, setSelected, setTotalSelected}:Props) 
     //  const [totalSelected, setTotalSelected] = useState(0);
  
         useEffect(() => {
-            console.log('SELECCIONADOS',selected)
+            setCuotasSeleccionadas(selected);
         }, [selected]);
 
         const toggleCuota = (cuota:Cuota) => {
-            let index = selected.findIndex((item:Cuota) => item.cuota == cuota.cuota);
-            const arraySelected = [...selected];
+            let index = cuotasSeleccionadas.findIndex((item:Cuota) => item.cuota == cuota.cuota);
+            const arraySelected = [...cuotasSeleccionadas];
             if(index !== -1){
                 arraySelected.splice(index,1);
             }else{
                 arraySelected.push(cuota as never);
             }
             const total = arraySelected.reduce((acc,curr)=> acc + curr['totalcuota'] ,0);
-            setSelected(arraySelected);
+            setCuotasSeleccionadas(arraySelected);
             setTotalSelected(total);
         }
 
@@ -116,7 +118,7 @@ export const RowAnios = ({item, selected, setSelected, setTotalSelected}:Props) 
                                                 onPress={() => toggleCuota(cuota)}
                                                 style={{height:16, width:16,backgroundColor:'#2596be', alignItems:'center', justifyContent:'center'}}>
                                                     {
-                                                        selected.findIndex((item:Cuota) => item.cuota == cuota.cuota) !== -1 ?
+                                                        cuotasSeleccionadas.findIndex((item:Cuota) => item.cuota == cuota.cuota) !== -1 ?
                                                         <Icon name={'check'} size={15} color={'white'}/> : null
                                                     }
                                             </TouchableOpacity>

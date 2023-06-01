@@ -3,31 +3,58 @@ import {Box, Divider, Pressable, Text} from 'native-base';
 //@ts-ignore
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import {Info} from '../screens/inmuebleScreeens/InmuebleScreen';
-import { DatosContext,Inmueble } from '../context/datos/DatosContext';
+import { Comercio, DatosContext,Inmueble, Cementerio } from '../context/datos/DatosContext';
 import { Deuda } from '../interfaces/inmuebles/deuda';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParams } from '../navigation/StackNavigation';
 
 interface ListItem{
-    item:Inmueble
+    item:Inmueble | Comercio | Cementerio
 }
 
 interface Props{
     setData:React.Dispatch<React.SetStateAction< Info|null>>,
     item:ListItem,
     deuda: {deudas:Deuda} | null,
-    navigation: StackNavigationProp<RootStackParams, "Inmueble", undefined>
+    pantalla: string,
+    navigation: StackNavigationProp<RootStackParams, "Inmueble", undefined> | StackNavigationProp<RootStackParams, "Comercio", undefined> | StackNavigationProp<RootStackParams, "Cementerio", undefined>
 }
 
-export const TableItem = ({item, setData,deuda, navigation}:Props) => {
+export const TableItem = ({item, setData,deuda, navigation, pantalla}:Props) => {
     const {setInmuebleId} = useContext(DatosContext);
     const nombre = item.item.descripcion;
     const {deudas} = deuda!;
-
-    const data = {
+    let data = {
+        id:0,
+        ruta:'',
         deuda: deudas,
-        referencia: nombre
+        referencia: nombre,
+        updateInfo:{}
     }
+    console.log('esta es la pantalla',pantalla)
+    switch (pantalla) {
+        case 'Inmueble':
+            data.id = (item.item as Inmueble).pkinmueble;
+            data.ruta = 'Inmueble';
+            data.updateInfo = {
+                cuenta:(item.item as Inmueble).cuenta,
+                d_verifi:(item.item as Inmueble).d_vefi,
+                partida:(item.item as Inmueble).partida,
+            }
+            break;
+        case 'Comercio':
+            data.id = (item.item as Comercio).padron;
+            data.ruta = 'Comercio';
+            break;
+        case 'Cementerio':
+            data.id = (item.item as Cementerio).pkcementerio;
+            data.ruta = 'Cementerio';
+            break;
+        default:
+            break;
+    }
+    
+    console.log('este es el item',item)
 
     const guardarInfo = () => {
         const info = {
@@ -44,6 +71,7 @@ export const TableItem = ({item, setData,deuda, navigation}:Props) => {
         }   
         setData(info);
     }
+    console.log(`Ver${pantalla}`)
 
   return (
     <>
@@ -83,7 +111,7 @@ export const TableItem = ({item, setData,deuda, navigation}:Props) => {
             </Box>
             <Box width={'20%'} display={'flex'}  alignItems={'center'}>
             <Pressable      
-                    onPress={() => navigation.navigate('VerInmueble' as never, data as never )}
+                    onPress={() => navigation.navigate(`Ver${pantalla}` as never, data as never )}
                     alignSelf={'center'}
                     ml={1}
                     height={5}

@@ -10,8 +10,6 @@ interface Props {
 }
 
 export const RowListaCuotas = ({item,cuotas,setCuotas}:Props) => {
-    
-console.log('ITEM',item)
 
     const handleChange = () => {
 

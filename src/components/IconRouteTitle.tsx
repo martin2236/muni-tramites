@@ -1,5 +1,6 @@
 import React from 'react'
 import {Box, Text} from 'native-base'
+//@ts-ignore
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 interface Props{
     icono:string

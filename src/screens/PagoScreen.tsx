@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native'
 import { Box, Button, Center, Checkbox, CheckIcon, Divider, Image, Input, Select, Text } from 'native-base'
 import React from 'react'
 
@@ -5,6 +6,7 @@ const visa = require('../assets/logo-visa.png')
 const master = require('../assets/logo-master.png')
 
 export const PagoScreen = () => {
+    const navigation = useNavigation();
     const [service, setService] = React.useState("");
   return (
         <Box flex={1} backgroundColor={'gray.200'}>
@@ -25,12 +27,12 @@ export const PagoScreen = () => {
                     <Box height={'12'} flexDirection={'row'} justifyContent={'space-around'}  width={'90%'} alignSelf={'center'} borderRadius={'2xl'} borderWidth={'1'}>
                         <Image height={'10'} width={'10'} source={visa} alt={'visa'}/>
                         <Text mt={2} fontWeight={'bold'}> **** **** **** *068</Text>
-                        <Checkbox borderRadius={'full'} colorScheme={'green'}  mt={3} value={'algo'} accessibilityLabel='algo' />
+                        <Checkbox borderRadius={'full'} colorScheme={'green'} onChange={() => navigation.navigate('FormularioPagos')}  mt={3} value={'algo'} accessibilityLabel='algo' />
                     </Box>
                     <Box height={'12'} mb={5} flexDirection={'row'} justifyContent={'space-around'}  width={'90%'} alignSelf={'center'} borderRadius={'2xl'} borderWidth={'1'}>
                         <Image height={'10'} width={'10'} source={master} alt={'visa'}/>
                         <Text mt={2} fontWeight={'bold'}> **** **** **** *235</Text>
-                        <Checkbox borderRadius={'full'}  mt={3} value={'algo'} accessibilityLabel='algo' />
+                        <Checkbox borderRadius={'full'} onChange={() => navigation.navigate('FormularioPagos')}  mt={3} value={'algo'} accessibilityLabel='algo' />
                     </Box>
                 </Box>
                 <Box mb={5} bg={'white'}>

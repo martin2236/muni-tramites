@@ -35,6 +35,7 @@ export const CustomInput = ({handleChange, errors, value, placeholder,keyboardTy
             textAlign={'center'}
             fontSize={18}
             mt={margin}
+            secureTextEntry={type === 'clave' ? true : false}
         />
         {type in errors ? <Text ml={4} color={'red.500'}> {errorCheck} </Text> : null}  
     </FormControl>

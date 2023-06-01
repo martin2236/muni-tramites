@@ -19,13 +19,22 @@ export const HomeScreen = ({navigation}:Props) => {
     useEffect(() => {
       if(data && data.Inmueble){
         const cuenta = data.Inmueble[0].cuenta;
+        console.log('esta es la cuenta',cuenta)
        setCuenta(cuenta) 
+      }
+      if(data && data.Comercio){
+        const cuenta = data.Comercio[0].padron;
+        setCuenta(cuenta) 
+      }
+      if(data && data.Cementerio){
+        const cuenta = data.Cementerio[0].num_orden;
+        setCuenta(cuenta) 
       }
     }, [data])
 
     useEffect(()=>{
         if(cuenta){
-           navigation.navigate('Inmueble',cuenta)
+           navigation.navigate(pantalla,cuenta);
            setCuenta(null)
         }
     },[cuenta])
@@ -34,9 +43,15 @@ export const HomeScreen = ({navigation}:Props) => {
         switch (data) {
             case 'Inmueble':
                 makeGet('/inmuebles/traerInmuebles', user?.token, undefined, 'Inmueble')
-                setPantalla('VerInmueble');
+                setPantalla('Inmueble');
               break;
             case 'Comercio':
+                makeGet('/comercios/traerComercios', user?.token, undefined, 'Comercio')
+                setPantalla('Comercio');
+              break;
+              case 'Cementerio':
+                makeGet('/cementerios/traerCementarios', user?.token, undefined, 'Cementerio')
+                setPantalla('Cementerio');
               break;
             case 'Vehiculo':
               break;
@@ -44,14 +59,6 @@ export const HomeScreen = ({navigation}:Props) => {
               console.log(`No se encontro el tipo ${data}.`);
           }
     };
-
-    const traerCuotas = () =>{
-        const data = {
-         cuenta,
-         vencimiento: "2023-03-27T15:33:33.902Z"
-        }
-         makePost('/inmuebles/traerCuotas',data, user?.token, 'deudas' )
-     }
 
   return (
     <Box flex={1} backgroundColor={'gray.200'}>
@@ -121,7 +128,7 @@ export const HomeScreen = ({navigation}:Props) => {
                 <Pressable 
                 width={'50%'}
                     mb={5}
-                    onPress={()=> navigation.navigate("Comercio" as never)}
+                    onPress={() => pedirInformacion('Comercio')}
                     >
                     <Box 
                         height={120} 
@@ -146,7 +153,7 @@ export const HomeScreen = ({navigation}:Props) => {
                 <Pressable 
                 width={'50%'}
                     mb={5}
-                    onPress={()=> navigation.navigate("Cementerio" as never)}
+                    onPress={() => pedirInformacion('Cementerio')}
                     >
                     <Box 
                         height={120} 

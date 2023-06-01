@@ -10,26 +10,47 @@ interface Props{
 
 export const DatosProvider = ({children}:Props) => {
     const {user} = useContext(UserContext);
-    const {makeGet, makePost, data} = useFetch();
+    const {makeGet, data} = useFetch();
     const [inmuebleId, setInmuebleId] = useState<number | null>(null);
     const [inmuebles, setInmuebles]= useState(null);
     const [cuenta, setCuenta]= useState([]);
     const [numeroCuota, setNumeroCuota]= useState<number[] | []>([]);
     const [comercios, setComercios]= useState(null);
+    const [cementerios, setCementerios]= useState(null);
     const [vehiculos, setVehiculos]= useState(null);
     const [cuotas, setCuotas]= useState<Cuota[]|[]>([]);
+    const [cuotasSeleccionadas, setCuotasSeleccionadas]= useState<Cuota[]|[]>([]);
+    const [updated, setUpdated]= useState({
+      ruta:'',
+      actualizar:false
+    });
+    
 
     useEffect(() => {
       if(user){
         traerInmuebles();
+        traerComercios();
+        traerCementerios();
       }
     }, [user])
 
     useEffect(() => {
-      if(user){
+     switch (updated.ruta) {
+      case 'inmuebles':
         traerInmuebles();
-      }
-    }, [user])
+        break;
+      case 'comercios':
+        traerComercios();
+        break;
+      case 'cementerios':
+        traerCementerios();
+        break;
+      case 'vehiculos':
+        break;
+      default:
+        console.log(`No se encontro el tipo ${updated.ruta.toUpperCase()}.`);
+     }
+    }, [updated])
 
     useEffect(() => {
         console.log('usando traer cuotas',numeroCuota)
@@ -44,7 +65,10 @@ export const DatosProvider = ({children}:Props) => {
                 setCuenta(data.inmuebles[0].cuenta)
               break;
             case 'comercios':
-                setComercios(data);
+                setComercios(data.comercios);
+              break;
+              case 'cementerios':
+                setCementerios(data.cementerios);
               break;
             case 'vehiculos':
               setVehiculos(data);
@@ -53,26 +77,36 @@ export const DatosProvider = ({children}:Props) => {
               console.log(`No se encontro el tipo ${param.toUpperCase()}.`);
           }
         }
-      }, [data])
-      
-    
+      }, [data]);
 
     const traerInmuebles = () =>{
-        console.log('usando traer inmuebles')
         makeGet('/inmuebles/traerInmuebles', user?.token, undefined, 'inmuebles')
-    }
-    
+    };
+
+    const traerComercios = () =>{
+      makeGet('/comercios/traerComercios', user?.token, undefined, 'comercios')
+    };
+
+  const traerCementerios = () =>{
+    makeGet('/cementerios/traerCementarios', user?.token, undefined, 'cementerios')
+    };
     
   return (
     <DatosContext.Provider
         value={{
+            comercios,
+            cementerios,
             inmuebles,
             cuotas,
             numeroCuota,
+            cuotasSeleccionadas,
+            setCuotasSeleccionadas,
             setNumeroCuota,
             setCuotas,
             inmuebleId,
-            setInmuebleId
+            setInmuebleId,
+            updated,
+            setUpdated
         }}
     >
         {children}

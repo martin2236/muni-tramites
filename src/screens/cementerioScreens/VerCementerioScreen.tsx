@@ -1,34 +1,27 @@
 import React, { useContext, useState } from 'react';
-import { Divider, Box, Text, Pressable, Checkbox, Button, ScrollView, FlatList } from 'native-base';
+import { Divider, Box, Text, Center, Checkbox, Button, ScrollView, FlatList } from 'native-base';
 //@ts-ignore
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
+import * as Animatable from 'react-native-animatable';
 import {DatosContext } from '../../context/datos/DatosContext';
+
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParams } from '../../navigation/StackNavigation';
 import { Cuota } from '../../interfaces/inmuebles/deuda';
 import { RowAnios } from '../../components/RowAnios';
 
-interface Props extends StackScreenProps<RootStackParams,'VerInmueble'>{}
+interface Props extends StackScreenProps<RootStackParams,'VerCementerio'>{}
 
-export const VerInmueble = ({navigation, route}:Props) => {
+export const VerCementerioScreen = ({navigation, route}:Props) => {
     const [show, setShow] = useState(false)
     const [selected, setSelected] = useState([])
     const [totalSelected, setTotalSelected] = useState(0);
     const {cuotas} = useContext(DatosContext);
-    const [checkbox, setCheckbox]= useState({
-        tarjeta: false,
-        efectivo: false,
-      });
     const handlePress = () =>{
         setShow(show => !show)
     }
-    const {id,ruta, referencia, updateInfo} =  route.params;
-    let editar = {
-        id,
-        ruta,
-        referencia,
-        updateInfo
-    }
+    const {deuda, referencia} =  route.params;
+
     const infoByAnio = {};
 
     cuotas.forEach( (item:Cuota) => {
@@ -60,7 +53,7 @@ export const VerInmueble = ({navigation, route}:Props) => {
                 alignSelf={'center'}
                 fontWeight={'bold'} 
                 fontSize={20}>
-                MIS INMUEBLES
+                MIS COMERCIOS
             </Text>
             <Box alignSelf={'center'} width={'95%'} justifyContent={'center'} mt={5}>
                 <Box 
@@ -89,9 +82,9 @@ export const VerInmueble = ({navigation, route}:Props) => {
                     <Text width={'30%'} textAlign={'center'} ellipsizeMode={'tail'} numberOfLines={1} fontSize={'sm'} fontWeight={'bold'}>
                         {referencia}
                     </Text>
-                    <Pressable borderWidth={1} onPress={() => navigation.navigate('EditarReferencia',editar)} borderRadius={5} position={'absolute'} right={2}>
-                        <Icon name={'pencil-outline'} size={15} color={'gray'}/>
-                    </Pressable>
+                    <Center height={15} width={15} borderColor={'black'} borderWidth={1} borderRadius={4}>
+                            <Icon size={15} name={'pencil-outline'}/>
+                    </Center>
                     
                 </Box>
                 <Box 
@@ -164,11 +157,11 @@ export const VerInmueble = ({navigation, route}:Props) => {
                 {/*********************METODOS DE PAGO************/}
                     <Box width={'80%'} mt={3} alignSelf={'center'} >
                         <Box flexDirection={'row'} mt={2} alignItems={'center'} justifyContent={'space-around'}>
-                            <Checkbox value='nuevo' defaultIsChecked={checkbox.tarjeta} onChange={() => setCheckbox({efectivo:false, tarjeta:true})} accessibilityLabel='algo2'/>
+                            <Checkbox value='nuevo' accessibilityLabel='algo2'/>
                             <Text width={'60%'} fontSize={'sm'} fontWeight={'bold'} lineHeight={'sm'}>PAGAR CON TARJETA DE CREDITO/DEBITO</Text>
                         </Box>
                         <Box flexDirection={'row'} mt={2} alignItems={'center'} justifyContent={'space-around'}>
-                            <Checkbox value='nuevo' defaultIsChecked={checkbox.efectivo} onChange={() => setCheckbox({tarjeta:false, efectivo:true})} accessibilityLabel='algo2'/>
+                            <Checkbox value='nuevo' accessibilityLabel='algo2'/>
                             <Text width={'60%'} fontSize={'sm'} lineHeight={'sm'}>DESCARGAR/IMPRIMIR RECIBO PARA PAGO</Text>
                         </Box>
                     </Box>

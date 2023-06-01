@@ -57,7 +57,6 @@ export const useFetch = () => {
             'Authorization':`Bearer ${token}`,
           }
         }
-        console.log(token)
         if(token === ''){
         try {
           console.log('haciendo login')
@@ -84,9 +83,14 @@ export const useFetch = () => {
       
     }
 
-    const makePut =  async(uri:string ,data:{}) => {
+    const makePut =  async(uri:string,token:string ,data:{}) => {
+      let config = {
+        headers: {
+          'Authorization':`Bearer ${token}`,
+        }
+      }
         try {
-          const res = await instance.put(uri, data);
+          const res = await instance.patch(uri, data,config);
           const datos = res.data;
           setData(datos);
           setCargando(false);
