@@ -33,6 +33,7 @@ export const CustomInput = ({handleChange, errors, value, placeholder,keyboardTy
             keyboardType={keyboardType}
             value={value}
             textAlign={'center'}
+            borderColor={'cyan.500'}
             fontSize={18}
             mt={margin}
             secureTextEntry={type === 'clave' ? true : false}

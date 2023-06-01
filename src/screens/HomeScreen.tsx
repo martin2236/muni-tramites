@@ -2,13 +2,12 @@ import React,{useContext, useEffect, useState} from 'react';
 import { Box, Divider, Text, Pressable } from 'native-base';
 //@ts-ignore
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
-import { useNavigation } from '@react-navigation/native';
 import { useFetch } from '../hooks/useFetch';
 import { UserContext } from '../context/usuario/Usercontext';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParams } from '../navigation/StackNavigation';
 
-interface Props extends StackScreenProps<RootStackParams,'Home'>{}
+interface Props extends StackScreenProps<RootStackParams,'Main'>{}
 
 export const HomeScreen = ({navigation}:Props) => {
     const {user} = useContext(UserContext);
@@ -34,7 +33,7 @@ export const HomeScreen = ({navigation}:Props) => {
 
     useEffect(()=>{
         if(cuenta){
-           navigation.navigate(pantalla,cuenta);
+           navigation.navigate(pantalla as never,cuenta);
            setCuenta(null)
         }
     },[cuenta])

@@ -20,12 +20,22 @@ import { VerComercioScreen } from '../screens/comercioScreens/VerComercioScreen'
 import { VerCementerioScreen } from '../screens/cementerioScreens/VerCementerioScreen';
 import { FormularioPagos } from '../screens/FormularioPagos';
 import { EditarReferenciaScreen } from '../screens/EditarReferenciaScreen';
+import { MediosPagosScreen } from '../screens/MediosPagoScreen';
+import { ContactoScreen } from '../screens/ContactoScreen';
+import { ContraseñaScreen } from '../screens/ContraseñaScreen';
+import { NotificacionesScreen } from '../screens/NotificacionesScreen';
+import { OficinasScreen } from '../screens/OficinasScreen';
 
 export type RootStackParams = {
     Login:undefined,
-    Home:undefined,
+    Main:undefined,
     Pagos:undefined,
     Inmueble:undefined,
+    Contacto:undefined,
+    Contraseña:undefined,
+    MediosPago:undefined,
+    Notificaciones:undefined,
+    Oficinas:undefined,
     VerInmueble: {  referencia: string; id:number; ruta:string; updateInfo:object;},
     Vehiculo:undefined,
     Comercio:undefined,
@@ -57,7 +67,12 @@ export const StackNavigation = () => {
     >       
             <Stack.Screen name="Carousel" options={{headerShown:false}} component={CarouselScreen}/>
             <Stack.Screen name="Login" options={{headerShown:false}} component={LoginScreen} />
-            <Stack.Screen name="Home" options={{headerShown:false}} component={DrawerNavigation}/>
+            <Stack.Screen name="Main" options={{headerShown:false}} component={DrawerNavigation}/>
+            <Stack.Screen name="Oficinas" options={{headerTitle:'Oficinas'}} component={OficinasScreen}/>
+            <Stack.Screen name="Notificaciones" options={{headerTitle:'Notificaciones'}} component={NotificacionesScreen}/>
+            <Stack.Screen name="Contraseña" options={{headerTitle:'Cambiar Contraseña'}} component={ContraseñaScreen}/>
+            <Stack.Screen name="Contacto" options={{headerTitle:'Contacto'}} component={ContactoScreen}/>
+            <Stack.Screen name="MediosPago" options={{headerTitle:'Medios de Pago'}} component={MediosPagosScreen}/>
             <Stack.Screen name="Registro" options={{headerTitle:'Registro'}} component={RegisterScreen}/>
             <Stack.Screen name="Pagos" options={{headerTitle:'Metodos de Pago'}} component={PagoScreen}/>
             <Stack.Screen name="FormularioPagos" options={{headerTitle:'Forma de Pago'}} component={FormularioPagos}/>

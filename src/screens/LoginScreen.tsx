@@ -36,7 +36,7 @@ export const LoginScreen = ({navigation}:Props) => {
             };
             if(usuario){
                 setUser(usuario);
-                navigation.replace('Home');
+                navigation.replace('Main');
             };
         } 
     }, [data])
