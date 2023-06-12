@@ -17,7 +17,7 @@ interface Props{
     item:ListItem,
     deuda: {deudas:Deuda} | null,
     pantalla: string,
-    navigation: StackNavigationProp<RootStackParams, "Inmueble", undefined> | StackNavigationProp<RootStackParams, "Comercio", undefined> | StackNavigationProp<RootStackParams, "Cementerio", undefined>
+    navigation: StackNavigationProp<RootStackParams, "Inmueble", undefined> | StackNavigationProp<RootStackParams, "Comercio", undefined> | StackNavigationProp<RootStackParams, "Cementerio", undefined> | StackNavigationProp<RootStackParams, "Vehiculo", undefined>
 }
 
 export const TableItem = ({item, setData,deuda, navigation, pantalla}:Props) => {

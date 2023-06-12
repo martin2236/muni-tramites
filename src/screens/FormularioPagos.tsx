@@ -2,23 +2,25 @@ import React, { useEffect, useState,useContext } from 'react'
 import {Box, Text, Input, Button} from 'native-base'
 import {WebView} from 'react-native-webview';
 import { DatosContext } from '../context/datos/DatosContext';
+import { UserContext } from '../context/usuario/Usercontext';
 //@ts-ignore
 
 interface FormData {
     callbackSucces: string,
     callbackCancel: string,
     sucursalComercio: string,
+    comercio:string,
     monto: string
 }
 
 export const FormularioPagos = () => {
     const {cuotasSeleccionadas} = useContext(DatosContext)
+    const {user} = useContext(UserContext)
     const [formData, setFormData] = useState<FormData | null>(null)
     const monto = 1500
     const totalRecargo = cuotasSeleccionadas.reduce((acc,curr)=> acc + curr.totalcuota + curr.recargo,0);
 
     useEffect(() => {
-        console.log(cuotasSeleccionadas)
         getData();
     },[])
 
@@ -29,11 +31,13 @@ export const FormularioPagos = () => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
+                "userId":user?.pkusuario,
                 "monto":totalRecargo
             })
         })
         const data = await response.json();
-        console.log(data)
+        let comercio = 'e13ee849-644e-4dc9-a9d4-d687c9a0892b'
+        const datosForm = {...data,comercio}
         setFormData(data)
     }
     
@@ -54,7 +58,7 @@ export const FormularioPagos = () => {
         <form style="width:100% height:100%;" method='post' action='https://sandboxpp.asjservicios.com.ar/' id='form-firma'>
         <input style="margin-top: 10px; display:none; color:blue; font-size:25px; height:50px; width:80%;" type='text' name='CallbackSucces' id='CallbackSucces' value=${formData?.callbackSucces} />
         <input style="margin-top: 10px; display:none; color:blue; font-size:25px; height:50px; width:80%;" type='text' name='CallbackCancel' id='CallbackCancel' value=${formData?.callbackCancel} />
-        <input type='hidden' name='Comercio' value= 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa' />
+        <input type='hidden' name='Comercio' value= ${formData?.comercio} />
         <input style="margin-top: 10px; display:none; color:blue; font-size:25px; height:50px; width:80%;" type='text' name='SucursalComercio' id='SucursalComercio' value=${formData?.sucursalComercio} />
         <input  style="display:none; margin-left:auto; margin-right:auto; text-align:center; width:80%; font-size:25px; height:50px; " type='text' name='Monto' id='Monto' value=${formData?.monto}  readonly/>
         <input  style="display:none;" name='23456456769' value='23456456769' />
