@@ -3,7 +3,7 @@ import { Text, Box, Divider, Button,Pressable, Center, FlatList, ScrollView, Spi
 //@ts-ignore
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import { RootStackParams } from '../../navigation/StackNavigation';
-import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
+import { StackNavigationProp} from '@react-navigation/stack';
 import { TableItem } from '../../components/TableItem';
 import { CustomModal } from '../../components/CustomModal';
 import { Inmueble,DatosContext, Comercio } from '../../context/datos/DatosContext';
@@ -83,7 +83,7 @@ export const ComercioScreen = ({navigation,route}:Props) => {
                     MIS COMERCIOS
                 </Text>
                 <Button 
-                    onPress={()=> navigation.navigate('CrearInmueble')}
+                    onPress={()=> navigation.navigate('CrearComercio')}
                     height={'30px'}
                     py={0}
                     px={4}

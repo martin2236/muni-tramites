@@ -16,13 +16,13 @@ export const EditarReferenciaScreen = ({navigation,route}:Props) => {
   const{updated,setUpdated}= useContext(DatosContext);
   const {makePut,data} = useFetch();
   
-  console.log('esta es la ruta',id,ruta,referencia,updateInfo)
   const onUpdate = () => {
     setShow(false);
     let data = {
       ...updateInfo,
       descripcion:nuevaReferencia
     }
+
     if(user?.token){
       switch(ruta){
         case 'Inmueble':
@@ -34,16 +34,32 @@ export const EditarReferenciaScreen = ({navigation,route}:Props) => {
           makePut(`vehiculos/${id}`,user.token,data);
         case  'Cementerio':
           makePut(`cementerios/${id}`,user.token,data);
-          
     }
   }
 }
 
   useEffect(() => {
-    console.log(data);
     if(data && nuevaReferencia){
-      setUpdated({ruta:'inmuebles',actualizar:!updated.actualizar})
-      navigation.navigate('VerInmueble',{id,ruta, referencia:nuevaReferencia,updateInfo})
+      
+      const path = data.ruta
+      console.log('EditarReferenciaScreen',path);
+      switch (path) {
+        case 'inmuebles':
+          setUpdated({ruta:'inmuebles',actualizar:!updated.actualizar})
+          navigation.navigate('VerInmueble',{id,ruta, referencia:nuevaReferencia,updateInfo})
+          break;
+        case 'comercios':
+          setUpdated({ruta:'comercios',actualizar:!updated.actualizar})
+          navigation.navigate('VerComercio',{id,ruta, referencia:nuevaReferencia,updateInfo})
+          break;
+        case 'cementerios':
+          setUpdated({ruta:'cementerios',actualizar:!updated.actualizar})
+          navigation.navigate('VerCementerio',{id,ruta, referencia:nuevaReferencia,updateInfo})
+          break;
+      
+        default:
+          break;
+      }
     }
   }
   ,[data])

@@ -25,6 +25,8 @@ import { ContactoScreen } from '../screens/ContactoScreen';
 import { ContraseñaScreen } from '../screens/ContraseñaScreen';
 import { NotificacionesScreen } from '../screens/NotificacionesScreen';
 import { OficinasScreen } from '../screens/OficinasScreen';
+import { CrearComercioScreen } from '../screens/comercioScreens/CrearComercioScreen';
+import { CrearCementerioScreen } from '../screens/cementerioScreens/CrearCementerioScreen';
 
 export type RootStackParams = {
     Login:undefined,
@@ -39,13 +41,15 @@ export type RootStackParams = {
     VerInmueble: {  referencia: string; id:number; ruta:string; updateInfo:object;},
     Vehiculo:undefined,
     Comercio:undefined,
-    VerComercio: { deuda: Deuda; referencia: string; id:number; updateInfo:object;},
+    VerComercio: { deuda?: Deuda; referencia: string; ruta:string, id:number; updateInfo:object;},
     Carousel:undefined,
     Cementerio:undefined,
-    VerCementerio: { deuda: Deuda; referencia: string; id:number; updateInfo:object;},
+    VerCementerio: { deuda?: Deuda;ruta:string, referencia: string; id:number; updateInfo:object;},
+    CrearCementerio:undefined
     ObrasPrivadas:undefined,
     Escribanos:undefined,
     CrearInmueble:undefined,
+    CrearComercio:undefined,
     FormularioPagos:undefined,
     EditarReferencia:{id:number,ruta:string, referencia:string ,updateInfo:object},
     Registro:undefined,
@@ -81,9 +85,11 @@ export const StackNavigation = () => {
             <Stack.Screen name="VerInmueble" options={{headerTitle:()=>(<IconRouteTitle icono='home' titulo={'INMUEBLE'}/>)}} component={VerInmueble}/>
             <Stack.Screen name="Vehiculo" options={{headerTitle:()=>(<IconRouteTitle icono='car' titulo={'VEHICULO'}/>)}} component={VehiculoScreen}/>
             <Stack.Screen name="Comercio" options={{headerTitle:()=>(<IconRouteTitle icono='file-document' titulo={'COMERCIO'}/>)}} component={ComercioScreen}/>
+            <Stack.Screen name="CrearComercio" options={{headerTitle:()=>(<IconRouteTitle icono='file-document' titulo={'COMERCIO'}/>)}} component={CrearComercioScreen}/>
             <Stack.Screen name="VerComercio" options={{headerTitle:()=>(<IconRouteTitle icono='file-document' titulo={'COMERCIO'}/>)}} component={VerComercioScreen}/>
             <Stack.Screen name="Cementerio" options={{headerTitle:()=>(<IconRouteTitle icono='bank' titulo={'CEMENTERIO'}/>)}} component={CementerioScreen}/>
             <Stack.Screen name="VerCementerio" options={{headerTitle:()=>(<IconRouteTitle icono='bank' titulo={'CEMENTERIO'}/>)}} component={VerCementerioScreen}/>
+            <Stack.Screen name="CrearCementerio" options={{headerTitle:()=>(<IconRouteTitle icono='bank' titulo={'CEMENTERIO'}/>)}} component={CrearCementerioScreen}/>
             <Stack.Screen name="ObrasPrivadas" options={{headerTitle:()=>(<IconRouteTitle icono='paperclip' titulo={'OBRAS PRIVADAS'}/>)}} component={ObrasPrivadasScreen}/>
             <Stack.Screen name="EditarReferencia" options={{headerTitle:()=>(<IconRouteTitle icono='pencil' titulo={'EDITAR'}/>)}} component={EditarReferenciaScreen}/>
             <Stack.Screen name="Escribanos" options={{headerTitle:()=>(<IconRouteTitle icono='scale-balance' titulo={'ESCRIBANOS'}/>)}} component={EscribanosScreen}/>

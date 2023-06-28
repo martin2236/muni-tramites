@@ -6,7 +6,7 @@ import { RootStackParams } from '../../navigation/StackNavigation';
 import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
 import { TableItem } from '../../components/TableItem';
 import { CustomModal } from '../../components/CustomModal';
-import { Inmueble,DatosContext, Comercio, Cementerio } from '../../context/datos/DatosContext';
+import { Inmueble,DatosContext, Cementerio } from '../../context/datos/DatosContext';
 import { useFetch } from '../../hooks/useFetch';
 import { UserContext } from '../../context/usuario/Usercontext';
 import { Cuota } from '../../interfaces/inmuebles/deuda';
@@ -36,7 +36,6 @@ export const CementerioScreen = ({navigation,route}:Props) => {
             orden:route.params,
             vencimiento: "2023-03-28T15:46:20.265Z"
         }
-        console.log(datos)
         const [info, setInfo] = useState<Info | null>(null);
         const [deuda, setDeuda] = useState(null);
         const { makePost, data} = useFetch();
@@ -82,7 +81,7 @@ export const CementerioScreen = ({navigation,route}:Props) => {
                     MIS SEPULTURAS
                 </Text>
                 <Button 
-                    onPress={()=> navigation.navigate('CrearInmueble')}
+                    onPress={()=> navigation.navigate('CrearCementerio')}
                     height={'30px'}
                     py={0}
                     px={4}

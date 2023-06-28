@@ -1,41 +1,65 @@
 import React, { useEffect, useState,useContext } from 'react'
-import {Box, Text, Input, Button} from 'native-base'
+import {Box, Text, Divider} from 'native-base'
 import {WebView} from 'react-native-webview';
 import { DatosContext } from '../context/datos/DatosContext';
+import { UserContext } from '../context/usuario/Usercontext';
 //@ts-ignore
 
 interface FormData {
-    callbackSucces: string,
-    callbackCancel: string,
-    sucursalComercio: string,
-    monto: string
+    callbackCancel:     string;
+    callbackSuccess:    string;
+    hashFinal:          string;
+    idUser:             string;
+    monto:              string;
+    sucursalComercio:   string;
+    comercio:           string;
 }
 
 export const FormularioPagos = () => {
-    const {cuotasSeleccionadas} = useContext(DatosContext)
-    const [formData, setFormData] = useState<FormData | null>(null)
+    const {cuotasSeleccionadas} = useContext(DatosContext);
+    const {user} = useContext(UserContext)
+    const [formData, setFormData] = useState<FormData | null>(null);
+    const [ipCel, setIpCel] = useState<FormData | null>(null)
     const monto = 1500
     const totalRecargo = cuotasSeleccionadas.reduce((acc,curr)=> acc + curr.totalcuota + curr.recargo,0);
 
     useEffect(() => {
-        console.log(cuotasSeleccionadas)
-        getData();
+        getIP()
     },[])
 
+    useEffect(()=>{
+        if(ipCel){
+            getData()
+        }
+    },[ipCel])
+
+    const getIP = async () => {
+        let response = await fetch('https://api.ipify.org?format=json')
+        const data = await response.json();
+        setIpCel(data)
+    }
+
     const getData = async() =>{
-        let response = await fetch(`http://192.168.0.112:8085/api/main/pago`,{
+       if(ipCel){
+         let response = await fetch(`http://192.168.0.112:8085/api/main/pago`,{
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                "monto":totalRecargo
+                monto:totalRecargo,
+                ipCel,
+                userId:user?.pkusuario,
+                tipo:"prueba"
             })
         })
         const data = await response.json();
-        console.log(data)
         setFormData(data)
+       }else{
+        console.log('no se pudo obtener la ip')
+       }
     }
+    const inputStyles = " color:blue;margin:0; font-size:15px; height:20px; width:80%;";
     
     let html =`
     <!DOCTYPE html>
@@ -44,35 +68,23 @@ export const FormularioPagos = () => {
         <meta charset='UTF-8'>
         <meta http-equiv='X-UA-Compatible' content='IE=edge'>
         <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-        <script src='https://cdn.jsdelivr.net/npm/pluspagos-aes-encryption@1.0.0/dist/AESEncrypter.
-        js'></script>
-        <!-- <script src='node_modules\pluspagos-aesencryptor\dist\AESEncrypter.js'></script>
-        -->
-        <title>Ejemplo</title>
+        <title>Formulario de pago</title>
         </head>
         <body>
-        <form style="width:100% height:100%;" method='post' action='https://sandboxpp.asjservicios.com.ar/' id='form-firma'>
-        <input style="margin-top: 10px; display:none; color:blue; font-size:25px; height:50px; width:80%;" type='text' name='CallbackSucces' id='CallbackSucces' value=${formData?.callbackSucces} />
-        <input style="margin-top: 10px; display:none; color:blue; font-size:25px; height:50px; width:80%;" type='text' name='CallbackCancel' id='CallbackCancel' value=${formData?.callbackCancel} />
-        <input type='hidden' name='Comercio' value= 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa' />
-        <input style="margin-top: 10px; display:none; color:blue; font-size:25px; height:50px; width:80%;" type='text' name='SucursalComercio' id='SucursalComercio' value=${formData?.sucursalComercio} />
-        <input  style="display:none; margin-left:auto; margin-right:auto; text-align:center; width:80%; font-size:25px; height:50px; " type='text' name='Monto' id='Monto' value=${formData?.monto}  readonly/>
-        <input  style="display:none;" name='23456456769' value='23456456769' />
-        <input style="display:none;" name='Pedro Martinez' value='Pedro Martinez' /> 
-        <input type='hidden' name='Hash' value='4be6253c592a60c3ffb27acc9d130908b05f7e10fd3ae671d326b5224e69dff6' />
-        <input type='hidden' name='TransaccionComercioId' value='abc001' />
-        <div style="">
-                <label style="display:block; margin-left:auto; margin-right:auto; width:80%;">Total a pagar</label>
-                <div style="display:block; margin-left:auto; margin-right:auto; width:80%;">
-                    <p style="font-size:30px;">$ ${totalRecargo}</p>
-                </div>
-            </div>
-           
-        <button style=" display:block; margin-left:auto; margin-right:auto; border-radius:15px; padding-top:10px; padding-bottom:10px; background-color:#71717a; color:white; font-size:25px; height:50px; width:80%;" type='submit' >Pagar</button>
-        </form>
+            <form style="width:100% height:100%;" method='post' action='https://sandboxpp.asjservicios.com.ar/' id='form'>
+                <input  name='CallbackSucces'   value=${formData?.callbackSuccess} />
+                <input  name='CallbackCancel'   value=${formData?.callbackCancel} />
+                <input  name='Comercio'         value= ${formData?.comercio} />
+                <input  name='SucursalComercio' value=${formData?.sucursalComercio} />
+                <input  name='Monto'            value=${formData?.monto}/>
+                <input  name='userId'           value='${formData?.idUser}' />
+                <input  name='Hash'             value=${formData?.hashFinal} />
+                
+                <button style=" display:block; margin-left:auto; margin-right:auto; border-radius:15px; padding-top:10px; padding-bottom:10px; background-color:#71717a; color:white; font-size:25px; height:50px; width:80%;" type='submit' >Pagar</button>
+            </form>
         </body>
-        </html>
-    `
+    </html>
+`
 
 const ordenarFecha = (fecha:string) => {
     if(fecha){
@@ -84,22 +96,29 @@ const ordenarFecha = (fecha:string) => {
 }
 
   return (
-    <Box style={{flex:1}}  >
-        <Box flex={2}>
-            <Text>Cuotas a pagar</Text>
-            <Box flexDir={"row"} height={"12"} borderBottomWidth={1} alignItems={"center"} justifyContent={"space-around"}>
+    <Box flex={1}  >
+        <Box  flex={1}>
+            <Box bg={'white'}>
+                <Text style={{fontSize:20,marginTop:10,marginBottom:10,marginLeft:5}}>Cuotas a pagar</Text>
+            </Box>
+            <Box bg={'white'} flexDir={"row"} height={"12"} borderBottomWidth={1} alignItems={"center"} justifyContent={"space-around"}>
                 <Text>Año</Text>
                 <Text>Cuota N°</Text>
-                <Text>Fecha de vencimiento</Text>
+                <Text>Vencimiento</Text>
                 <Text>Monto</Text>
             </Box>
             {cuotasSeleccionadas.map((cuota:any) => {
-                return <Box key={cuota.cuota} flexDir={"row"} height={"12"} borderBottomWidth={1} alignItems={"center"} justifyContent={"space-around"}>
-                    <Text>{cuota.anio}</Text>
-                    <Text>{cuota.cuota}</Text>
-                    <Text>{ordenarFecha(cuota.fecha_ven1)}</Text>
-                    <Text>$ {cuota.totalcuota}</Text>
+                return (
+                <Box bg={'white'}>
+                    <Box key={cuota.cuota} flexDir={"row"} height={"12"} alignItems={"center"} justifyContent={"space-around"}>
+                        <Text>{cuota.anio}</Text>
+                        <Text>{cuota.cuota}</Text>
+                        <Text>{ordenarFecha(cuota.fecha_ven1)}</Text>
+                        <Text>$ {cuota.totalcuota}</Text>
+                    </Box>
+                    <Divider/>
                 </Box>
+                )
             })
             }
         </Box>

@@ -47,6 +47,15 @@ export interface Cementerio {
     fapenom:        string;
 }
 
+export interface Vehiculo {
+    dominio:     string;
+    tipo:        string;
+    fecbaja:     string;
+    condicontri: string;
+    condimoncho: number;
+    descripcion: string;
+}
+
 export interface updateInfo {
     ruta:string,
     actualizar:boolean
@@ -56,6 +65,7 @@ interface DatosInterface{
     comercios:Comercio[] | null,
     cementerios:Cementerio[] | null,
     inmuebles:Inmueble[] | null,
+    vehiculos:Vehiculo[] | null,
     cuotas:Cuota[] | [],
     setCuotas:(cuotas:Cuota[] | []) => void,
     numeroCuota:number[] | [],
@@ -72,6 +82,7 @@ const initialState = {
     comercios:[],
     cementerios:[],
     inmuebles:[],
+    vehiculos:[],
     cuotas:[],
     setCuotas:() => {},
     numeroCuota:[],

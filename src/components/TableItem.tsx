@@ -3,13 +3,13 @@ import {Box, Divider, Pressable, Text} from 'native-base';
 //@ts-ignore
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import {Info} from '../screens/inmuebleScreeens/InmuebleScreen';
-import { Comercio, DatosContext,Inmueble, Cementerio } from '../context/datos/DatosContext';
+import { Comercio, DatosContext,Inmueble, Cementerio, Vehiculo } from '../context/datos/DatosContext';
 import { Deuda } from '../interfaces/inmuebles/deuda';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParams } from '../navigation/StackNavigation';
 
 interface ListItem{
-    item:Inmueble | Comercio | Cementerio
+    item:Inmueble | Comercio | Cementerio | Vehiculo
 }
 
 interface Props{
@@ -17,7 +17,7 @@ interface Props{
     item:ListItem,
     deuda: {deudas:Deuda} | null,
     pantalla: string,
-    navigation: StackNavigationProp<RootStackParams, "Inmueble", undefined> | StackNavigationProp<RootStackParams, "Comercio", undefined> | StackNavigationProp<RootStackParams, "Cementerio", undefined>
+    navigation: StackNavigationProp<RootStackParams, "Inmueble", undefined> | StackNavigationProp<RootStackParams, "Comercio", undefined> | StackNavigationProp<RootStackParams, "Cementerio", undefined> | StackNavigationProp<RootStackParams, "Vehiculo", undefined>
 }
 
 export const TableItem = ({item, setData,deuda, navigation, pantalla}:Props) => {
@@ -31,7 +31,7 @@ export const TableItem = ({item, setData,deuda, navigation, pantalla}:Props) => 
         referencia: nombre,
         updateInfo:{}
     }
-    console.log('esta es la pantalla',pantalla)
+
     switch (pantalla) {
         case 'Inmueble':
             data.id = (item.item as Inmueble).pkinmueble;
@@ -43,18 +43,26 @@ export const TableItem = ({item, setData,deuda, navigation, pantalla}:Props) => 
             }
             break;
         case 'Comercio':
-            data.id = (item.item as Comercio).padron;
+            data.id = (item.item as Comercio).pkcomercio;
             data.ruta = 'Comercio';
+            data.updateInfo={
+                padron:(item.item as Comercio).padron
+            }
             break;
         case 'Cementerio':
             data.id = (item.item as Cementerio).pkcementerio;
             data.ruta = 'Cementerio';
+            data.updateInfo={
+                padron:(item.item as Cementerio).num_orden
+            }
+            break;
+        case 'Vehiculo':
+            data.id = parseInt((item.item as Vehiculo).dominio);
+            data.ruta = 'Vehiculo';
             break;
         default:
             break;
     }
-    
-    console.log('este es el item',item)
 
     const guardarInfo = () => {
         const info = {

@@ -2,9 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Divider, Box, Text, Pressable, Checkbox, Button, ScrollView, FlatList } from 'native-base';
 //@ts-ignore
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
-import * as Animatable from 'react-native-animatable';
 import {DatosContext } from '../../context/datos/DatosContext';
-
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParams } from '../../navigation/StackNavigation';
 import { Cuota } from '../../interfaces/inmuebles/deuda';
@@ -20,8 +18,16 @@ export const VerComercioScreen = ({navigation, route}:Props) => {
     const handlePress = () =>{
         setShow(show => !show)
     }
-    const {deuda, referencia} =  route.params;
-    console.log(cuotas)
+    const {id,ruta,updateInfo,deuda, referencia} =  route.params;
+
+    console.log('ruta en VerComercioScreen',ruta)
+
+    let editar = {
+        id,
+        ruta,
+        updateInfo,
+        referencia
+    }
 
     const infoByAnio = {};
 
@@ -83,7 +89,9 @@ export const VerComercioScreen = ({navigation, route}:Props) => {
                     <Text width={'30%'} textAlign={'center'} ellipsizeMode={'tail'} numberOfLines={1} fontSize={'sm'} fontWeight={'bold'}>
                         {referencia}
                     </Text>
-                    
+                    <Pressable borderWidth={1} onPress={() => navigation.navigate('EditarReferencia',editar)} borderRadius={5} position={'absolute'} right={2}>
+                        <Icon name={'pencil-outline'} size={15} color={'gray'}/>
+                    </Pressable>
                 </Box>
                 <Box 
                     mt={'0.5'}

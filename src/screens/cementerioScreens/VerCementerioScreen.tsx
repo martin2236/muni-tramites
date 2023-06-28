@@ -1,10 +1,8 @@
 import React, { useContext, useState } from 'react';
-import { Divider, Box, Text, Center, Checkbox, Button, ScrollView, FlatList } from 'native-base';
+import { Divider, Box, Text, Checkbox, Button,Pressable, FlatList } from 'native-base';
 //@ts-ignore
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
-import * as Animatable from 'react-native-animatable';
 import {DatosContext } from '../../context/datos/DatosContext';
-
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParams } from '../../navigation/StackNavigation';
 import { Cuota } from '../../interfaces/inmuebles/deuda';
@@ -20,7 +18,13 @@ export const VerCementerioScreen = ({navigation, route}:Props) => {
     const handlePress = () =>{
         setShow(show => !show)
     }
-    const {deuda, referencia} =  route.params;
+    const {id,ruta,updateInfo,deuda, referencia} =  route.params;
+    let editar = {
+        id,
+        ruta,
+        updateInfo,
+        referencia
+    }
 
     const infoByAnio = {};
 
@@ -53,7 +57,7 @@ export const VerCementerioScreen = ({navigation, route}:Props) => {
                 alignSelf={'center'}
                 fontWeight={'bold'} 
                 fontSize={20}>
-                MIS COMERCIOS
+                MIS SEPULTURAS
             </Text>
             <Box alignSelf={'center'} width={'95%'} justifyContent={'center'} mt={5}>
                 <Box 
@@ -82,10 +86,9 @@ export const VerCementerioScreen = ({navigation, route}:Props) => {
                     <Text width={'30%'} textAlign={'center'} ellipsizeMode={'tail'} numberOfLines={1} fontSize={'sm'} fontWeight={'bold'}>
                         {referencia}
                     </Text>
-                    <Center height={15} width={15} borderColor={'black'} borderWidth={1} borderRadius={4}>
-                            <Icon size={15} name={'pencil-outline'}/>
-                    </Center>
-                    
+                    <Pressable borderWidth={1} onPress={() => navigation.navigate('EditarReferencia',editar)} borderRadius={5} position={'absolute'} right={2}>
+                        <Icon name={'pencil-outline'} size={15} color={'gray'}/>
+                    </Pressable>
                 </Box>
                 <Box 
                     mt={'0.5'}

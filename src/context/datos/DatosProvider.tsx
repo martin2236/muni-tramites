@@ -46,6 +46,7 @@ export const DatosProvider = ({children}:Props) => {
         traerCementerios();
         break;
       case 'vehiculos':
+        traerVehiculos();
         break;
       default:
         console.log(`No se encontro el tipo ${updated.ruta.toUpperCase()}.`);
@@ -87,9 +88,13 @@ export const DatosProvider = ({children}:Props) => {
       makeGet('/comercios/traerComercios', user?.token, undefined, 'comercios')
     };
 
-  const traerCementerios = () =>{
-    makeGet('/cementerios/traerCementarios', user?.token, undefined, 'cementerios')
-    };
+    const traerCementerios = () =>{
+      makeGet('/cementerios/traerCementarios', user?.token, undefined, 'cementerios')
+      };
+
+    const traerVehiculos = () =>{
+      makeGet('/vehiculos/traerVehiculos', user?.token, undefined, 'vehiculos')
+      };
     
   return (
     <DatosContext.Provider
@@ -97,6 +102,7 @@ export const DatosProvider = ({children}:Props) => {
             comercios,
             cementerios,
             inmuebles,
+            vehiculos,
             cuotas,
             numeroCuota,
             cuotasSeleccionadas,

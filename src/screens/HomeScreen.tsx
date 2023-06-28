@@ -9,11 +9,12 @@ import { RootStackParams } from '../navigation/StackNavigation';
 
 interface Props extends StackScreenProps<RootStackParams,'Main'>{}
 
+
 export const HomeScreen = ({navigation}:Props) => {
     const {user} = useContext(UserContext);
-    const [cuenta, setCuenta]= useState(null);
+    const [cuenta, setCuenta]= useState<any>(null);
     const [pantalla, setPantalla] = useState('')
-    const {makeGet,makePost, data, cargando} = useFetch();
+    const {makeGet, data, cargando} = useFetch();
 
     useEffect(() => {
       if(data && data.Inmueble){
@@ -29,11 +30,19 @@ export const HomeScreen = ({navigation}:Props) => {
         const cuenta = data.Cementerio[0].num_orden;
         setCuenta(cuenta) 
       }
+      if(data && data.Vehiculo){
+        console.log(data.Vehiculo)
+        const cuenta = {
+            dominio:data.Vehiculo[0].dominio.trim(),
+            tipo:data.Vehiculo[0].tipo
+        };
+        setCuenta(cuenta) 
+      }
     }, [data])
 
     useEffect(()=>{
-        if(cuenta){
-           navigation.navigate(pantalla as never,cuenta);
+        if(cuenta && pantalla){
+           navigation.navigate(pantalla as never,cuenta as never);
            setCuenta(null)
         }
     },[cuenta])
@@ -53,6 +62,8 @@ export const HomeScreen = ({navigation}:Props) => {
                 setPantalla('Cementerio');
               break;
             case 'Vehiculo':
+                makeGet('/vehiculos/traerVehiculos', user?.token, undefined, 'Vehiculo')
+                setPantalla('Vehiculo');
               break;
             default:
               console.log(`No se encontro el tipo ${data}.`);
@@ -103,7 +114,7 @@ export const HomeScreen = ({navigation}:Props) => {
                 <Pressable 
                 width={'50%'}
                     mb={5} 
-                    onPress={()=> navigation.navigate("Vehiculo" as never)}>
+                    onPress={()=> pedirInformacion("Vehiculo")}>
                     <Box 
                         height={120} 
                         alignSelf={'center'}

@@ -26,7 +26,7 @@ interface FormValues {
 export const RegisterScreen = ({navigation}:Props) => {
 
    const onRegister = (values:FormValues) => {
-     navigation.navigate('Home')
+     navigation.navigate('Main');
    }
   return (
     <Box flex={1} alignItems={'center'}>
@@ -163,7 +163,7 @@ export const RegisterScreen = ({navigation}:Props) => {
                                 height={'12'}
                                 mt={8}
                                 borderRadius={'3xl'}
-                                backgroundColor={'#763E96'}>
+                                backgroundColor={'gray.500'}>
                                 <Text 
                                     color={'white'} 
                                     fontWeight={'bold'}>

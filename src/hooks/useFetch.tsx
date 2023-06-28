@@ -70,6 +70,7 @@ export const useFetch = () => {
         }
       }
          try {
+          console.log('makepost', data)
           const res = await instance.post(uri, data, config);
           console.log('en envio el token', token)
           const datos = await res.data;
@@ -91,7 +92,8 @@ export const useFetch = () => {
       }
         try {
           const res = await instance.patch(uri, data,config);
-          const datos = res.data;
+          const ruta = uri.split('/')[0]
+          const datos = {...res.data,ruta};
           setData(datos);
           setCargando(false);
         } catch (error) {
