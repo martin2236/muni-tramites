@@ -3,7 +3,7 @@ import {Box, Divider, Pressable, Text} from 'native-base';
 //@ts-ignore
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import {Info} from '../screens/inmuebleScreeens/InmuebleScreen';
-import { Comercio, DatosContext,Inmueble, Cementerio, Vehiculo } from '../context/datos/DatosContext';
+import { Comercio,Inmueble, Cementerio, Vehiculo } from '../context/datos/DatosContext';
 import { Deuda } from '../interfaces/inmuebles/deuda';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParams } from '../navigation/StackNavigation';
@@ -21,7 +21,6 @@ interface Props{
 }
 
 export const TableItem = ({item, setData,deuda, navigation, pantalla}:Props) => {
-    const {setInmuebleId} = useContext(DatosContext);
     const nombre = item.item.descripcion;
     const {deudas} = deuda!;
     let data = {
@@ -78,8 +77,7 @@ export const TableItem = ({item, setData,deuda, navigation, pantalla}:Props) => 
             deudas.datosPadron.nc_quinta.trim() +"-"+ deudas.datosPadron.nc_fracci.trim() +"-"+ deudas.datosPadron.n_c_serv.trim()
         }   
         setData(info);
-    }
-    console.log(`Ver${pantalla}`)
+    };
 
   return (
     <>

@@ -22,7 +22,6 @@ export const EditarReferenciaScreen = ({navigation,route}:Props) => {
       ...updateInfo,
       descripcion:nuevaReferencia
     }
-
     if(user?.token){
       switch(ruta){
         case 'Inmueble':
@@ -40,21 +39,22 @@ export const EditarReferenciaScreen = ({navigation,route}:Props) => {
 
   useEffect(() => {
     if(data && nuevaReferencia){
-      
-      const path = data.ruta
-      console.log('EditarReferenciaScreen',path);
-      switch (path) {
-        case 'inmuebles':
+      console.log('Esta es la ruta',ruta)
+      switch (ruta) {
+        case 'Inmueble':
           setUpdated({ruta:'inmuebles',actualizar:!updated.actualizar})
           navigation.navigate('VerInmueble',{id,ruta, referencia:nuevaReferencia,updateInfo})
           break;
-        case 'comercios':
+        case 'Comercio':
           setUpdated({ruta:'comercios',actualizar:!updated.actualizar})
           navigation.navigate('VerComercio',{id,ruta, referencia:nuevaReferencia,updateInfo})
           break;
-        case 'cementerios':
+        case 'Cementerio':
           setUpdated({ruta:'cementerios',actualizar:!updated.actualizar})
           navigation.navigate('VerCementerio',{id,ruta, referencia:nuevaReferencia,updateInfo})
+          break;
+        case 'Vehiculo':
+          console.log('se fue a vehiculos')
           break;
       
         default:

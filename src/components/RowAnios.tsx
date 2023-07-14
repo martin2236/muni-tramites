@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState} from 'react'
+import React, { useContext, useEffect, useState,memo,useCallback} from 'react'
 import { Box, Divider, Pressable, ScrollView, Text } from 'native-base'
 import * as Animatable from 'react-native-animatable';
 //@ts-ignore
@@ -14,26 +14,41 @@ interface Props {
     setTotalSelected:React.Dispatch<React.SetStateAction<number>>
 }   
 
-export const RowAnios = ({item, selected, setSelected, setTotalSelected}:Props) => {
+const isSelected = (cuota: Cuota, selectedCuotas: Cuota[]) => {
+
+    return selectedCuotas.some((selectedCuota) => selectedCuota.cuota === cuota.cuota);
+  };
+  
+const arePropsEqual =(prevProps: Props, nextProps: Props) => {
+    // Comparar solo las propiedades relevantes
+    console.log('ESTAS SON LAS PREV PROPS',prevProps.selected);
+    return (
+        prevProps.item.length === nextProps.item.length &&
+        prevProps.item.every((prevItem, index) => {
+          const nextItem = nextProps.item[index];
+          return isSelected(prevItem, prevProps.selected) === isSelected(nextItem, nextProps.selected)
+        })
+      );
+  };
+
+export const RowAnios = memo( ({item, selected, setSelected, setTotalSelected}:Props) => {
     const{cuotasSeleccionadas,setCuotasSeleccionadas} = useContext(DatosContext)
      const [show, setShow] = useState({
         anio:'',
         mostrar:false,
      });
 
-     // calculates total debt
      const total = item.reduce((acc,curr)=> acc + curr.totalcuota,0);
      const recargo = item.reduce((acc,curr)=> acc + curr.totalcuota + curr.recargo,0);
-     //const [selected, setSelected] = useState([])
-    //  const [totalSelected, setTotalSelected] = useState(0);
- 
         useEffect(() => {
+            if(selected.length){
             setCuotasSeleccionadas(selected);
+            }
         }, [selected]);
 
         const toggleCuota = (cuota:Cuota) => {
             let index = cuotasSeleccionadas.findIndex((item:Cuota) => item.cuota == cuota.cuota);
-            const arraySelected = [...cuotasSeleccionadas];
+            const arraySelected = [...cuotasSeleccionadas!];
             if(index !== -1){
                 arraySelected.splice(index,1);
             }else{
@@ -83,7 +98,7 @@ export const RowAnios = ({item, selected, setSelected, setTotalSelected}:Props) 
                 </Text>
             </Box>
             <Box width={'27%'} display={'flex'}  alignItems={'center'}>
-                <Text textAlign={'center'} fontSize={'sm'} >
+                <Text textAlign={'center'} allowFontScaling={true} fontSize={'sm'} >
                 {total.toFixed(2)}
                 </Text>
             </Box>
@@ -92,10 +107,10 @@ export const RowAnios = ({item, selected, setSelected, setTotalSelected}:Props) 
         { show.anio === item[0].anio && show.mostrar ?
                 <Animatable.View animation='fadeInDown' style={{backgroundColor:'white'}}>
                         <Box  mt={2} alignSelf={'center'} width={'95%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
-                <Text width={'32%'}fontSize={'sm'} color={'#2596be'} textAlign={'center'} fontWeight={'bold'}>
+                <Text width={'35%'}fontSize={'sm'} color={'#2596be'} textAlign={'center'} fontWeight={'bold'}>
                     CUOTA
                 </Text>
-                <Text width={'32%'} fontSize={'sm'} color={'#2596be'} textAlign={'center'} fontWeight={'bold'} lineHeight={'sm'}>
+                <Text width={'35%'} fontSize={'sm'} color={'#2596be'} textAlign={'center'} fontWeight={'bold'} lineHeight={'sm'}>
                     VENCIMIENTO
                 </Text>
                 
@@ -113,7 +128,7 @@ export const RowAnios = ({item, selected, setSelected, setTotalSelected}:Props) 
                         <Box>
                             {item.map((cuota:Cuota, index) => (
                                 <Box key={index} alignSelf={'center'} width={'95%'} mt={2} display={'flex'} flexDirection={'row'} justifyContent={'space-around'} alignItems={'center'}>
-                                        <Box width={'32%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
+                                        <Box width={'35%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
                                             <TouchableOpacity
                                                 onPress={() => toggleCuota(cuota)}
                                                 style={{height:16, width:16,backgroundColor:'#2596be', alignItems:'center', justifyContent:'center'}}>
@@ -127,7 +142,7 @@ export const RowAnios = ({item, selected, setSelected, setTotalSelected}:Props) 
                                             </Text>
                                         </Box>
 
-                                        <Box width={'32%'} display={'flex'} alignItems={'center'} >
+                                        <Box width={'35%'} display={'flex'} alignItems={'center'} >
                                             <Text textAlign={'center'} fontSize={'sm'} >
                                                 {ordenarFecha(cuota.fecha_ven1)}
                                             </Text>
@@ -143,18 +158,10 @@ export const RowAnios = ({item, selected, setSelected, setTotalSelected}:Props) 
                         )}
                         </Box>
                     </ScrollView>
-            
-                    {/* <Box mt={2} bg={'gray.300'} flexDirection={'row'} justifyContent={'flex-end'}>
-                        <Text  fontSize={'sm'} fontWeight={'bold'}>
-                            TOTAL A PAGAR
-                        </Text>
-                        <Text width={"27%"} textAlign={'center'}  fontSize={'sm'} fontWeight={'bold'}>
-                            ${totalSelected.toFixed(2)}
-                        </Text>
-                    </Box> */}
 </Animatable.View>
         : null}
     </>
     
   )
-}
+},arePropsEqual)
+

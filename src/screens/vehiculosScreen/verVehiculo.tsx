@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState,memo } from 'react';
 import { Divider, Box, Text, Pressable, Checkbox, Button, ScrollView, FlatList } from 'native-base';
 //@ts-ignore
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
@@ -10,7 +10,7 @@ import { RowAnios } from '../../components/RowAnios';
 
 interface Props extends StackScreenProps<RootStackParams,'VerVehiculo'>{}
 
-export const VerInmueble = ({navigation, route}:Props) => {
+export const VerVehiculo = ({navigation, route}:Props) => {
     const [show, setShow] = useState(false)
     const [selected, setSelected] = useState([])
     const [totalSelected, setTotalSelected] = useState(0);
@@ -172,7 +172,8 @@ export const VerInmueble = ({navigation, route}:Props) => {
                             <Text width={'60%'} fontSize={'sm'} lineHeight={'sm'}>DESCARGAR/IMPRIMIR RECIBO PARA PAGO</Text>
                         </Box>
                     </Box>
-                    <Button onPress={()=>navigation.navigate('Pagos')} alignSelf={'center'} borderRadius={'2xl'} py={0} height={8} mt={3} backgroundColor={'#2596be'} width='30%'>
+                    
+                    <Button onPress={()=>navigation.navigate('FormularioPagos')} alignSelf={'center'} borderRadius={'2xl'} py={0} height={8} mt={3} backgroundColor={'#2596be'} width='30%'>
                         <Text color={'white'} fontSize={'md'} my={0}>
                             PAGAR
                         </Text>

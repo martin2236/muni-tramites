@@ -27,7 +27,7 @@ export const DrawerNavigation = () => {
     }}
         drawerContent={(props) => <DrawerMenu {...props}/>}
     >
-      <Drawer.Screen name="Home" options={{headerTitle:()=>(<Box flexDirection={'row'} alignItems={'center'}><Text fontSize={22} fontWeight={'bold'} color={'white'}>TRÁMITES</Text></Box>)}} component={HomeScreen} />
+      <Drawer.Screen name="Home" options={{unmountOnBlur:true,headerTitle:()=>(<Box flexDirection={'row'} alignItems={'center'}><Text fontSize={22} fontWeight={'bold'} color={'white'}>TRÁMITES</Text></Box>)}}  component={HomeScreen} />
     </Drawer.Navigator>
   );
 }

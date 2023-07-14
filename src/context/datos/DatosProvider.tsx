@@ -31,6 +31,7 @@ export const DatosProvider = ({children}:Props) => {
         traerInmuebles();
         traerComercios();
         traerCementerios();
+        traerVehiculos();
       }
     }, [user])
 
@@ -72,7 +73,7 @@ export const DatosProvider = ({children}:Props) => {
                 setCementerios(data.cementerios);
               break;
             case 'vehiculos':
-              setVehiculos(data);
+              setVehiculos(data.vehiculos);
               break;
             default:
               console.log(`No se encontro el tipo ${param.toUpperCase()}.`);
@@ -89,7 +90,7 @@ export const DatosProvider = ({children}:Props) => {
     };
 
     const traerCementerios = () =>{
-      makeGet('/cementerios/traerCementarios', user?.token, undefined, 'cementerios')
+      makeGet('/cementerios/traerCementerios', user?.token, undefined, 'cementerios')
       };
 
     const traerVehiculos = () =>{

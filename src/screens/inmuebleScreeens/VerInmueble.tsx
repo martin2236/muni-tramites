@@ -1,5 +1,5 @@
-import React, { useContext, useState } from 'react';
-import { Divider, Box, Text, Pressable, Checkbox, Button, ScrollView, FlatList } from 'native-base';
+import React, { useContext, useEffect, useState, useRef } from 'react';
+import { Divider, Box, Text, Pressable, Checkbox, Button, Radio, FlatList } from 'native-base';
 //@ts-ignore
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import {DatosContext } from '../../context/datos/DatosContext';
@@ -11,14 +11,21 @@ import { RowAnios } from '../../components/RowAnios';
 interface Props extends StackScreenProps<RootStackParams,'VerInmueble'>{}
 
 export const VerInmueble = ({navigation, route}:Props) => {
-    const [show, setShow] = useState(false)
-    const [selected, setSelected] = useState([])
+    const [show, setShow] = useState(false);
+    const [seleccionado, setSelected] = useState<Cuota[] | []>([]);
     const [totalSelected, setTotalSelected] = useState(0);
-    const {cuotas} = useContext(DatosContext);
-    const [checkbox, setCheckbox]= useState({
-        tarjeta: false,
-        efectivo: false,
+    const {cuotas,cuotasSeleccionadas} = useContext(DatosContext);
+    const [opcion, setOpcion] = useState<string | undefined>(undefined);
+    const [error, setError]= useState({
+        pago: false,
+        cuota:false
       });
+    
+      const refSelected = useRef(seleccionado);
+      const selected = refSelected.current;
+
+      console.log('se monto verInmueble')
+
     const handlePress = () =>{
         setShow(show => !show)
     }
@@ -30,6 +37,7 @@ export const VerInmueble = ({navigation, route}:Props) => {
         updateInfo
     }
     const infoByAnio = {};
+
 
     cuotas.forEach( (item:Cuota) => {
         //@ts-ignore
@@ -46,6 +54,23 @@ export const VerInmueble = ({navigation, route}:Props) => {
         listaAnios.push(infoByAnio[key]);
     }
 
+    const verificarPago = () => {
+        if(!cuotasSeleccionadas.length){
+            setError({...error,cuota:true})
+            console.log('no se selecciono ninguna cuota')
+        }else if(opcion =='macro'){
+            navigation.navigate('FormularioPagos')
+            setError({...error,pago:false})
+        }else if(opcion == 'pdf'){
+            console.log('se descargo el pdf')
+            setError({...error,pago:false})
+        }
+        else{
+            console.log('no se seleccionó una opcion')
+            setError({...error,pago:true})
+        }
+    }
+
   return (
     <Box flex={1} backgroundColor={'gray.200'}>
     <Divider backgroundColor={'gray.600'} height={'1.5'}/>
@@ -56,7 +81,7 @@ export const VerInmueble = ({navigation, route}:Props) => {
             alignSelf={'center'} 
             backgroundColor={'white'}>
             <Text
-                mt={7}
+                mt={5}
                 alignSelf={'center'}
                 fontWeight={'bold'} 
                 fontSize={20}>
@@ -83,10 +108,10 @@ export const VerInmueble = ({navigation, route}:Props) => {
                     justifyContent={'flex-start'}
                     backgroundColor={'gray.300'}>
                     <Box width={'15%'}></Box>
-                    <Text  width={'30%'}  fontSize={'sm'} fontWeight={'bold'}>
+                    <Text  width={'40%'}  fontSize={12} fontWeight={'bold'}>
                         REFERENCIA
                     </Text>
-                    <Text width={'30%'} textAlign={'center'} ellipsizeMode={'tail'} numberOfLines={1} fontSize={'sm'} fontWeight={'bold'}>
+                    <Text fontSize={12} width={'30%'} textAlign={'center'} ellipsizeMode={'tail'} numberOfLines={1} fontWeight={'bold'}>
                         {referencia}
                     </Text>
                     <Pressable borderWidth={1} onPress={() => navigation.navigate('EditarReferencia',editar)} borderRadius={5} position={'absolute'} right={2}>
@@ -104,10 +129,10 @@ export const VerInmueble = ({navigation, route}:Props) => {
                     justifyContent={'flex-start'}
                     backgroundColor={'gray.300'}>
                         <Box width={'15%'}></Box>
-                    <Text  width={'30%'} fontWeight={'bold'} fontSize={'sm'} >
+                    <Text  width={'40%'} fontWeight={'bold'} fontSize={12} >
                         CUENTA
                     </Text>
-                    <Text width={'30%'} fontSize={'sm'} textAlign={'center'}>
+                    <Text width={'30%'} fontSize={12} textAlign={'center'}>
                         456254/4
                     </Text>
                 </Box>
@@ -121,25 +146,25 @@ export const VerInmueble = ({navigation, route}:Props) => {
                     justifyContent={'flex-start'}
                     backgroundColor={'gray.300'}>
                         <Box width={'15%'}></Box>
-                    <Text width={'30%'} fontWeight={'bold'} fontSize={'sm'} >
+                    <Text width={'40%'} fontWeight={'bold'} fontSize={12} >
                         PARTIDA
                     </Text>
-                    <Text width={'30%'} fontSize={'sm'} textAlign={'center'}>
+                    <Text width={'30%'} fontSize={12} textAlign={'center'}>
                         157420
                     </Text>
                 </Box>
             </Box>
-            <Box mt={10} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
-                    <Text width={'15%'} fontSize={'sm'} textAlign={'center'} fontWeight={'medium'}>
+            <Box mt={7} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
+                    <Text width={'15%'} fontSize={12} textAlign={'center'} fontWeight={'medium'}>
                         AÑO
                     </Text>
-                    <Text width={'29%'} fontSize={'sm'} textAlign={'center'} fontWeight={'medium'} lineHeight={'sm'}>
+                    <Text width={'29%'} fontSize={12} textAlign={'center'} fontWeight={'medium'} lineHeight={'sm'}>
                         IMPORTE ORIGINAL
                     </Text>
-                    <Text width={'29%'} fontSize={'sm'} textAlign={'center'} fontWeight={'medium'} lineHeight={'sm'}>
+                    <Text width={'29%'} fontSize={12} textAlign={'center'} fontWeight={'medium'} lineHeight={'sm'}>
                         IMPORTE ACTUALIZADO
                     </Text>
-                    <Text width={'27%'} fontSize={'sm'} textAlign={'center'} fontWeight={'medium'} lineHeight={'sm'}>
+                    <Text width={'27%'} fontSize={12} textAlign={'center'} fontWeight={'medium'} lineHeight={'sm'}>
                         TOTAL A PAGAR
                     </Text>
                 </Box>
@@ -153,31 +178,48 @@ export const VerInmueble = ({navigation, route}:Props) => {
                     />
                 </Box>
                 <Box mt={2} bg={'gray.300'} flexDirection={'row'} justifyContent={'flex-end'}>
-                        <Text  fontSize={'sm'} fontWeight={'bold'}>
+                        <Text  fontSize={12} fontWeight={'bold'}>
                             TOTAL A PAGAR
                         </Text>
-                        <Text width={"27%"} textAlign={'center'}  fontSize={'sm'} fontWeight={'bold'}>
+                        <Text width={"27%"} textAlign={'center'}  fontSize={12} fontWeight={'bold'}>
                             ${totalSelected.toFixed(2)}
                         </Text>
                     </Box>
+                    {
+                        error.cuota ?
+                        <Text textAlign={'center'} color={'red.500'}>Seleccione una cuota antes de continuar</Text>
+                        :
+                        null
+                    }
               
                 {/*********************METODOS DE PAGO************/}
                     <Box width={'80%'} mt={3} alignSelf={'center'} >
-                        <Box flexDirection={'row'} mt={2} alignItems={'center'} justifyContent={'space-around'}>
-                            <Checkbox value='nuevo' defaultIsChecked={checkbox.tarjeta} onChange={() => setCheckbox({efectivo:false, tarjeta:true})} accessibilityLabel='algo2'/>
-                            <Text width={'60%'} fontSize={'sm'} fontWeight={'bold'} lineHeight={'sm'}>PAGAR CON TARJETA DE CREDITO/DEBITO</Text>
+                    <Radio.Group width={'100%'} mt={3} name="myRadioGroup" accessibilityLabel="favorite number" value={opcion} onChange={nextValue => {
+                        setOpcion(nextValue);
+                    }}>
+                        <Box  alignSelf={'center'} flexDirection={'row'} mt={2} alignItems={'center'} justifyContent={'space-around'}>
+                            <Radio value='macro' onTouchStart={() => setError({ ...error,pago:false})} borderColor={error.pago ? 'red.500' : 'black'}  accessibilityLabel='algo2' />
+                            <Text ml={5} width={'60%'} fontSize={'sm'} fontWeight={'bold'} lineHeight={'sm'}>PAGAR CON TARJETA DE CREDITO/DEBITO</Text>
                         </Box>
-                        <Box flexDirection={'row'} mt={2} alignItems={'center'} justifyContent={'space-around'}>
-                            <Checkbox value='nuevo' defaultIsChecked={checkbox.efectivo} onChange={() => setCheckbox({tarjeta:false, efectivo:true})} accessibilityLabel='algo2'/>
-                            <Text width={'60%'} fontSize={'sm'} lineHeight={'sm'}>DESCARGAR/IMPRIMIR RECIBO PARA PAGO</Text>
+                        <Box alignSelf={'center'} flexDirection={'row'} mt={2} alignItems={'center'} justifyContent={'space-around'}>
+                            <Radio value='pdf' onTouchStart={() => setError({ ...error,pago:false})} borderColor={error.pago ? 'red.500' : 'black'}  accessibilityLabel='algo2' />
+                            <Text ml={5} width={'60%'} fontSize={'sm'} lineHeight={'sm'}>DESCARGAR/IMPRIMIR RECIBO PARA PAGO</Text>
                         </Box>
-                    </Box>
-                    <Button onPress={()=>navigation.navigate('Pagos')} alignSelf={'center'} borderRadius={'2xl'} py={0} height={8} mt={3} backgroundColor={'#2596be'} width='30%'>
+                    </Radio.Group>
+                    {
+                        error.pago ? 
+                        <Text textAlign={'center'} color={'red.500'}>seleccione un metodo de pago</Text>
+                        :
+                        null
+                    }
+                   
+                    <Button onPress={()=> verificarPago()} alignSelf={'center'} borderRadius={'2xl'} py={0} height={8} mt={3} backgroundColor={'#2596be'} width='30%'>
                         <Text color={'white'} fontSize={'md'} my={0}>
                             PAGAR
                         </Text>
                     </Button>
-                </Box>
+                    </Box>
             </Box>
+        </Box>
         )
     }

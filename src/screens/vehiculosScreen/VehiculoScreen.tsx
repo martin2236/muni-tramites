@@ -50,9 +50,9 @@ export const VehiculoScreen = ({navigation,route}:Props) => {
         }, [])
 
         useEffect(()=>{
-
             //! aca pido la data de la deuda y la seteo en el state de deuda
             if(data){
+                console.log('estas son los inmuebles',vehiculos);
                 const checkedCuotas = data.deudas.cuotas.map((cuota:Cuota)=>{
                     return {
                         ...cuota,

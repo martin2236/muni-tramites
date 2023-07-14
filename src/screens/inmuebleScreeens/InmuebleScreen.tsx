@@ -30,7 +30,7 @@ export interface Info {
 
 export const InmuebleScreen = ({navigation,route}:Props) => {
 
-        const { inmuebles,cuotas, setCuotas} = useContext(DatosContext);
+        const { inmuebles, setCuotas} = useContext(DatosContext);
         const {user} = useContext(UserContext);
         const datos ={
             cuenta:route.params,
@@ -49,9 +49,10 @@ export const InmuebleScreen = ({navigation,route}:Props) => {
         }, [])
 
         useEffect(()=>{
-
+            console.log(inmuebles)
             //! aca pido la data de la deuda y la seteo en el state de deuda
             if(data){
+                console.log('estas son los inmuebles',inmuebles);
                 const checkedCuotas = data.deudas.cuotas.map((cuota:Cuota)=>{
                     return {
                         ...cuota,

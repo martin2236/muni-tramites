@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Divider, Box, Text, Checkbox, Button,Pressable, FlatList } from 'native-base';
+import { Divider, Box, Text, Checkbox, Button,Pressable,Radio, FlatList } from 'native-base';
 //@ts-ignore
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import {DatosContext } from '../../context/datos/DatosContext';
@@ -14,7 +14,8 @@ export const VerCementerioScreen = ({navigation, route}:Props) => {
     const [show, setShow] = useState(false)
     const [selected, setSelected] = useState([])
     const [totalSelected, setTotalSelected] = useState(0);
-    const {cuotas} = useContext(DatosContext);
+    const {cuotas,cuotasSeleccionadas} = useContext(DatosContext);
+    const [opcion, setOpcion] = useState<string | undefined>(undefined);
     const handlePress = () =>{
         setShow(show => !show)
     }
@@ -41,6 +42,20 @@ export const VerCementerioScreen = ({navigation, route}:Props) => {
     for (const key in infoByAnio) {
         //@ts-ignore
         listaAnios.push(infoByAnio[key]);
+    }
+
+    const verificarPago = () => {
+        if(! cuotasSeleccionadas.length){
+            console.log('no se selecciono ninguna cuota')
+        }else if(opcion =='macro'){
+            console.log(opcion)
+            console.log('navego a macro')
+        }else if(opcion == 'pdf'){
+            console.log('se descargo el pdf')
+        }
+        else{
+            console.log('no se seleccionó una opcion')
+        }
     }
 
   return (
@@ -158,17 +173,20 @@ export const VerCementerioScreen = ({navigation, route}:Props) => {
                     </Box>
               
                 {/*********************METODOS DE PAGO************/}
-                    <Box width={'80%'} mt={3} alignSelf={'center'} >
-                        <Box flexDirection={'row'} mt={2} alignItems={'center'} justifyContent={'space-around'}>
-                            <Checkbox value='nuevo' accessibilityLabel='algo2'/>
-                            <Text width={'60%'} fontSize={'sm'} fontWeight={'bold'} lineHeight={'sm'}>PAGAR CON TARJETA DE CREDITO/DEBITO</Text>
+                <Radio.Group width={'100%'} mt={3} name="myRadioGroup" accessibilityLabel="favorite number" value={opcion} onChange={nextValue => {
+                        setOpcion(nextValue);
+                    }}>
+                        <Box  alignSelf={'center'} flexDirection={'row'} mt={2} alignItems={'center'} justifyContent={'space-around'}>
+                            <Radio value='macro'  accessibilityLabel='algo2' />
+                            <Text ml={5} width={'60%'} fontSize={'sm'} fontWeight={'bold'} lineHeight={'sm'}>PAGAR CON TARJETA DE CREDITO/DEBITO</Text>
                         </Box>
-                        <Box flexDirection={'row'} mt={2} alignItems={'center'} justifyContent={'space-around'}>
-                            <Checkbox value='nuevo' accessibilityLabel='algo2'/>
-                            <Text width={'60%'} fontSize={'sm'} lineHeight={'sm'}>DESCARGAR/IMPRIMIR RECIBO PARA PAGO</Text>
+                        <Box alignSelf={'center'} flexDirection={'row'} mt={2} alignItems={'center'} justifyContent={'space-around'}>
+                            <Radio value='pdf'  accessibilityLabel='algo2' />
+                            <Text ml={5} width={'60%'} fontSize={'sm'} lineHeight={'sm'}>DESCARGAR/IMPRIMIR RECIBO PARA PAGO</Text>
                         </Box>
-                    </Box>
-                    <Button onPress={()=>navigation.navigate('Pagos')} alignSelf={'center'} borderRadius={'2xl'} py={0} height={8} mt={3} backgroundColor={'#2596be'} width='30%'>
+                    </Radio.Group>
+
+                    <Button onPress={()=> verificarPago()} alignSelf={'center'} borderRadius={'2xl'} py={0} height={8} mt={3} backgroundColor={'#2596be'} width='30%'>
                         <Text color={'white'} fontSize={'md'} my={0}>
                             PAGAR
                         </Text>

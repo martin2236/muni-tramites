@@ -13,7 +13,8 @@ interface Props extends StackScreenProps<RootStackParams,'Main'>{}
 export const HomeScreen = ({navigation}:Props) => {
     const {user} = useContext(UserContext);
     const [cuenta, setCuenta]= useState<any>(null);
-    const [pantalla, setPantalla] = useState('')
+    const [pantalla, setPantalla] = useState('');
+    const [disabled,setDisabled] = useState<string | null>(null);
     const {makeGet, data, cargando} = useFetch();
 
     useEffect(() => {
@@ -31,14 +32,34 @@ export const HomeScreen = ({navigation}:Props) => {
         setCuenta(cuenta) 
       }
       if(data && data.Vehiculo){
-        console.log(data.Vehiculo)
+        const vehiculo = data.Vehiculo[0].tipo
         const cuenta = {
             dominio:data.Vehiculo[0].dominio.trim(),
             tipo:data.Vehiculo[0].tipo
         };
+        switch (vehiculo) {
+            case "Vehiculo Particular":
+              cuenta.tipo = "auto"
+              break;
+            case "Moto":
+              cuenta.tipo = "moto"
+              break;
+            default:
+              cuenta.tipo = "publico"
+              break;
+          }
         setCuenta(cuenta) 
       }
     }, [data])
+
+    useEffect(()=>{
+      const unsubscribe = navigation.addListener('focus', () => {
+        console.log('ruta focused')
+        setDisabled(null)
+      });
+  
+      return unsubscribe;
+    }, [navigation]);
 
     useEffect(()=>{
         if(cuenta && pantalla){
@@ -48,6 +69,7 @@ export const HomeScreen = ({navigation}:Props) => {
     },[cuenta])
     
     const pedirInformacion = (data: string) =>{
+      setDisabled(data)
         switch (data) {
             case 'Inmueble':
                 makeGet('/inmuebles/traerInmuebles', user?.token, undefined, 'Inmueble')
@@ -58,7 +80,7 @@ export const HomeScreen = ({navigation}:Props) => {
                 setPantalla('Comercio');
               break;
               case 'Cementerio':
-                makeGet('/cementerios/traerCementarios', user?.token, undefined, 'Cementerio')
+                makeGet('/cementerios/traerCementerios', user?.token, undefined, 'Cementerio')
                 setPantalla('Cementerio');
               break;
             case 'Vehiculo':
@@ -88,6 +110,7 @@ export const HomeScreen = ({navigation}:Props) => {
                 backgroundColor={'white'}>
                 <Divider mb={10}/>
                 <Pressable 
+                  isDisabled={disabled !== null && disabled !== 'Inmueble'}
                     width={'50%'}
                     mb={5} 
                     onPress={()=> pedirInformacion('Inmueble')}>
@@ -112,7 +135,8 @@ export const HomeScreen = ({navigation}:Props) => {
                     </Text>
                 </Pressable>
                 <Pressable 
-                width={'50%'}
+                    isDisabled={disabled !== null && disabled !== 'Vehiculo'}
+                    width={'50%'}
                     mb={5} 
                     onPress={()=> pedirInformacion("Vehiculo")}>
                     <Box 
@@ -136,7 +160,8 @@ export const HomeScreen = ({navigation}:Props) => {
                     </Text>
                 </Pressable>
                 <Pressable 
-                width={'50%'}
+                    isDisabled={disabled !== null && disabled !== 'Comercio'}
+                    width={'50%'}
                     mb={5}
                     onPress={() => pedirInformacion('Comercio')}
                     >
@@ -161,7 +186,8 @@ export const HomeScreen = ({navigation}:Props) => {
                     </Text>
                 </Pressable>
                 <Pressable 
-                width={'50%'}
+                    isDisabled={disabled !== null && disabled !== 'Cementerio'}
+                    width={'50%'}
                     mb={5}
                     onPress={() => pedirInformacion('Cementerio')}
                     >
@@ -185,10 +211,9 @@ export const HomeScreen = ({navigation}:Props) => {
                             Cementerio
                     </Text>
                 </Pressable>
-                <Pressable 
-                width={'50%'}
+                <Pressable
+                    width={'50%'}
                     mb={5}
-                    onPress={()=> navigation.navigate("ObrasPrivadas" as never)}
                     >
                     <Box 
                         height={120} 
@@ -211,9 +236,8 @@ export const HomeScreen = ({navigation}:Props) => {
                     </Text>
                 </Pressable>
                 <Pressable 
-                width={'50%'}
+                    width={'50%'}
                     mb={5}
-                    onPress={()=> navigation.navigate("Escribanos" as never)}
                     >
                     <Box 
                         height={120} 

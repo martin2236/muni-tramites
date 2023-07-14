@@ -31,6 +31,7 @@ export const LoginScreen = ({navigation}:Props) => {
 
     useEffect(() => {
         if(data){
+            console.log('Respuesta del backend',data)
             const usuario = {
                 ...(data as LoginReq).user[0], token:(data as LoginReq).token
             };

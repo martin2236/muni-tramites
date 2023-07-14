@@ -15,37 +15,37 @@ export const DrawerMenu = ({navigation}:DrawerContentComponentProps) => {
             
             <Pressable onPress={()=>navigation.navigate('Notificaciones')} height={'10'} mt={5} mb={2}  flexDir={'row'} alignItems={'center'} justifyContent={'flex-start'} width={'full'}>
               <Icon style={{marginLeft:10}} name='email' size={28}/>
-              <Text ml={3} textAlign={'center'} fontSize={17} fontWeight={'bold'}>Notificaciones</Text>
+              <Text ml={3} textAlign={'center'} fontSize={15} fontWeight={'bold'}>Notificaciones</Text>
             </Pressable>
             <Divider width={'80%'} mb={2}/>
 
             <Pressable onPress={()=>navigation.navigate('MediosPago')} height={'10'} mb={2} flexDir={'row'} alignItems={'center'} justifyContent={'flex-start'} width={'full'}>
               <Icon style={{marginLeft:10}} name='card-bulleted' size={28}/>
-              <Text ml={3} textAlign={'center'} fontSize={17} fontWeight={'bold'}>Medios de pago</Text>
+              <Text ml={3} textAlign={'center'} fontSize={15} fontWeight={'bold'}>Medios de pago</Text>
             </Pressable>
             <Divider width={'80%'} mb={2}/>
 
             <Pressable onPress={()=>navigation.navigate('Oficinas')} height={'10'} mb={2} flexDir={'row'} alignItems={'center'} justifyContent={'flex-start'} width={'full'}>
               <Icon style={{marginLeft:10}} name='office-building-marker' size={28}/>
-              <Text ml={3} textAlign={'center'} fontSize={17} fontWeight={'bold'}>Oficinas</Text>
+              <Text ml={3} textAlign={'center'} fontSize={15} fontWeight={'bold'}>Atención al contribuyente</Text>
             </Pressable>
             <Divider width={'80%'} mb={2}/>
 
             <Pressable onPress={()=>navigation.navigate('Contacto')} height={'10'} mb={2}  flexDir={'row'} alignItems={'center'} justifyContent={'flex-start'} width={'full'}>
               <Icon style={{marginLeft:10}} name='wechat' size={28}/>
-              <Text ml={3} textAlign={'center'} fontSize={17} fontWeight={'bold'}>Contacto</Text>
+              <Text ml={3} textAlign={'center'} fontSize={15} fontWeight={'bold'}>Contacto</Text>
             </Pressable>
             <Divider width={'80%'} mb={2}/>
 
             <Pressable onPress={()=>navigation.navigate('Contraseña')} height={'10'} mb={2} flexDir={'row'} alignItems={'center'} justifyContent={'flex-start'} width={'full'}>
               <Icon style={{marginLeft:10}} name='key-variant' size={28}/>
-              <Text  ml={3} textAlign={'center'} fontSize={17} fontWeight={'bold'}>Cambiar contraseña</Text>
+              <Text  ml={3} textAlign={'center'} fontSize={15} fontWeight={'bold'}>Cambiar contraseña</Text>
             </Pressable>
             <Divider width={'80%'} mb={2} />
             
             <Pressable onPress={()=> navigation.navigate('Login')} height={'10'} mb={2}  flexDir={'row'} alignItems={'center'} justifyContent={'flex-start'} width={'full'}>
             <Icon style={{marginLeft:10}} name='logout' size={28}/>
-              <Text ml={3} textAlign={'center'} fontSize={17} fontWeight={'bold'}>Cerrar sesión</Text>
+              <Text ml={3} textAlign={'center'} fontSize={15} fontWeight={'bold'}>Cerrar sesión</Text>
             </Pressable>
             <Divider width={'80%'} mb={2}/>
         </Center>

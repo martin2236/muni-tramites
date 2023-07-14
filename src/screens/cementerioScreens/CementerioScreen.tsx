@@ -42,7 +42,7 @@ export const CementerioScreen = ({navigation,route}:Props) => {
        
         const renderItem = (item:ListProps)=> {return (<TableItem item={item} pantalla={'Cementerio'} setData={setInfo} deuda={deuda} navigation={navigation}/>)};  
         const keyExtractor = (item:Cementerio, index:number)=> `${item.pkcementerio}${index}` 
-
+        console.log('Estos son los datos',datos)
         useEffect(() => {
             makePost('/cementerios/traerCuotas',datos, user?.token, 'deudas' )
         }, [])
@@ -50,6 +50,7 @@ export const CementerioScreen = ({navigation,route}:Props) => {
         useEffect(()=>{
             //! aca pido la data de la deuda y la seteo en el state de deuda
             if(data){
+                console.log(data)
                 const checkedCuotas = data.deudas.cuotas.map((cuota:Cuota)=>{
                     return {
                         ...cuota,
