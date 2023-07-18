@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useContext, useState, useEffect,useCallback } from 'react'
 import { Text, Box, Divider, Button,Pressable, Center, FlatList, ScrollView, Spinner } from 'native-base';
 //@ts-ignore
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
@@ -36,7 +36,6 @@ export const InmuebleScreen = ({navigation,route}:Props) => {
             cuenta:route.params,
             vencimiento: "2023-03-28T15:46:20.265Z"
         }
-
         const [info, setInfo] = useState<Info | null>(null);
         const [deuda, setDeuda] = useState(null);
         const { makePost, data} = useFetch();
@@ -49,20 +48,22 @@ export const InmuebleScreen = ({navigation,route}:Props) => {
         }, [])
 
         useEffect(()=>{
-            console.log(inmuebles)
             //! aca pido la data de la deuda y la seteo en el state de deuda
             if(data){
-                console.log('estas son los inmuebles',inmuebles);
-                const checkedCuotas = data.deudas.cuotas.map((cuota:Cuota)=>{
-                    return {
-                        ...cuota,
-                        checked:false
-                    }
-                })
+                 memorizedCuotas(data);
                 setDeuda(data);
-                setCuotas(checkedCuotas);
             }
         },[data])
+
+        const memorizedCuotas = useCallback((data:any)=>{
+           const datos = data.deudas.cuotas.map((cuota:Cuota)=>{
+                return {
+                    ...cuota,
+                    checked:false
+                }
+            })
+            setCuotas(datos);
+        },[]) 
 
   return (
     <Box flex={1} backgroundColor={'gray.200'}>

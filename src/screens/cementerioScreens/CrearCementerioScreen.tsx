@@ -68,7 +68,7 @@ export const CrearCementerioScreen = () => {
                                  errors={errors}
                                  value={values.padron}
                                  placeholder={'PADRON'}
-                                 type={'cuenta'}
+                                 type={'padron'}
                                  errorCheck={errors.padron}
                                  margin={5}
                             />

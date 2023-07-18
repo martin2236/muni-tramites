@@ -21,7 +21,6 @@ const isSelected = (cuota: Cuota, selectedCuotas: Cuota[]) => {
   
 const arePropsEqual =(prevProps: Props, nextProps: Props) => {
     // Comparar solo las propiedades relevantes
-    console.log('ESTAS SON LAS PREV PROPS',prevProps.selected);
     return (
         prevProps.item.length === nextProps.item.length &&
         prevProps.item.every((prevItem, index) => {
@@ -37,6 +36,8 @@ export const RowAnios = memo( ({item, selected, setSelected, setTotalSelected}:P
         anio:'',
         mostrar:false,
      });
+
+console.log('se monto rowAnios')
 
      const total = item.reduce((acc,curr)=> acc + curr.totalcuota,0);
      const recargo = item.reduce((acc,curr)=> acc + curr.totalcuota + curr.recargo,0);
@@ -89,17 +90,17 @@ export const RowAnios = memo( ({item, selected, setSelected, setTotalSelected}:P
             </Box>
             <Box width={'29%'}  display={'flex'}  alignItems={'center'}>
                 <Text textAlign={'center'} fontSize={'sm'} >
-                {total.toFixed(2)}
+                $ {total.toFixed(2)}
                 </Text>
             </Box>
             <Box width={'29%'} display={'flex'} alignItems={'center'} >
                 <Text textAlign={'center'} fontSize={'sm'} fontWeight={'bold'}>
-                {recargo.toFixed(2) }
+                $ {recargo.toFixed(2) }
                 </Text>
             </Box>
             <Box width={'27%'} display={'flex'}  alignItems={'center'}>
                 <Text textAlign={'center'} allowFontScaling={true} fontSize={'sm'} >
-                {total.toFixed(2)}
+               $ {total.toFixed(2)}
                 </Text>
             </Box>
         </Box>
@@ -138,7 +139,7 @@ export const RowAnios = memo( ({item, selected, setSelected, setTotalSelected}:P
                                                     }
                                             </TouchableOpacity>
                                             <Text textAlign={'center'} fontSize={'sm'} >
-                                                {ordenarFecha(cuota.fecha_pago)}
+                                                {cuota.cuota}
                                             </Text>
                                         </Box>
 
@@ -150,7 +151,7 @@ export const RowAnios = memo( ({item, selected, setSelected, setTotalSelected}:P
 
                                         <Box  width={'24%'} display={'flex'}  alignItems={'center'}>
                                             <Text textAlign={'center'} fontSize={'sm'} >
-                                                {cuota.totalcuota.toFixed(2)}
+                                                ${cuota.totalcuota.toFixed(2)}
                                             </Text>
                                         </Box>
                                 </Box>

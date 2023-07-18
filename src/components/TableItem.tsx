@@ -1,4 +1,4 @@
-import React ,{useContext}from 'react'
+import React ,{memo}from 'react'
 import {Box, Divider, Pressable, Text} from 'native-base';
 //@ts-ignore
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
@@ -21,6 +21,7 @@ interface Props{
 }
 
 export const TableItem = ({item, setData,deuda, navigation, pantalla}:Props) => {
+    console.log('se monto tableItem')
     const nombre = item.item.descripcion;
     const {deudas} = deuda!;
     let data = {

@@ -70,7 +70,7 @@ export const useFetch = () => {
         }
       }
          try {
-          console.log('makepost', data)
+          //console.log('makepost', data)
           const res = await instance.post(uri, data, config);
           console.log('en envio el token', token)
           const datos = await res.data;

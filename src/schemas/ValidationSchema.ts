@@ -1,4 +1,4 @@
-import { object, string, ref } from 'yup';
+import { object, string, ref, number } from 'yup';
 import axios from 'axios';
 
 //* LOGIN
@@ -32,7 +32,8 @@ export const loginSchema = object({
     string()
     .required('Ingrese una clave')
     ,
-    verificacion:string()
+    verificacion:
+    string()
     .oneOf([ref('clave')], 'Las contraseñas no coinciden.')
     ,
     mail:
@@ -55,7 +56,7 @@ export const loginSchema = object({
     .required('ingrese un codigo de area'),
     celular_empresa:
     string()
-    .required('ingrese un nombre'),
+    .required('ingrese su compañia'),
   })
 
 //* CREAR INMUEBLE

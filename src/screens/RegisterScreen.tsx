@@ -1,11 +1,12 @@
-import React from 'react'
-import { Box, Center, Text, Button,ScrollView } from 'native-base'
+import React, {useState,useEffect, useContext} from 'react'
+import { Box, Center, Text, Button,ScrollView, Select, CheckIcon} from 'native-base'
 import { CustomInput } from '../components/CustomInput'
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParams } from '../navigation/StackNavigation';
 import { Formik } from 'formik';
 import { registerSchema } from '../schemas/ValidationSchema';
 import { useFetch } from '../hooks/useFetch';
+import { UserContext } from '../context/usuario/Usercontext';
 
 interface Props extends StackScreenProps<RootStackParams,'Registro'>{}
 interface FormValues {
@@ -24,10 +25,27 @@ interface FormValues {
 }
 
 export const RegisterScreen = ({navigation}:Props) => {
+    const [service, setService] = useState("");
+    const {setUser} = useContext(UserContext)
+    const {makePost, data, cargando, setCargando} = useFetch()
 
    const onRegister = (values:FormValues) => {
-     navigation.navigate('Main');
+    const{celular,celular_area,telefono,telefono_area,nombre,tipo_cuit,clave,mail,celular_empresa,cuit}= values;
+    makePost('/auth/register',{cuit:Number(cuit),celular,celular_area,telefono,telefono_area,nombre,tipo_cuit,clave, mail,celular_empresa});
    }
+
+   useEffect(() => {
+    if(data){
+        console.log('Respuesta del backend',data)
+        const usuario = {
+            ...data.user[0], token:data.token
+        };
+        if(usuario){
+            setUser(usuario);
+            navigation.replace('Main');
+        };
+    } 
+}, [data])
   return (
     <Box flex={1} alignItems={'center'}>
         <Center mt={10} width={'80%'}>
@@ -37,7 +55,7 @@ export const RegisterScreen = ({navigation}:Props) => {
                     validateOnChange={false}
                     onSubmit={onRegister}
                 >
-                    {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
+                    {({ handleChange, setFieldValue, handleSubmit, values, errors }) => (
                     <>
                        <ScrollView
                         showsVerticalScrollIndicator={false}
@@ -53,7 +71,7 @@ export const RegisterScreen = ({navigation}:Props) => {
                             />
                             <Box width={'100%'} flexDirection={'row'}>
                                 <CustomInput
-                                    width={'70%'}
+                                    width={'50%'}
                                     handleChange={handleChange}
                                     errors={errors}
                                     value={values.cuit}
@@ -63,16 +81,31 @@ export const RegisterScreen = ({navigation}:Props) => {
                                     errorCheck={errors.cuit}
                                     margin={4}
                                 />
-                                <CustomInput
-                                    width={'30%'}
-                                    handleChange={handleChange}
-                                    errors={errors}
-                                    value={values.tipo_cuit}
-                                    placeholder={'TIPO'}
-                                    type={'tipo_cuit'}
-                                    errorCheck={errors.tipo_cuit}
-                                    margin={4}
-                                />
+                                <Box flex={1}>
+                                <Select selectedValue={service} flex={1} accessibilityLabel="Choose Service" 
+                                    placeholder="TIPO"
+                                    textAlign={'center'}
+                                    borderColor={'cyan.500'}
+                                    borderRadius={'3xl'}
+                                    backgroundColor={'white'}
+                                    placeholderTextColor={'black'}
+                                    fontSize={18}
+                                    marginTop={4}
+                                    marginLeft={4}
+                                    _selectedItem={{
+                                        bg: "teal.600",
+                                        endIcon: <CheckIcon size="5" />
+                                    }} mt={1} onValueChange={itemValue => {
+                                            setService(itemValue);
+                                            setFieldValue("tipo_cuit", itemValue);
+                                        }}>
+                                    <Select.Item label="FEMENINO" value="femenino" />
+                                    <Select.Item label="MASCULINO" value="masculino" />
+                                    <Select.Item label="EMPRESA" value="empresa" />
+                                </Select>
+                                {'tipo_cuit' in errors ? <Text ml={8} color={'red.500'}> {errors.celular_empresa} </Text> : null} 
+                                </Box>
+                              
                             </Box>
                             <CustomInput
                                 handleChange={handleChange}
@@ -112,6 +145,7 @@ export const RegisterScreen = ({navigation}:Props) => {
                                     placeholder={'COD'}
                                     type={'telefono_area'}
                                     errorCheck={errors.telefono_area}
+                                    keyboardType='numeric'
                                     margin={3}
                                 />
                                 <CustomInput
@@ -122,6 +156,7 @@ export const RegisterScreen = ({navigation}:Props) => {
                                     placeholder={'TELEFONO'}
                                     type={'telefono'}
                                     errorCheck={errors.telefono}
+                                    keyboardType='numeric'
                                     margin={4}
                                 />
                             </Box>
@@ -134,8 +169,10 @@ export const RegisterScreen = ({navigation}:Props) => {
                                 placeholder={'COD'}
                                 type={'celular_area'}
                                 errorCheck={errors.celular_area}
+                                keyboardType='numeric'
                                 margin={4}
                             />
+                            
                             <CustomInput
                                 width={'70%'}
                                 handleChange={handleChange}
@@ -144,19 +181,34 @@ export const RegisterScreen = ({navigation}:Props) => {
                                 placeholder={'CELULAR'}
                                 type={'celular'}
                                 errorCheck={errors.celular}
+                                keyboardType='numeric'
                                 margin={4}
                             />
                             </Box>
-                            <CustomInput
-                                handleChange={handleChange}
-                                errors={errors}
-                                value={values.celular_empresa}
-                                placeholder={'EMPRESA DE CELULAR'}
-                                type={'celular_empresa'}
-                                errorCheck={errors.celular_empresa}
-                                margin={4}
-                            />
-                            
+                            <Box>
+                            <Select selectedValue={service} flex={1} accessibilityLabel="Choose Service" 
+                                    placeholder="COMPAÑIA DE CELULAR"
+                                    textAlign={'center'}
+                                    borderColor={'cyan.500'}
+                                    borderRadius={'3xl'}
+                                    backgroundColor={'white'}
+                                    placeholderTextColor={'black'}
+                                    fontSize={18}
+                                    marginTop={4}
+                                    _selectedItem={{
+                                        bg: "teal.600",
+                                        endIcon: <CheckIcon size="5" />
+                                    }} mt={1} onValueChange={itemValue => {
+                                            setService(itemValue);
+                                            setFieldValue("celular_empresa", itemValue);
+                                        }}>
+                                    <Select.Item label="PERSONAL" value="personal" />
+                                    <Select.Item label="MOVISTAR" value="movistar" />
+                                    <Select.Item label="CLARO" value="claro" />
+                                    <Select.Item label="TWENTI" value="twenti" />
+                                </Select>
+                                {'celular_empresa' in errors ? <Text ml={4} color={'red.500'}> {errors.celular_empresa} </Text> : null} 
+                            </Box>
                             <Button 
                                 width={'100%'}
                                 onPress={() => handleSubmit()}

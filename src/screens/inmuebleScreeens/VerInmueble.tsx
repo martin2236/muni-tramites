@@ -26,9 +26,6 @@ export const VerInmueble = ({navigation, route}:Props) => {
 
       console.log('se monto verInmueble')
 
-    const handlePress = () =>{
-        setShow(show => !show)
-    }
     const {id,ruta, referencia, updateInfo} =  route.params;
     let editar = {
         id,
@@ -72,7 +69,7 @@ export const VerInmueble = ({navigation, route}:Props) => {
     }
 
   return (
-    <Box flex={1} backgroundColor={'gray.200'}>
+    <Box flex={3} backgroundColor={'gray.200'}>
     <Divider backgroundColor={'gray.600'} height={'1.5'}/>
     <Divider position={'absolute'} width={'90%'} height={'1.5'} backgroundColor={'gray.500'} alignSelf={'center'}/>
         <Box 
@@ -80,6 +77,8 @@ export const VerInmueble = ({navigation, route}:Props) => {
             width={'90%'} 
             alignSelf={'center'} 
             backgroundColor={'white'}>
+        {/* nuevo box */}
+            <Box flex={1} >
             <Text
                 mt={5}
                 alignSelf={'center'}
@@ -87,7 +86,7 @@ export const VerInmueble = ({navigation, route}:Props) => {
                 fontSize={20}>
                 MIS INMUEBLES
             </Text>
-            <Box alignSelf={'center'} width={'95%'} justifyContent={'center'} mt={5}>
+            <Box flex={1}  alignSelf={'center'} width={'95%'} justifyContent={'center'} mt={5}>
                 <Box 
                     position={'absolute'}
                     zIndex={100}
@@ -117,8 +116,8 @@ export const VerInmueble = ({navigation, route}:Props) => {
                     <Pressable borderWidth={1} onPress={() => navigation.navigate('EditarReferencia',editar)} borderRadius={5} position={'absolute'} right={2}>
                         <Icon name={'pencil-outline'} size={15} color={'gray'}/>
                     </Pressable>
-                    
                 </Box>
+
                 <Box 
                     mt={'0.5'}
                     zIndex={10}
@@ -154,56 +153,60 @@ export const VerInmueble = ({navigation, route}:Props) => {
                     </Text>
                 </Box>
             </Box>
-            <Box mt={7} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
-                    <Text width={'15%'} fontSize={12} textAlign={'center'} fontWeight={'medium'}>
-                        AÑO
-                    </Text>
-                    <Text width={'29%'} fontSize={12} textAlign={'center'} fontWeight={'medium'} lineHeight={'sm'}>
-                        IMPORTE ORIGINAL
-                    </Text>
-                    <Text width={'29%'} fontSize={12} textAlign={'center'} fontWeight={'medium'} lineHeight={'sm'}>
-                        IMPORTE ACTUALIZADO
-                    </Text>
-                    <Text width={'27%'} fontSize={12} textAlign={'center'} fontWeight={'medium'} lineHeight={'sm'}>
-                        TOTAL A PAGAR
-                    </Text>
-                </Box>
-                <Divider mt={1} height={0.5}/>
-                <Box height={'64'}>
-                    <FlatList 
-                        data={listaAnios}
-                        keyExtractor={(item,index) => ` ${index}`}
-                        renderItem={({item}) => <RowAnios item={item} setTotalSelected={setTotalSelected} selected={selected} setSelected={setSelected}/>}
-                        nestedScrollEnabled={true}
-                    />
-                </Box>
-                <Box mt={2} bg={'gray.300'} flexDirection={'row'} justifyContent={'flex-end'}>
-                        <Text  fontSize={12} fontWeight={'bold'}>
+            </Box>
+            {/*+++++++++++++++++++++++++ lista +++++++++++++++++++*/}
+            <Box flex={3} >
+                <Box mt={7} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
+                        <Text width={'15%'} fontSize={12} textAlign={'center'} fontWeight={'medium'}>
+                            AÑO
+                        </Text>
+                        <Text width={'29%'} fontSize={12} textAlign={'center'} fontWeight={'medium'} lineHeight={'sm'}>
+                            IMPORTE ORIGINAL
+                        </Text>
+                        <Text width={'29%'} fontSize={12} textAlign={'center'} fontWeight={'medium'} lineHeight={'sm'}>
+                            IMPORTE ACTUALIZADO
+                        </Text>
+                        <Text width={'27%'} fontSize={12} textAlign={'center'} fontWeight={'medium'} lineHeight={'sm'}>
                             TOTAL A PAGAR
                         </Text>
-                        <Text width={"27%"} textAlign={'center'}  fontSize={12} fontWeight={'bold'}>
-                            ${totalSelected.toFixed(2)}
-                        </Text>
                     </Box>
-                    {
-                        error.cuota ?
-                        <Text textAlign={'center'} color={'red.500'}>Seleccione una cuota antes de continuar</Text>
-                        :
-                        null
-                    }
+                    <Divider mt={1} height={0.5}/>
+                    <Box flex={2}>
+                        <FlatList 
+                            data={listaAnios}
+                            keyExtractor={(item,index) => ` ${index}`}
+                            renderItem={({item}) => <RowAnios item={item} setTotalSelected={setTotalSelected} selected={selected} setSelected={setSelected}/>}
+                            nestedScrollEnabled={true}
+                        />
+                    </Box>
+                    <Box mt={2} bg={'gray.300'} flexDirection={'row'} justifyContent={'flex-end'}>
+                            <Text  fontSize={12} fontWeight={'bold'}>
+                                TOTAL A PAGAR
+                            </Text>
+                            <Text width={"27%"} textAlign={'center'}  fontSize={12} fontWeight={'bold'}>
+                                ${totalSelected.toFixed(2)}
+                            </Text>
+                        </Box>
+                        {
+                            error.cuota ?
+                            <Text textAlign={'center'} color={'red.500'}>Seleccione una cuota antes de continuar</Text>
+                            :
+                            null
+                        }
+            </Box>
               
                 {/*********************METODOS DE PAGO************/}
-                    <Box width={'80%'} mt={3} alignSelf={'center'} >
-                    <Radio.Group width={'100%'} mt={3} name="myRadioGroup" accessibilityLabel="favorite number" value={opcion} onChange={nextValue => {
+                    <Box flex={1}  width={'80%'}mb={8} alignSelf={'center'} >
+                    <Radio.Group width={'100%'} name="myRadioGroup" accessibilityLabel="favorite number" value={opcion} onChange={nextValue => {
                         setOpcion(nextValue);
                     }}>
                         <Box  alignSelf={'center'} flexDirection={'row'} mt={2} alignItems={'center'} justifyContent={'space-around'}>
                             <Radio value='macro' onTouchStart={() => setError({ ...error,pago:false})} borderColor={error.pago ? 'red.500' : 'black'}  accessibilityLabel='algo2' />
-                            <Text ml={5} width={'60%'} fontSize={'sm'} fontWeight={'bold'} lineHeight={'sm'}>PAGAR CON TARJETA DE CREDITO/DEBITO</Text>
+                            <Text ml={5} width={'80%'} fontSize={'12'} fontWeight={'bold'} lineHeight={'sm'}>PAGAR CON TARJETA DE CREDITO/DEBITO</Text>
                         </Box>
                         <Box alignSelf={'center'} flexDirection={'row'} mt={2} alignItems={'center'} justifyContent={'space-around'}>
                             <Radio value='pdf' onTouchStart={() => setError({ ...error,pago:false})} borderColor={error.pago ? 'red.500' : 'black'}  accessibilityLabel='algo2' />
-                            <Text ml={5} width={'60%'} fontSize={'sm'} lineHeight={'sm'}>DESCARGAR/IMPRIMIR RECIBO PARA PAGO</Text>
+                            <Text ml={5} width={'80%'} fontSize={'12'} lineHeight={'sm'}>DESCARGAR/IMPRIMIR RECIBO PARA PAGO</Text>
                         </Box>
                     </Radio.Group>
                     {
@@ -213,7 +216,7 @@ export const VerInmueble = ({navigation, route}:Props) => {
                         null
                     }
                    
-                    <Button onPress={()=> verificarPago()} alignSelf={'center'} borderRadius={'2xl'} py={0} height={8} mt={3} backgroundColor={'#2596be'} width='30%'>
+                    <Button onPress={()=> verificarPago()} alignSelf={'center'} borderRadius={'2xl'} py={0} height={8} mt={3} backgroundColor={'#2596be'} px={5}>
                         <Text color={'white'} fontSize={'md'} my={0}>
                             PAGAR
                         </Text>

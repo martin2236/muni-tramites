@@ -67,6 +67,7 @@ export const VerCementerioScreen = ({navigation, route}:Props) => {
             width={'90%'} 
             alignSelf={'center'} 
             backgroundColor={'white'}>
+            <Box flex={1}>
             <Text
                 mt={7}
                 alignSelf={'center'}
@@ -140,7 +141,9 @@ export const VerCementerioScreen = ({navigation, route}:Props) => {
                     </Text>
                 </Box>
             </Box>
-            <Box mt={10} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
+            </Box>
+            <Box flex={3}>
+            <Box mt={7} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
                     <Text width={'15%'} fontSize={'sm'} textAlign={'center'} fontWeight={'medium'}>
                         AÑO
                     </Text>
@@ -155,7 +158,7 @@ export const VerCementerioScreen = ({navigation, route}:Props) => {
                     </Text>
                 </Box>
                 <Divider mt={1} height={0.5}/>
-                <Box height={'64'}>
+                <Box flex={2}>
                     <FlatList 
                         data={listaAnios}
                         keyExtractor={(item,index) => ` ${index}`}
@@ -171,26 +174,29 @@ export const VerCementerioScreen = ({navigation, route}:Props) => {
                             ${totalSelected.toFixed(2)}
                         </Text>
                     </Box>
+            </Box>
               
                 {/*********************METODOS DE PAGO************/}
-                <Radio.Group width={'100%'} mt={3} name="myRadioGroup" accessibilityLabel="favorite number" value={opcion} onChange={nextValue => {
-                        setOpcion(nextValue);
-                    }}>
-                        <Box  alignSelf={'center'} flexDirection={'row'} mt={2} alignItems={'center'} justifyContent={'space-around'}>
-                            <Radio value='macro'  accessibilityLabel='algo2' />
-                            <Text ml={5} width={'60%'} fontSize={'sm'} fontWeight={'bold'} lineHeight={'sm'}>PAGAR CON TARJETA DE CREDITO/DEBITO</Text>
-                        </Box>
-                        <Box alignSelf={'center'} flexDirection={'row'} mt={2} alignItems={'center'} justifyContent={'space-around'}>
-                            <Radio value='pdf'  accessibilityLabel='algo2' />
-                            <Text ml={5} width={'60%'} fontSize={'sm'} lineHeight={'sm'}>DESCARGAR/IMPRIMIR RECIBO PARA PAGO</Text>
-                        </Box>
-                    </Radio.Group>
+                <Box flex={1}  width={'80%'}mb={3} alignSelf={'center'}>
+                    <Radio.Group width={'100%'} mt={3} name="myRadioGroup" accessibilityLabel="favorite number" value={opcion} onChange={nextValue => {
+                            setOpcion(nextValue);
+                        }}>
+                            <Box  alignSelf={'center'} flexDirection={'row'} mt={2} alignItems={'center'} justifyContent={'space-around'}>
+                                <Radio value='macro'  accessibilityLabel='algo2' />
+                                <Text ml={5} width={'60%'} fontSize={'sm'} fontWeight={'bold'} lineHeight={'sm'}>PAGAR CON TARJETA DE CREDITO/DEBITO</Text>
+                            </Box>
+                            <Box alignSelf={'center'} flexDirection={'row'} mt={2} alignItems={'center'} justifyContent={'space-around'}>
+                                <Radio value='pdf'  accessibilityLabel='algo2' />
+                                <Text ml={5} width={'60%'} fontSize={'sm'} lineHeight={'sm'}>DESCARGAR/IMPRIMIR RECIBO PARA PAGO</Text>
+                            </Box>
+                        </Radio.Group>
 
-                    <Button onPress={()=> verificarPago()} alignSelf={'center'} borderRadius={'2xl'} py={0} height={8} mt={3} backgroundColor={'#2596be'} width='30%'>
-                        <Text color={'white'} fontSize={'md'} my={0}>
-                            PAGAR
-                        </Text>
-                    </Button>
+                        <Button onPress={()=> verificarPago()} alignSelf={'center'} borderRadius={'2xl'} py={0} height={8} mt={3} backgroundColor={'#2596be'} width='30%'>
+                            <Text color={'white'} fontSize={'md'} my={0}>
+                                PAGAR
+                            </Text>
+                        </Button>
+                  </Box>
                 </Box>
             </Box>
         )
