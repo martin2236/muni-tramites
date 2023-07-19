@@ -31,7 +31,7 @@ const arePropsEqual =(prevProps: Props, nextProps: Props) => {
   };
 
 export const RowAnios = memo( ({item, selected, setSelected, setTotalSelected}:Props) => {
-    const{cuotasSeleccionadas,setCuotasSeleccionadas} = useContext(DatosContext)
+    const[cuotasSeleccionadas,setCuotasSeleccionadas] = useState([])
      const [show, setShow] = useState({
         anio:'',
         mostrar:false,

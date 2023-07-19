@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect,useCallback } from 'react'
+import React, { useContext, useState, useEffect,useCallback,memo } from 'react'
 import { Text, Box, Divider, Button,Pressable, Center, FlatList, ScrollView, Spinner } from 'native-base';
 //@ts-ignore
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
@@ -28,7 +28,7 @@ export interface Info {
     nomenclatura: string;
 }
 
-export const InmuebleScreen = ({navigation,route}:Props) => {
+export const InmuebleScreen = memo(({navigation,route}:Props) => {
 
         const { inmuebles, setCuotas} = useContext(DatosContext);
         const {user} = useContext(UserContext);
@@ -51,7 +51,6 @@ export const InmuebleScreen = ({navigation,route}:Props) => {
             //! aca pido la data de la deuda y la seteo en el state de deuda
             if(data){
                  memorizedCuotas(data);
-                setDeuda(data);
             }
         },[data])
 
@@ -63,7 +62,8 @@ export const InmuebleScreen = ({navigation,route}:Props) => {
                 }
             })
             setCuotas(datos);
-        },[]) 
+            setDeuda(data);
+        },[data]) 
 
   return (
     <Box flex={1} backgroundColor={'gray.200'}>
@@ -200,4 +200,4 @@ export const InmuebleScreen = ({navigation,route}:Props) => {
         </Box>
     </Box>
   )
-}
+})
