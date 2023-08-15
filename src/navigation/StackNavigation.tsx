@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useContext} from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import {Box, Text} from 'native-base';
 import { LoginScreen } from '../screens/LoginScreen';
@@ -28,6 +28,7 @@ import { OficinasScreen } from '../screens/OficinasScreen';
 import { CrearComercioScreen } from '../screens/comercioScreens/CrearComercioScreen';
 import { CrearCementerioScreen } from '../screens/cementerioScreens/CrearCementerioScreen';
 import { VerVehiculo } from '../screens/vehiculosScreen/verVehiculo';
+import { UserContext } from '../context/usuario/Usercontext';
 
 export type RootStackParams = {
     Login:undefined,
@@ -39,7 +40,7 @@ export type RootStackParams = {
     MediosPago:undefined,
     Notificaciones:undefined,
     Oficinas:undefined,
-    VerInmueble: {  referencia: string; id:number; ruta:string; updateInfo:object;},
+    VerInmueble: {  referencia: string; id:number; ruta:string; updateInfo:object; deuda:any},
     Vehiculo:undefined,
     VerVehiculo: { deuda?: Deuda; referencia: string; ruta:string, id:number; updateInfo:object;},
     Comercio:undefined,
@@ -61,6 +62,7 @@ const Stack = createStackNavigator<RootStackParams>();
 const user = null;
 
 export const StackNavigation = () => {
+  const {user} = useContext(UserContext)
   return (
     <Stack.Navigator
     screenOptions={{
@@ -71,15 +73,22 @@ export const StackNavigation = () => {
         headerTitleAlign:'center'
     }}
     >       
+      <Stack.Group>
+        {
+          !user ? 
+          <>
             <Stack.Screen name="Carousel" options={{headerShown:false}} component={CarouselScreen}/>
             <Stack.Screen name="Login" options={{headerShown:false}} component={LoginScreen} />
-            <Stack.Screen name="Main" options={{headerShown:false}} component={DrawerNavigation}/>
+            <Stack.Screen name="Registro" options={{headerTitle:'Registro'}} component={RegisterScreen}/>
+          </>
+          :
+          <>
+           <Stack.Screen name="Main" options={{headerShown:false}} component={DrawerNavigation}/>
             <Stack.Screen name="Oficinas" options={{headerTitle:()=>(<IconRouteTitle icono='office-building-marker' titulo={'ATENCION AL CONTRIBUYENTE'}/>)}} component={OficinasScreen}/>
             <Stack.Screen name="Notificaciones" options={{headerTitle:'Notificaciones'}} component={NotificacionesScreen}/>
             <Stack.Screen name="Contraseña" options={{headerTitle:'Cambiar Contraseña'}} component={ContraseñaScreen}/>
             <Stack.Screen name="Contacto" options={{headerTitle:()=>(<IconRouteTitle icono='wechat' titulo={'CONTACTO'}/>)}} component={ContactoScreen}/>
             <Stack.Screen name="MediosPago" options={{headerTitle:()=>(<IconRouteTitle icono='card-bulleted' titulo={'MEDIOS DE PAGO'}/>)}} component={MediosPagosScreen}/>
-            <Stack.Screen name="Registro" options={{headerTitle:'Registro'}} component={RegisterScreen}/>
             <Stack.Screen name="Pagos" options={{headerTitle:'Metodos de Pago'}} component={PagoScreen}/>
             <Stack.Screen name="FormularioPagos" options={{headerTitle:'Forma de Pago'}} component={FormularioPagos}/>
             <Stack.Screen name="Inmueble" options={{headerTitle:()=>(<IconRouteTitle icono='home' titulo={'INMUEBLE'}/>)}} component={InmuebleScreen}/>
@@ -96,6 +105,9 @@ export const StackNavigation = () => {
             <Stack.Screen name="ObrasPrivadas" options={{headerTitle:()=>(<IconRouteTitle icono='paperclip' titulo={'OBRAS PRIVADAS'}/>)}} component={ObrasPrivadasScreen}/>
             <Stack.Screen name="EditarReferencia" options={{headerTitle:()=>(<IconRouteTitle icono='pencil' titulo={'EDITAR'}/>)}} component={EditarReferenciaScreen}/>
             <Stack.Screen name="Escribanos" options={{headerTitle:()=>(<IconRouteTitle icono='scale-balance' titulo={'ESCRIBANOS'}/>)}} component={EscribanosScreen}/>
+          </>
+        }   
+       </Stack.Group>    
     </Stack.Navigator>
-  );
+    );
 }

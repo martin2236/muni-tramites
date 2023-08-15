@@ -1,42 +1,59 @@
-import React, { useContext, useEffect, useState, useRef } from 'react';
+import React, { useEffect, memo, useState, useContext } from 'react';
 import { Divider, Box, Text, Pressable, Checkbox, Button, Radio, FlatList } from 'native-base';
+
 //@ts-ignore
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
-import {DatosContext } from '../../context/datos/DatosContext';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParams } from '../../navigation/StackNavigation';
 import { Cuota } from '../../interfaces/inmuebles/deuda';
 import { RowAnios } from '../../components/RowAnios';
+import { UpdateInfo } from '../../components/TableItem';
+import { useFetch } from '../../hooks/useFetch';
+import { UserContext } from '../../context/usuario/Usercontext';
 
 interface Props extends StackScreenProps<RootStackParams,'VerInmueble'>{}
-
-export const VerInmueble = ({navigation, route}:Props) => {
-    const [show, setShow] = useState(false);
-    const [seleccionado, setSelected] = useState<Cuota[] | []>([]);
+//envolver en memo para ver si se conserva el estado
+export const VerInmueble = memo(({navigation, route}:Props) => {
+    const {user}= useContext(UserContext)
+    const {makePost,data} = useFetch()
+    const [selected, setSelected] = useState<Cuota[]>([]);
+    const [anios, setAnios] = useState<string[] | []>([]);
     const [totalSelected, setTotalSelected] = useState(0);
-    const {cuotas,cuotasSeleccionadas} = useContext(DatosContext);
     const [opcion, setOpcion] = useState<string | undefined>(undefined);
     const [error, setError]= useState({
         pago: false,
         cuota:false
       });
-    
-      const refSelected = useRef(seleccionado);
-      const selected = refSelected.current;
 
-      console.log('se monto verInmueble')
-
-    const {id,ruta, referencia, updateInfo} =  route.params;
+    useEffect(() =>{
+        if(data){
+            console.log('pdf',data)
+        }
+    },[data]);
+     
+    const {id,ruta, referencia, updateInfo,deuda} =  route.params;
     let editar = {
         id,
         ruta,
         referencia,
         updateInfo
     }
+    useEffect(() => {
+        pagarPorAnios(anios)
+    },[anios])
+
+   const pagarPorAnios = (anios:String[]) => {
+    const nuevaLista = deuda.filter((deuda:Cuota) => anios.includes(deuda.anio));
+    const total = nuevaLista.reduce((acc:number,curr:Cuota)=> acc + curr['totalcuota'] ,0);
+    setSelected(nuevaLista);
+    setTotalSelected(total);
+    }
+    
+    
     const infoByAnio = {};
 
-
-    cuotas.forEach( (item:Cuota) => {
+    //organiza las deudas por año
+    deuda.forEach( (item:Cuota) => {
         //@ts-ignore
     if (!infoByAnio[item.anio]) {
         //@ts-ignore
@@ -51,16 +68,22 @@ export const VerInmueble = ({navigation, route}:Props) => {
         listaAnios.push(infoByAnio[key]);
     }
 
+    // verifica que haya alguna deuda seleccionada y que se haya 
+    // elegido algun metodo de pago antes de pagar
     const verificarPago = () => {
-        if(!cuotasSeleccionadas.length){
+        if(!selected.length){
             setError({...error,cuota:true})
             console.log('no se selecciono ninguna cuota')
         }else if(opcion =='macro'){
             navigation.navigate('FormularioPagos')
             setError({...error,pago:false})
         }else if(opcion == 'pdf'){
-            console.log('se descargo el pdf')
-            setError({...error,pago:false})
+            const cuotas = selected.map(item => item.cunica);
+            const cunica = cuotas.join(",");
+            const cuenta = (updateInfo as UpdateInfo).cuenta;
+            const vencimiento = "2023-08-14T13:01:23.832Z";
+            makePost('/inmuebles/traerCuotas',{cuenta,vencimiento}, user?.token, 'pdf' );
+            setError({...error,pago:false});
         }
         else{
             console.log('no se seleccionó una opcion')
@@ -172,10 +195,11 @@ export const VerInmueble = ({navigation, route}:Props) => {
                     </Box>
                     <Divider mt={1} height={0.5}/>
                     <Box flex={2}>
-                        <FlatList 
+                        {/* lista */}
+                        <FlatList
                             data={listaAnios}
+                            renderItem={({item}) => <RowAnios item={item} setTotalSelected={(nuevaSuma) => setTotalSelected(nuevaSuma)} anios={anios} setAnios={setAnios} selected={selected} setSelected={setSelected}/>}
                             keyExtractor={(item,index) => ` ${index}`}
-                            renderItem={({item}) => <RowAnios item={item} setTotalSelected={setTotalSelected} selected={selected} setSelected={setSelected}/>}
                             nestedScrollEnabled={true}
                         />
                     </Box>
@@ -225,4 +249,4 @@ export const VerInmueble = ({navigation, route}:Props) => {
             </Box>
         </Box>
         )
-    }
+    })

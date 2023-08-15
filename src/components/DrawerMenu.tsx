@@ -1,11 +1,25 @@
 import { DrawerContentComponentProps } from '@react-navigation/drawer'
 import { Box, Pressable, Center, Text, Divider,Image } from 'native-base'
-import React from 'react'
+import React,{useContext} from 'react'
 //@ts-ignore
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
+import { UserContext } from '../context/usuario/Usercontext';
+import { DatosContext } from '../context/datos/DatosContext';
 
 
 export const DrawerMenu = ({navigation}:DrawerContentComponentProps) => {
+
+  const {user,setUser} = useContext(UserContext);
+  const {setInmuebles,setComercios,setCementerios,setVehiculos} = useContext(DatosContext);
+
+  const cerrarSesion = () => {
+    setInmuebles(null);
+    setComercios(null);
+    setCementerios(null);
+    setVehiculos(null);
+    setUser(null);
+  }
+
   return (
     <Box flex={1}>
         <Center height={140} bg={'#3FB2E8ff'}>
@@ -43,7 +57,7 @@ export const DrawerMenu = ({navigation}:DrawerContentComponentProps) => {
             </Pressable>
             <Divider width={'80%'} mb={2} />
             
-            <Pressable onPress={()=> navigation.navigate('Login')} height={'10'} mb={2}  flexDir={'row'} alignItems={'center'} justifyContent={'flex-start'} width={'full'}>
+            <Pressable onPress={()=> cerrarSesion()} height={'10'} mb={2}  flexDir={'row'} alignItems={'center'} justifyContent={'flex-start'} width={'full'}>
             <Icon style={{marginLeft:10}} name='logout' size={28}/>
               <Text ml={3} textAlign={'center'} fontSize={15} fontWeight={'bold'}>Cerrar sesión</Text>
             </Pressable>

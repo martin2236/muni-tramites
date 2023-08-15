@@ -25,9 +25,9 @@ export interface LoginReq {
 
 export const LoginScreen = ({navigation}:Props) => {
 
-    const {makePost, data, cargando, setCargando} = useFetch()
+    const {makePost, data, cargando, setCargando} = useFetch();
 
-    const {setUser} = useContext(UserContext)
+    const {setUser} = useContext(UserContext);
 
     useEffect(() => {
         if(data){
@@ -37,14 +37,13 @@ export const LoginScreen = ({navigation}:Props) => {
             };
             if(usuario){
                 setUser(usuario);
-                navigation.replace('Main');
             };
         } 
     }, [data])
     
     const onLogin = (values : Login) =>{
         setCargando(true);
-       makePost('/auth/login',{cuit:Number(values.cuit), clave:values.clave});
+       makePost('/auth/login',{cuit:Number(values.cuit), clave:values.clave},undefined,'login');
     }
 
   return (

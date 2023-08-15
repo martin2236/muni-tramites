@@ -31,36 +31,16 @@ export interface Info {
 export const CementerioScreen = ({navigation,route}:Props) => {
 
         const { cementerios, setCuotas} = useContext(DatosContext);
-        const {user} = useContext(UserContext);
         const datos ={
             orden:route.params,
             vencimiento: "2023-03-28T15:46:20.265Z"
         }
         const [info, setInfo] = useState<Info | null>(null);
-        const [deuda, setDeuda] = useState(null);
-        const { makePost, data} = useFetch();
        
-        const renderItem = (item:ListProps)=> {return (<TableItem item={item} pantalla={'Cementerio'} setData={setInfo} deuda={deuda} navigation={navigation}/>)};  
+        const renderItem = (item:ListProps)=> {return (<TableItem item={item} pantalla={'Cementerio'} setData={setInfo}  navigation={navigation}/>)};  
         const keyExtractor = (item:Cementerio, index:number)=> `${item.pkcementerio}${index}` 
         console.log('Estos son los datos',datos)
-        useEffect(() => {
-            makePost('/cementerios/traerCuotas',datos, user?.token, 'deudas' )
-        }, [])
-
-        useEffect(()=>{
-            //! aca pido la data de la deuda y la seteo en el state de deuda
-            if(data){
-                console.log(data)
-                const checkedCuotas = data.deudas.cuotas.map((cuota:Cuota)=>{
-                    return {
-                        ...cuota,
-                        checked:false
-                    }
-                })
-                setDeuda(data);
-                setCuotas(checkedCuotas);
-            }
-        },[data])
+        
 
   return (
     <Box flex={1} backgroundColor={'gray.200'}>
@@ -72,7 +52,7 @@ export const CementerioScreen = ({navigation,route}:Props) => {
             alignSelf={'center'} 
             backgroundColor={'white'}>
             {
-             deuda ? 
+             cementerios ? 
              <>
                    <Text
                     mt={7}

@@ -1,12 +1,12 @@
 import React, {useState,useEffect, useContext} from 'react'
-import { Box, Center, Text, Button,ScrollView, Select, CheckIcon} from 'native-base'
+import { Box, Center, Text, Button,ScrollView, Select, CheckIcon, Spinner} from 'native-base'
 import { CustomInput } from '../components/CustomInput'
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParams } from '../navigation/StackNavigation';
 import { Formik } from 'formik';
 import { registerSchema } from '../schemas/ValidationSchema';
 import { useFetch } from '../hooks/useFetch';
-import { UserContext } from '../context/usuario/Usercontext';
+import { CustomAlert } from '../components/CustomAlert';
 
 interface Props extends StackScreenProps<RootStackParams,'Registro'>{}
 interface FormValues {
@@ -26,29 +26,40 @@ interface FormValues {
 
 export const RegisterScreen = ({navigation}:Props) => {
     const [service, setService] = useState("");
-    const {setUser} = useContext(UserContext)
+    const [alert,setAlert] = useState({
+        status:'',
+        title:''
+    });
     const {makePost, data, cargando, setCargando} = useFetch()
-
-   const onRegister = (values:FormValues) => {
-    const{celular,celular_area,telefono,telefono_area,nombre,tipo_cuit,clave,mail,celular_empresa,cuit}= values;
-    makePost('/auth/register',{cuit:Number(cuit),celular,celular_area,telefono,telefono_area,nombre,tipo_cuit,clave, mail,celular_empresa});
-   }
+    const onRegister = (values:FormValues) => {
+        const{celular,celular_area,telefono,telefono_area,nombre,tipo_cuit,clave,mail,celular_empresa,cuit}= values;
+        makePost('/auth/register',{cuit:Number(cuit),celular,celular_area,telefono,telefono_area,nombre,tipo_cuit,clave, mail,celular_empresa},undefined,'registro');
+    }
 
    useEffect(() => {
-    if(data){
-        console.log('Respuesta del backend',data)
-        const usuario = {
-            ...data.user[0], token:data.token
-        };
-        if(usuario){
-            setUser(usuario);
-            navigation.replace('Main');
-        };
-    } 
+    
+    if(data && !data.msj){
+        console.log('error',cargando)
+       setAlert({
+        status:'error',
+        title:'Ocurrió por favor intente mas tarde'
+       })
+    }else if(data && data.msj){
+        console.log('bien',cargando)
+        setAlert({
+            status:'success',
+            title:data.msj
+        })
+    }
+
 }, [data])
-  return (
+
+  return ( 
     <Box flex={1} alignItems={'center'}>
         <Center mt={10} width={'80%'}>
+            {
+                alert.status != '' && <CustomAlert setAlert={setAlert} status={alert.status} title={alert.title}/>
+            }
             <Formik
                     initialValues={{ nombre:'',mail:'', cuit:0, clave:'', verificacion:'', tipo_cuit:'', telefono:'', telefono_area:'', celular:'', celular_area:'', celular_empresa:'' }}
                     validationSchema={registerSchema}
@@ -99,9 +110,9 @@ export const RegisterScreen = ({navigation}:Props) => {
                                             setService(itemValue);
                                             setFieldValue("tipo_cuit", itemValue);
                                         }}>
-                                    <Select.Item label="FEMENINO" value="femenino" />
-                                    <Select.Item label="MASCULINO" value="masculino" />
-                                    <Select.Item label="EMPRESA" value="empresa" />
+                                    <Select.Item label="FEMENINO" value="F" />
+                                    <Select.Item label="MASCULINO" value="M" />
+                                    <Select.Item label="EMPRESA" value="E" />
                                 </Select>
                                 {'tipo_cuit' in errors ? <Text ml={8} color={'red.500'}> {errors.celular_empresa} </Text> : null} 
                                 </Box>
@@ -214,13 +225,30 @@ export const RegisterScreen = ({navigation}:Props) => {
                                 onPress={() => handleSubmit()}
                                 height={'12'}
                                 mt={8}
+                                disabled={cargando}
                                 borderRadius={'3xl'}
                                 backgroundColor={'gray.500'}>
-                                <Text 
-                                    color={'white'} 
-                                    fontWeight={'bold'}>
-                                        REGISTRARSE
-                                    </Text>        
+                                    {
+                                    cargando ? 
+                                    <Box display={'flex'} flexDirection={'row'} width={'100%'}>
+                                        <Spinner size={20} color={'white'}/>
+                                        <Text 
+                                            ml={5} 
+                                            color={'white'} 
+                                            fontWeight={'bold'}>
+                                                REGISTRANDO...
+                                        </Text> 
+                                    </Box>
+                                    :
+                                    <>
+                                    <Text 
+                                        color={'white'} 
+                                        fontWeight={'bold'}>
+                                            REGISTRARSE
+                                    </Text>   
+                                    </>
+                                }      
+                                      
                             </Button>
                        </ScrollView>
                     </>

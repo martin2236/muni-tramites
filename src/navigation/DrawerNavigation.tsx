@@ -4,12 +4,11 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { HomeScreen } from '../screens/HomeScreen';
 import { DrawerMenu } from '../components/DrawerMenu';
 
-export type RootStackParams = {
-    Login:undefined,
+export type RootDrawerParams = {
     Home:undefined,
 }
 
-const Drawer = createDrawerNavigator<RootStackParams>();
+const Drawer = createDrawerNavigator<RootDrawerParams>();
 
 export const DrawerNavigation = () => {
   return (

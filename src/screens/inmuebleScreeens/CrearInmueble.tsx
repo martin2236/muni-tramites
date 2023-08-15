@@ -5,6 +5,7 @@ import { CustomInputForm } from '../../components/CustomInputForm'
 import { UserContext } from '../../context/usuario/Usercontext'
 import { useFetch } from '../../hooks/useFetch'
 import { AgregarInmuebleSchema } from '../../schemas/ValidationSchema'
+import { DatosContext } from '../../context/datos/DatosContext'
 
 interface NuevoInmueble{
     cuenta:string,
@@ -21,21 +22,31 @@ export const CrearInmueble = () => {
 
     const {makePost, data} = useFetch()
     const {user} = useContext(UserContext);
+    const {traerInmuebles} = useContext(DatosContext)
 
     useEffect(() => {
-        console.log('crear inmueble data',data)
-    }, [data])
+        console.log(data);
+        if(data && data.inmuebles.estado){
+            console.log('inmueble creado, se pidieron los inmuebles');
+            traerInmuebles();
+        }
+    }, [data]);
+    
     
 
     const crearInmueble = ( values: NuevoInmueble) => {
+        //d-vefi es los que viene en cuenta municipal despues del / ej:57464/0
+        const cuenta = values.cuenta.slice(0,-1);
+        const d_vefi = values.cuenta.charAt(values.cuenta.length - 1);
         let datos = {
-            cuenta: Number(values.cuenta),
-            d_vefi: 4,
+            cuenta: Number(cuenta),
+            d_vefi:Number(d_vefi),
             partida: Number(values.partida),
             descripcion: values.descripcion,
             titular: true
         }
-        makePost('/inmuebles', datos, user?.token);
+        console.log('ESTOS SON LOS DATOS',datos)
+        makePost('/inmuebles', datos, user?.token,'inmuebles');
     }
 
   return (

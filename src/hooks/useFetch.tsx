@@ -6,6 +6,9 @@ export const useFetch = () => {
   const [data, setData] = useState<any>(null);
   const [cargando, setCargando] = useState(false);
 
+  // maneja todas las peticiones get si tiene token y tipo hace la peticion al endpoint correspondiente
+  // si tiene token e id hace get al endpoint que pide id
+  // por ultimo puede hacer una peticion a un endpoint que no requiera datos
     const makeGet = async(uri:string, token = '' , id?:number, tipo?:string) => {
       let config = {
         headers: {
@@ -14,20 +17,17 @@ export const useFetch = () => {
       }
       if(token && tipo){
         try {
-          console.log(`pidiendo ${tipo}`)
           const res = await instance.get(uri , config);
           const datos = await res.data;
-          const objData = {[`${tipo}`]: datos}
+          const objData = {[`${tipo}`]: datos};
           setData(objData);
           setCargando(false);
-        } catch (error) {
-          console.log(error);
+        } catch (error:any) {
+          setData(error.response.data);
           setCargando(false);
         }
       }else if(token && id){
         try {
-            console.log(`pidiendo ${tipo}`)
-            console.log(uri, token, id, tipo)
           const res = await instance.get(uri+`/${id}` , config);
           const datos = await res.data;
           const objData = {[`${tipo}`]: datos}
@@ -41,25 +41,24 @@ export const useFetch = () => {
         try {
           const res = await instance.get(uri, config);
           const datos = res.data;
-          setData(datos)
+          setData(datos);
           setCargando(false);
          } catch (error) {
-          console.log(error)
+          console.log(error);
           setCargando(false);
          }
-      }
-       
-    }
-
+      };
+    };
+    //desde esta funcion se manejan todas las peticiones post de la app como
+    //login registro, creacion de datos y peticiones a endpoints como traerCuotas
     const makePost = async(uri:string ,data:{}, token= '', tipo?:string) => {
         let config = {
           headers: {
             'Authorization':`Bearer ${token}`,
           }
-        }
-        if(token === ''){
+        };
+        if(token === '' && tipo == 'login'){
         try {
-          console.log('haciendo login')
           const res = await instance.post(uri, data);
           const datos = await res.data;
           setData(datos);
@@ -68,11 +67,22 @@ export const useFetch = () => {
           console.log(error);
           setCargando(false);
         }
-      }
-         try {
-          //console.log('makepost', data)
+      }else if( token === '' && tipo == 'registro'){
+        try {
+          setCargando(true)
+          const nuevaData = {...data,token}
+          const res = await instance.post(uri, nuevaData);
+          const datos = await res.data;
+          setData(datos);
+          setCargando(false);
+        } catch (error) {
+          console.log(error);
+          setData(error)
+          setCargando(false);
+        }
+      }else{
+        try {
           const res = await instance.post(uri, data, config);
-          console.log('en envio el token', token)
           const datos = await res.data;
           const objData = {[`${tipo}`]: datos}
           setData(objData);
@@ -81,9 +91,10 @@ export const useFetch = () => {
           console.log(error);
           setCargando(false);
         }
-      
+      }
     }
 
+    //este endpoint se usa para hacer todas las peticiones put de la app
     const makePut =  async(uri:string,token:string ,data:{}) => {
       let config = {
         headers: {

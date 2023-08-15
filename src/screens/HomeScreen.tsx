@@ -4,10 +4,10 @@ import { Box, Divider, Text, Pressable } from 'native-base';
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import { useFetch } from '../hooks/useFetch';
 import { UserContext } from '../context/usuario/Usercontext';
-import { StackScreenProps } from '@react-navigation/stack';
-import { RootStackParams } from '../navigation/StackNavigation';
+import { DrawerScreenProps } from '@react-navigation/drawer';
+import { RootDrawerParams } from '../navigation/DrawerNavigation';
 
-interface Props extends StackScreenProps<RootStackParams,'Main'>{}
+interface Props extends DrawerScreenProps<RootDrawerParams,'Home'>{}
 
 
 export const HomeScreen = ({navigation}:Props) => {
@@ -17,10 +17,39 @@ export const HomeScreen = ({navigation}:Props) => {
     const [disabled,setDisabled] = useState<string | null>(null);
     const {makeGet, data, cargando} = useFetch();
 
+    //pide los datos a mostrar en la siguiente pantalla y desabilita la navegacion a otras
+    //pantallas mientras los datos se cargan 
+    const pedirInformacion = (data: string) =>{
+      setDisabled(data)
+        switch (data) {
+            case 'Inmueble':
+                makeGet('/inmuebles/traerInmuebles', user?.token, undefined, 'Inmueble')
+                setPantalla('Inmueble');
+              break;
+            case 'Comercio':
+                makeGet('/comercios/traerComercios', user?.token, undefined, 'Comercio')
+                setPantalla('Comercio');
+              break;
+              case 'Cementerio':
+                makeGet('/cementerios/traerCementerios', user?.token, undefined, 'Cementerio')
+                setPantalla('Cementerio');
+              break;
+            case 'Vehiculo':
+                makeGet('/vehiculos/traerVehiculos', user?.token, undefined, 'Vehiculo')
+                setPantalla('Vehiculo');
+              break;
+            default:
+              console.log(`No se encontro el tipo ${data}.`);
+          }
+    };
+
+    //recibe los datos que trae la funcion traerInformaciony los procesa
     useEffect(() => {
+      if(data && data.message){
+        setCuenta(1)
+      }
       if(data && data.Inmueble){
         const cuenta = data.Inmueble[0].cuenta;
-        console.log('esta es la cuenta',cuenta)
        setCuenta(cuenta) 
       }
       if(data && data.Comercio){
@@ -50,47 +79,26 @@ export const HomeScreen = ({navigation}:Props) => {
           }
         setCuenta(cuenta) 
       }
-    }, [data])
+    }, [data]);
 
-    useEffect(()=>{
-      const unsubscribe = navigation.addListener('focus', () => {
-        console.log('ruta focused')
-        setDisabled(null)
-      });
-  
-      return unsubscribe;
-    }, [navigation]);
-
-    useEffect(()=>{
+     //verifica la existencia de una cuenta para navegar a la pantalla seleccionada
+     useEffect(()=>{
+      console.log('algo',cuenta,pantalla)
         if(cuenta && pantalla){
+          console.log(cuenta,pantalla)
            navigation.navigate(pantalla as never,cuenta as never);
            setCuenta(null)
         }
-    },[cuenta])
+    },[cuenta]);
+
+    //quita la propiedad disabled despues de haber presionado una ruta
+    useEffect(()=>{
+      const unsubscribe = navigation.addListener('focus', () => {
+        setDisabled(null)
+      });
+      return unsubscribe;
+    }, [navigation]);
     
-    const pedirInformacion = (data: string) =>{
-      setDisabled(data)
-        switch (data) {
-            case 'Inmueble':
-                makeGet('/inmuebles/traerInmuebles', user?.token, undefined, 'Inmueble')
-                setPantalla('Inmueble');
-              break;
-            case 'Comercio':
-                makeGet('/comercios/traerComercios', user?.token, undefined, 'Comercio')
-                setPantalla('Comercio');
-              break;
-              case 'Cementerio':
-                makeGet('/cementerios/traerCementerios', user?.token, undefined, 'Cementerio')
-                setPantalla('Cementerio');
-              break;
-            case 'Vehiculo':
-                makeGet('/vehiculos/traerVehiculos', user?.token, undefined, 'Vehiculo')
-                setPantalla('Vehiculo');
-              break;
-            default:
-              console.log(`No se encontro el tipo ${data}.`);
-          }
-    };
 
   return (
     <Box flex={1} backgroundColor={'gray.200'}>
@@ -107,13 +115,15 @@ export const HomeScreen = ({navigation}:Props) => {
                 flexWrap={'wrap'} 
                 justifyContent={'space-around'}
                 alignSelf={'center'} 
-                backgroundColor={'white'}>
+                backgroundColor={'white'}
+              >
                 <Divider mb={10}/>
                 <Pressable 
                   isDisabled={disabled !== null && disabled !== 'Inmueble'}
-                    width={'50%'}
-                    mb={5} 
-                    onPress={()=> pedirInformacion('Inmueble')}>
+                  width={'50%'}
+                  mb={5} 
+                  onPress={()=> pedirInformacion('Inmueble')}
+                  >
                     <Box 
                         height={120} 
                         alignSelf={'center'}
@@ -146,11 +156,13 @@ export const HomeScreen = ({navigation}:Props) => {
                         alignItems={'center'} 
                         borderRadius={'3xl'} 
                         width={120} 
-                        backgroundColor={'#2596be'}>
+                        backgroundColor={'#2596be'}
+                      >
                         <Icon 
                             name="car" 
                             size={70} 
-                            color="#fff" />
+                            color="#fff" 
+                          />
                     </Box>
                     <Text 
                         mt={1} 

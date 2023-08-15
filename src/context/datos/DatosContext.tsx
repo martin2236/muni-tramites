@@ -45,6 +45,7 @@ export interface Cementerio {
     fecha_registro: Date;
     fnrorden:       number;
     fapenom:        string;
+    orden?:         string;
 }
 
 export interface Vehiculo {
@@ -63,9 +64,13 @@ export interface updateInfo {
 
 interface DatosInterface{
     comercios:Comercio[] | null,
+    setComercios: React.Dispatch<React.SetStateAction<null>>,
     cementerios:Cementerio[] | null,
+    setCementerios: React.Dispatch<React.SetStateAction<null>>,
     inmuebles:Inmueble[] | null,
+    setInmuebles: React.Dispatch<React.SetStateAction<null>>,
     vehiculos:Vehiculo[] | null,
+    setVehiculos: React.Dispatch<React.SetStateAction<null>>,
     cuotas:Cuota[] | [],
     setCuotas:(cuotas:Cuota[] | []) => void,
     numeroCuota:number[] | [],
@@ -76,13 +81,18 @@ interface DatosInterface{
     setUpdated:({}:updateInfo) => void,
     cuotasSeleccionadas:Cuota[] | [],
     setCuotasSeleccionadas:(cuotas:Cuota[] | []) => void,
+    traerInmuebles: () => void
 }
 
 const initialState = {
     comercios:[],
+    setComercios:() => {},
     cementerios:[],
+    setCementerios:() => {},
     inmuebles:[],
+    setInmuebles:() => {},
     vehiculos:[],
+    setVehiculos:() => {},
     cuotas:[],
     setCuotas:() => {},
     numeroCuota:[],
@@ -93,6 +103,7 @@ const initialState = {
     setUpdated:() => {},
     cuotasSeleccionadas:[],
     setCuotasSeleccionadas:() => {},
+    traerInmuebles: () => {}
 }
 
 export const DatosContext = createContext<DatosInterface>(initialState);

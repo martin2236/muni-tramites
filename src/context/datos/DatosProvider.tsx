@@ -25,7 +25,7 @@ export const DatosProvider = ({children}:Props) => {
       actualizar:false
     });
     
-
+    //ni bien la aplicacion detecta un usuario manda a pedir toda la data 
     useEffect(() => {
       if(user){
         traerInmuebles();
@@ -33,8 +33,10 @@ export const DatosProvider = ({children}:Props) => {
         traerCementerios();
         traerVehiculos();
       }
-    }, [user])
-
+    }, [user]);
+    
+   //este useEffect se activa cuando se modifica alguna referencia pidiendo los datos otra vez
+   //para que el inmueble muestre el nuevo nombre 
     useEffect(() => {
      switch (updated.ruta) {
       case 'inmuebles':
@@ -52,12 +54,11 @@ export const DatosProvider = ({children}:Props) => {
       default:
         console.log(`No se encontro el tipo ${updated.ruta.toUpperCase()}.`);
      }
-    }, [updated])
-
-    useEffect(() => {
-        console.log('usando traer cuotas',numeroCuota)
-    }, [numeroCuota])
-
+    }, [updated]);
+    
+    // a medida que se van ejecutando la funciones traerInmuebles(), traerComercios(),
+    // traerCementerio(),traerVehiculos() la data va cambiando lo que dispara este useEffect
+    // haciendo que se guarden en el estado los inmuebles, comercios, cementerios y vehiculos de usuario
     useEffect(() => {
         if(data){
             const param = Object.keys(data)[0];
@@ -80,7 +81,8 @@ export const DatosProvider = ({children}:Props) => {
           }
         }
       }, [data]);
-
+    
+    // funciones para pedir datos en el backend
     const traerInmuebles = () =>{
         makeGet('/inmuebles/traerInmuebles', user?.token, undefined, 'inmuebles')
     };
@@ -101,9 +103,13 @@ export const DatosProvider = ({children}:Props) => {
     <DatosContext.Provider
         value={{
             comercios,
+            setComercios,
             cementerios,
+            setCementerios,
             inmuebles,
+            setInmuebles,
             vehiculos,
+            setVehiculos,
             cuotas,
             numeroCuota,
             cuotasSeleccionadas,
@@ -113,7 +119,8 @@ export const DatosProvider = ({children}:Props) => {
             inmuebleId,
             setInmuebleId,
             updated,
-            setUpdated
+            setUpdated,
+            traerInmuebles
         }}
     >
         {children}
