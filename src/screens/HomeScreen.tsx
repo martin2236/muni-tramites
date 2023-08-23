@@ -61,23 +61,8 @@ export const HomeScreen = ({navigation}:Props) => {
         setCuenta(cuenta) 
       }
       if(data && data.Vehiculo){
-        const vehiculo = data.Vehiculo[0].tipo
-        const cuenta = {
-            dominio:data.Vehiculo[0].dominio.trim(),
-            tipo:data.Vehiculo[0].tipo
-        };
-        switch (vehiculo) {
-            case "Vehiculo Particular":
-              cuenta.tipo = "auto"
-              break;
-            case "Moto":
-              cuenta.tipo = "moto"
-              break;
-            default:
-              cuenta.tipo = "publico"
-              break;
-          }
-        setCuenta(cuenta) 
+        //una vez que se piden los vehiculos se chequea que haya alguno en la lista
+        setCuenta({dominio:'',tipo:''});
       }
     }, [data]);
 

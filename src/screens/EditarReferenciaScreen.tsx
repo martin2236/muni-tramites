@@ -9,12 +9,14 @@ import { DatosContext } from '../context/datos/DatosContext'
 interface Props extends StackScreenProps<RootStackParams,'EditarReferencia'>{}
 
 export const EditarReferenciaScreen = ({navigation,route}:Props) => {
-  const {id, ruta,referencia,updateInfo} =  route.params;
+  const {id, ruta,referencia,deuda,updateInfo} =  route.params;
   const[nuevaReferencia, setNuevaReferencia] = useState('');
   const [show, setShow] = useState(true);
   const {user} = useContext(UserContext);
   const{updated,setUpdated}= useContext(DatosContext);
   const {makePut,data} = useFetch();
+
+  console.log('esta es la ruta',ruta)
   
   const onUpdate = () => {
     setShow(false);
@@ -23,38 +25,40 @@ export const EditarReferenciaScreen = ({navigation,route}:Props) => {
       descripcion:nuevaReferencia
     }
     if(user?.token){
-      switch(ruta){
-        case 'Inmueble':
-          makePut(`inmuebles/${id}`,user.token,data,)
-          break;
-        case 'Comercio':
-          makePut(`comercios/${id}`,user.token, data);
-        case 'Vehiculo':
-          makePut(`vehiculos/${id}`,user.token,data);
-        case  'Cementerio':
+      if(ruta === 'Inmueble'){
+          console.log(`inmueble/${id}`,user.token,data)
+        return makePut(`inmuebles/${id}`,user.token,data,)
+      }else if(ruta === 'Comercio'){
+        console.log(`comercios/${id}`,user.token,data)
+         return makePut(`comercios/${id}`,user.token, data);
+      }else if(ruta === 'Vehiculo'){
+        console.log(`vehiculos/${id}`,user.token,data)
+        return  makePut(`vehiculos/${id}`,user.token,data);
+      } else if( ruta === 'Cementerio'){
+        console.log(`cementerio/${id}`,user.token,data)
           makePut(`cementerios/${id}`,user.token,data);
-    }
+      }
   }
 }
-
+//!revisar aca
   useEffect(() => {
     if(data && nuevaReferencia){
-      console.log('Esta es la ruta',ruta)
       switch (ruta) {
         case 'Inmueble':
           setUpdated({ruta:'inmuebles',actualizar:!updated.actualizar})
-          navigation.navigate('VerInmueble',{id,ruta, referencia:nuevaReferencia,updateInfo})
+          navigation.navigate('VerInmueble',{id,ruta,deuda,referencia:nuevaReferencia,updateInfo})
           break;
         case 'Comercio':
           setUpdated({ruta:'comercios',actualizar:!updated.actualizar})
-          navigation.navigate('VerComercio',{id,ruta, referencia:nuevaReferencia,updateInfo})
+          navigation.navigate('VerComercio',{id,ruta,deuda, referencia:nuevaReferencia,updateInfo})
           break;
         case 'Cementerio':
           setUpdated({ruta:'cementerios',actualizar:!updated.actualizar})
-          navigation.navigate('VerCementerio',{id,ruta, referencia:nuevaReferencia,updateInfo})
+          navigation.navigate('VerCementerio',{id,ruta,deuda, referencia:nuevaReferencia,updateInfo})
           break;
         case 'Vehiculo':
-          console.log('se fue a vehiculos')
+          setUpdated({ruta:'vehiculos',actualizar:!updated.actualizar})
+          navigation.navigate('VerVehiculo',{id,ruta,deuda, referencia:nuevaReferencia,updateInfo})
           break;
       
         default:

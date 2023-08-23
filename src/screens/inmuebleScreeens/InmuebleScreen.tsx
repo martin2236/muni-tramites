@@ -8,6 +8,7 @@ import { TableItem } from '../../components/TableItem';
 import { CustomModal } from '../../components/CustomModal';
 import { Inmueble,DatosContext } from '../../context/datos/DatosContext';
 
+
 interface Props {
     navigation: StackNavigationProp<RootStackParams, "Inmueble", undefined>,
     route:any

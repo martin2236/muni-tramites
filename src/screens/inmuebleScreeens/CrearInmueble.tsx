@@ -1,11 +1,12 @@
 import { Formik } from 'formik'
-import { Alert, Box, Button, Center, Divider, Input, Text } from 'native-base'
-import React, { useEffect, useContext } from 'react'
+import { Box, Button, Center, Divider, Input, Text } from 'native-base'
+import React, {useState, useEffect, useContext } from 'react'
 import { CustomInputForm } from '../../components/CustomInputForm'
 import { UserContext } from '../../context/usuario/Usercontext'
 import { useFetch } from '../../hooks/useFetch'
 import { AgregarInmuebleSchema } from '../../schemas/ValidationSchema'
 import { DatosContext } from '../../context/datos/DatosContext'
+import { CustomAlert } from '../../components/CustomAlert';
 
 interface NuevoInmueble{
     cuenta:string,
@@ -23,14 +24,22 @@ export const CrearInmueble = () => {
     const {makePost, data} = useFetch()
     const {user} = useContext(UserContext);
     const {traerInmuebles} = useContext(DatosContext)
+    const [alert,setAlert] = useState({
+        status:'',
+        title:''
+    });
 
     useEffect(() => {
         console.log(data);
         if(data && data.inmuebles.estado){
-            console.log('inmueble creado, se pidieron los inmuebles');
+            setAlert({
+                status:'success',
+                title:'Inmueble agregado con Éxito'
+            })
             traerInmuebles();
         }
     }, [data]);
+
     
     
 
@@ -58,6 +67,12 @@ export const CrearInmueble = () => {
             width={'90%'} 
             alignSelf={'center'} 
             backgroundColor={'white'}>
+                {
+                alert.status != '' && 
+                <Box alignSelf={'center'} mt={10} width={'80%'}>
+                    <CustomAlert setAlert={setAlert} status={alert.status} title={alert.title}/>
+                </Box>
+                }
                 <Text
                     mt={7}
                     alignSelf={'center'}

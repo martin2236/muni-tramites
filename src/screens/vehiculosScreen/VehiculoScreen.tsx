@@ -6,7 +6,7 @@ import { RootStackParams } from '../../navigation/StackNavigation';
 import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
 import { TableItem } from '../../components/TableItem';
 import { CustomModal } from '../../components/CustomModal';
-import { Inmueble,DatosContext, Vehiculo } from '../../context/datos/DatosContext';
+import { DatosContext, Vehiculo } from '../../context/datos/DatosContext';
 import { useFetch } from '../../hooks/useFetch';
 import { UserContext } from '../../context/usuario/Usercontext';
 import { Cuota } from '../../interfaces/inmuebles/deuda';
@@ -30,39 +30,11 @@ export interface Info {
 
 export const VehiculoScreen = ({navigation,route}:Props) => {
 
-        const { vehiculos, setCuotas} = useContext(DatosContext);
-        const {user} = useContext(UserContext);
-        const datos ={
-            dominio:route.params.dominio,
-            tipo:route.params.tipo,
-            vencimiento: "2023-03-28T15:46:20.265Z"
-        }
-
+        const { vehiculos} = useContext(DatosContext);
         const [info, setInfo] = useState<Info | null>(null);
-        const [deuda, setDeuda] = useState(null);
-        const { makePost, data} = useFetch();
-       
-        const renderItem = (item:ListProps)=> {return (<TableItem item={item} pantalla={'Vehiculo'} setData={setInfo} deuda={deuda} navigation={navigation}/>)};  
+        const renderItem = (item:ListProps)=> {return (<TableItem item={item} pantalla={'Vehiculo'} setData={setInfo} navigation={navigation}/>)};  
         const keyExtractor = (item:Vehiculo, index:number)=> `${item.dominio}${index}` 
 
-        useEffect(() => {
-            makePost('/vehiculos/traerCuotas',datos, user?.token, 'deudas' )
-        }, [])
-
-        useEffect(()=>{
-            //! aca pido la data de la deuda y la seteo en el state de deuda
-            if(data){
-                console.log('estas son los inmuebles',vehiculos);
-                const checkedCuotas = data.deudas.cuotas.map((cuota:Cuota)=>{
-                    return {
-                        ...cuota,
-                        checked:false
-                    }
-                })
-                setDeuda(data);
-                setCuotas(checkedCuotas);
-            }
-        },[data])
 
   return (
     <Box flex={1} backgroundColor={'gray.200'}>
@@ -73,8 +45,7 @@ export const VehiculoScreen = ({navigation,route}:Props) => {
             width={'90%'} 
             alignSelf={'center'} 
             backgroundColor={'white'}>
-            {
-             deuda ? 
+          
              <>
                    <Text
                     mt={7}
@@ -96,7 +67,7 @@ export const VehiculoScreen = ({navigation,route}:Props) => {
                     <Text fontWeight={'bold'} fontSize={'sm'} color={'white'}>AGREGAR INMUEBLE</Text>
                 </Button>
                {
-                vehiculos ? (
+                vehiculos && vehiculos.length ? (
                   <>
                       <Box mt={10} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
                         <Text width={'40%'} fontSize={'12px'} textAlign={'center'} fontWeight={'bold'}>
@@ -121,7 +92,9 @@ export const VehiculoScreen = ({navigation,route}:Props) => {
                 )
                 : 
                 (
-                    <Text>No hay inmuebles</Text>
+                    <Center flex={1}>
+                        <Text fontSize={20} color={'cyan.500'}>No hay vehiculos registrados</Text>
+                    </Center>
                 )
                }
                     
@@ -187,14 +160,7 @@ export const VehiculoScreen = ({navigation,route}:Props) => {
                     }
                 </Box>
              </>
-             :
-             <Center flex={1}>
-                <Spinner size={50} color={'cyan.400'} />
-                <Text mt={5} fontSize={18} fontWeight={'bold'}>
-                    Cargando la Informacion
-                </Text>
-             </Center>
-            }
+            
                 <CustomModal/>
         </Box>
     </Box>

@@ -1,4 +1,4 @@
-import React, { useContext, useState,memo } from 'react';
+import React, { useContext, useState, useEffect, memo } from 'react';
 import { Divider, Box, Text, Pressable, Radio, Button, FlatList } from 'native-base';
 //@ts-ignore
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
@@ -7,43 +7,52 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParams } from '../../navigation/StackNavigation';
 import { Cuota } from '../../interfaces/inmuebles/deuda';
 import { RowAnios } from '../../components/RowAnios';
+import { UserContext } from '../../context/usuario/Usercontext';
+import { useFetch } from '../../hooks/useFetch';
+import { UpdateInfo } from '../../components/TableItem';
 
 interface Props extends StackScreenProps<RootStackParams,'VerVehiculo'>{}
 
 export const VerVehiculo = ({navigation, route}:Props) => {
-    const [show, setShow] = useState(false)
-    const [selected, setSelected] = useState([])
+
+    const {user}= useContext(UserContext)
+    const {makePost,data} = useFetch()
+    const [selected, setSelected] = useState<Cuota[]>([]);
+    const [anios, setAnios] = useState<string[] | []>([]);
     const [totalSelected, setTotalSelected] = useState(0);
     const [opcion, setOpcion] = useState<string | undefined>(undefined);
-    const {cuotas, cuotasSeleccionadas} = useContext(DatosContext);
+    const [error, setError]= useState({
+        pago: false,
+        cuota:false
+      });
 
-    const handlePress = () =>{
-        setShow(show => !show)
-    }
-
-    const verificarPago = () => {
-        if(! cuotasSeleccionadas.length){
-            console.log('no se selecciono ninguna cuota')
-        }else if(opcion =='macro'){
-            console.log(opcion)
-            console.log('navego a macro')
-        }else if(opcion == 'pdf'){
-            console.log('se descargo el pdf')
+      useEffect(() =>{
+        if(data && data.pdf){
+            console.log('pdf',data)
         }
-        else{
-            console.log('no se seleccionó una opcion')
-        }
-    }
-    const {id,ruta, referencia, updateInfo} =  route.params;
+    },[data]);
+     
+    const {id,ruta, referencia, updateInfo,deuda} =  route.params;
     let editar = {
         id,
         ruta,
+        deuda,
         referencia,
         updateInfo
     }
-    const infoByAnio = {};
+    useEffect(() => {
+        pagarPorAnios(anios)
+    },[anios])
 
-    cuotas.forEach( (item:Cuota) => {
+   const pagarPorAnios = (anios:String[]) => {
+    const nuevaLista = deuda.filter((deuda:Cuota) => anios.includes(deuda.anio));
+    const total = nuevaLista.reduce((acc:number,curr:Cuota)=> acc + curr['totalcuota'] ,0);
+    setSelected(nuevaLista);
+    setTotalSelected(total);
+    }
+    const infoByAnio = {};
+    //organiza las deudas por año
+    deuda.forEach( (item:Cuota) => {
         //@ts-ignore
     if (!infoByAnio[item.anio]) {
         //@ts-ignore
@@ -57,6 +66,30 @@ export const VerVehiculo = ({navigation, route}:Props) => {
         //@ts-ignore
         listaAnios.push(infoByAnio[key]);
     }
+
+    // verifica que haya alguna deuda seleccionada y que se haya 
+    // elegido algun metodo de pago antes de pagar
+    const verificarPago = () => {
+        if(!selected.length){
+            setError({...error,cuota:true})
+            console.log('no se selecciono ninguna cuota')
+        }else if(opcion =='macro'){
+            navigation.navigate('FormularioPagos')
+            setError({...error,pago:false})
+        }else if(opcion == 'pdf'){
+            const cuotas = selected.map(item => item.cunica);
+            const cunica = cuotas.join(",");
+            const cuenta = (updateInfo as UpdateInfo).cuenta;
+            //! cambiar a una fecha dinamica
+            const vencimiento = "2023-08-14T13:01:23.832Z";
+            makePost('/inmuebles/traerCuotas',{cuenta,vencimiento,cunica}, user?.token, 'pdf' );
+            setError({...error,pago:false});
+        }
+        else{
+            console.log('no se seleccionó una opcion')
+            setError({...error,pago:true})
+        }
+    };
 
   return (
     <Box flex={1} backgroundColor={'gray.200'}>
@@ -163,7 +196,7 @@ export const VerVehiculo = ({navigation, route}:Props) => {
                     <FlatList 
                         data={listaAnios}
                         keyExtractor={(item,index) => ` ${index}`}
-                        renderItem={({item}) => <RowAnios item={item} setTotalSelected={setTotalSelected} selected={selected} setSelected={setSelected}/>}
+                        renderItem={({item}) =><RowAnios item={item} setTotalSelected={(nuevaSuma) => setTotalSelected(nuevaSuma)} anios={anios} setAnios={setAnios} selected={selected} setSelected={setSelected}/>}
                         nestedScrollEnabled={true}
                     />
                 </Box>

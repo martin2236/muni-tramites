@@ -26,15 +26,19 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
       });
 
     useEffect(() =>{
-        if(data){
-            console.log('pdf',data)
+        if(data && data.pdf){
+            console.log(data)
         }
     },[data]);
+
      
     const {id,ruta, referencia, updateInfo,deuda} =  route.params;
+
+
     let editar = {
         id,
         ruta,
+        deuda,
         referencia,
         updateInfo
     }
@@ -48,7 +52,6 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
     setSelected(nuevaLista);
     setTotalSelected(total);
     }
-    
     
     const infoByAnio = {};
 
@@ -81,15 +84,17 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
             const cuotas = selected.map(item => item.cunica);
             const cunica = cuotas.join(",");
             const cuenta = (updateInfo as UpdateInfo).cuenta;
+            //! cambiar a una fecha dinamica
             const vencimiento = "2023-08-14T13:01:23.832Z";
-            makePost('/inmuebles/traerCuotas',{cuenta,vencimiento}, user?.token, 'pdf' );
+            console.log('/inmuebles/traerCuotas',{cuenta,vencimiento,cunica});
+            makePost('/inmuebles/traerCuotas',{cuenta,vencimiento,cunica}, user?.token, 'pdf' );
             setError({...error,pago:false});
         }
         else{
             console.log('no se seleccionó una opcion')
             setError({...error,pago:true})
         }
-    }
+    };
 
   return (
     <Box flex={3} backgroundColor={'gray.200'}>

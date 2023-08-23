@@ -29,39 +29,13 @@ export interface Info {
 }
 
 export const ComercioScreen = ({navigation,route}:Props) => {
-
-        const { comercios, setCuotas} = useContext(DatosContext);
-        const {user} = useContext(UserContext);
-        const datos ={
-            padron:route.params,
-            vencimiento: "2023-03-28T15:46:20.265Z"
-        }
-
-        const [info, setInfo] = useState<Info | null>(null);
-        const [deuda, setDeuda] = useState(null);
-        const { makePost, data} = useFetch();
+    const { comercios} = useContext(DatosContext);
+    const [info, setInfo] = useState<Info | null>(null);
        
-        const renderItem = (item:ListProps)=> {return (<TableItem item={item} pantalla={'Comercio'} setData={setInfo} deuda={deuda} navigation={navigation}/>)};  
+        const renderItem = (item:ListProps)=> {return (<TableItem item={item} pantalla={'Comercio'} setData={setInfo}  navigation={navigation}/>)};  
         const keyExtractor = (item:Comercio, index:number)=> `${item.padron}${index}` 
 
-        useEffect(() => {
-            makePost('/comercios/traerCuotas',datos, user?.token, 'deudas' )
-        }, [])
-
-        useEffect(()=>{
-
-            //! aca pido la data de la deuda y la seteo en el state de deuda
-            if(data){
-                const checkedCuotas = data.deudas.cuotas.map((cuota:Cuota)=>{
-                    return {
-                        ...cuota,
-                        checked:false
-                    }
-                })
-                setDeuda(data);
-                setCuotas(checkedCuotas);
-            }
-        },[data])
+      
 
   return (
     <Box flex={1} backgroundColor={'gray.200'}>
@@ -72,8 +46,7 @@ export const ComercioScreen = ({navigation,route}:Props) => {
             width={'90%'} 
             alignSelf={'center'} 
             backgroundColor={'white'}>
-            {
-             deuda ? 
+            
              <>
                    <Text
                     mt={7}
@@ -120,7 +93,9 @@ export const ComercioScreen = ({navigation,route}:Props) => {
                 )
                 : 
                 (
-                    <Text>No hay inmuebles</Text>
+                    <Center flex={1}>
+                        <Text fontSize={20} color={'cyan.500'}>No hay comercios registrados</Text>
+                    </Center>
                 )
                }
                     
@@ -186,14 +161,6 @@ export const ComercioScreen = ({navigation,route}:Props) => {
                     }
                 </Box>
              </>
-             :
-             <Center flex={1}>
-                <Spinner size={50} color={'cyan.400'} />
-                <Text mt={5} fontSize={18} fontWeight={'bold'}>
-                    Cargando la Informacion
-                </Text>
-             </Center>
-            }
                 <CustomModal/>
         </Box>
     </Box>

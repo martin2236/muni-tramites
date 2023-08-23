@@ -47,7 +47,6 @@ export const TableItem = ({item, navigation,setData, pantalla}:Props) => {
     const clasificarTipo = (valor:any) => {
        //! cambiar a una fecha dinamica
         if((valor as Inmueble).cuenta){
-            console.log('INMUEBLES')
             const cuenta = (valor as Inmueble).cuenta
             const vencimiento = "2023-03-28T15:46:20.265Z"
             return makePost('/inmuebles/traerCuotas',{cuenta, vencimiento}, user?.token, 'deudas' );
@@ -63,7 +62,6 @@ export const TableItem = ({item, navigation,setData, pantalla}:Props) => {
             return makePost('/cementerios/traerCuotas',{orden,vencimiento}, user?.token, 'deudas' );
         }
         if((valor as Vehiculo).dominio){
-            
             const dominio = (valor as Vehiculo).dominio;
             const vencimiento = "2023-06-28T15:46:20.265Z";
             let tipo;
@@ -89,6 +87,7 @@ export const TableItem = ({item, navigation,setData, pantalla}:Props) => {
     //chequea cuando cambia el estado de data y si no es null guarda la deuda
     useEffect(()=>{
         if(data){
+            console.log('CAMBIO DATA')
             setDeuda(data);
         }
     },[data])
@@ -140,7 +139,7 @@ export const TableItem = ({item, navigation,setData, pantalla}:Props) => {
             }
             break;
         case 'Vehiculo':
-            datos.id = parseInt((item.item as Vehiculo).dominio);
+            datos.id = parseInt((item.item as Vehiculo).pkvehiculo);
             datos.ruta = 'Vehiculo';
             break;
         default:

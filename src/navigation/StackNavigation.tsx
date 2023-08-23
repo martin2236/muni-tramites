@@ -54,7 +54,7 @@ export type RootStackParams = {
     CrearInmueble:undefined,
     CrearComercio:undefined,
     FormularioPagos:undefined,
-    EditarReferencia:{id:number,ruta:string, referencia:string ,updateInfo:object},
+    EditarReferencia:{id:number,ruta:string, referencia:string ,updateInfo:object,deuda:any},
     Registro:undefined,
 }
 
