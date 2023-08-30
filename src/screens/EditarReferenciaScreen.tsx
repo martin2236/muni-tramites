@@ -16,7 +16,6 @@ export const EditarReferenciaScreen = ({navigation,route}:Props) => {
   const{updated,setUpdated}= useContext(DatosContext);
   const {makePut,data} = useFetch();
 
-  console.log('esta es la ruta',ruta)
   
   const onUpdate = () => {
     setShow(false);

@@ -1,13 +1,16 @@
 import React ,{memo,useState,useEffect,useCallback,useContext}from 'react'
-import {Box, Divider, Pressable, Text} from 'native-base';
-//@ts-ignore
-import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
+import {Box, Divider, Image, Pressable, Text} from 'native-base';
 import {Info} from '../screens/inmuebleScreeens/InmuebleScreen';
 import { Comercio,Inmueble, Cementerio, Vehiculo } from '../context/datos/DatosContext';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParams } from '../navigation/StackNavigation';
 import { useFetch } from '../hooks/useFetch';
 import { UserContext } from '../context/usuario/Usercontext';
+//@ts-ignore
+import info from '../assets/info-icon.png'
+//@ts-ignore
+import pago from '../assets/pago-icon.png'
+import { useFontSize } from '../hooks/useFontsize';
 
 interface ListItem{
     item:Inmueble | Comercio | Cementerio | Vehiculo
@@ -31,18 +34,26 @@ interface Props{
 
 export const TableItem = ({item, navigation,setData, pantalla}:Props) => {
     const {user} = useContext(UserContext);
+    const { texto16} = useFontSize();
     const [deuda, setDeuda] = useState<Deuda | null>(null);
     const [cuotas,setCuotas] = useState(null);
     const { makePost, data} = useFetch();
     const nombre = item.item.descripcion;
-
-    let datos = {
+    const [datos,setDatos] = useState<any>({
         id:0,
         ruta:'',
         deuda: cuotas,
         referencia: nombre,
         updateInfo:{}
-    }
+        });
+
+    // let datos = {
+    //     id:0,
+    //     ruta:'',
+    //     deuda: cuotas,
+    //     referencia: nombre,
+    //     updateInfo:{}
+    // }
     //chequea los datos y hace un post al endpoint correspondiente
     const clasificarTipo = (valor:any) => {
        //! cambiar a una fecha dinamica
@@ -94,62 +105,79 @@ export const TableItem = ({item, navigation,setData, pantalla}:Props) => {
     
     // verifica que se hayan acomodados los datos cuando se ejecuta el switch y navega a otra pantalla
     useEffect(()=> {
+        console.log(datos.deuda)
         if(datos.deuda){
+            console.log('navegando a ',pantalla)
             navigation.navigate(`Ver${pantalla}` as never, datos as never )
         }
-    },[datos])
+    },[datos.deuda])
 
     //verifica que haya cuotas y agrega la propiedad checked para
     //despues poder seleccionarla
     const organizarData = () => {
+        console.log('organizando data')
         if(!deuda){
           return console.log('no hay deudas')
         }
-        const datos = deuda.deudas.cuotas.map((cuota:any)=>{
+        const dato = deuda.deudas.cuotas.map((cuota:any)=>{
             return {
                 ...cuota,
                 checked:false
             }
         })
+        setDatos({
+            ...datos,
+            deuda:dato
+        })
        setCuotas(datos);
     }
     //acomoda los datos para usarse en la pantalla `ver${pantalla}`
-    switch (pantalla) {
-        case 'Inmueble':
-            datos.id = (item.item as Inmueble).pkinmueble;
-            datos.ruta = 'Inmueble';
-            datos.updateInfo = {
-                cuenta:(item.item as Inmueble).cuenta,
-                d_verifi:(item.item as Inmueble).d_vefi,
-                partida:(item.item as Inmueble).partida,
+   useEffect(()=>{
+    if(pantalla){
+        if(pantalla === 'Inmueble'){
+          return setDatos({...datos, 
+            id:(item.item as Inmueble).pkinmueble,
+            ruta:'Inmueble',
+            updateInfo:{
+            cuenta:(item.item as Inmueble).cuenta,
+            d_verifi:(item.item as Inmueble).d_vefi,
+            partida:(item.item as Inmueble).partida
+        }
+    })
+        }else if(pantalla === 'Comercio'){
+           return setDatos({
+            ...datos,
+            id:(item.item as Comercio).pkcomercio,
+            ruta:'Comercio',
+            updateInfo:{
+            padron:(item.item as Comercio).padron
             }
-            break;
-        case 'Comercio':
-            datos.id = (item.item as Comercio).pkcomercio;
-            datos.ruta = 'Comercio';
-            datos.updateInfo={
-                padron:(item.item as Comercio).padron
-            }
-            break;
-        case 'Cementerio':
-            datos.id = (item.item as Cementerio).pkcementerio;
-            datos.ruta = 'Cementerio';
-            datos.updateInfo={
-                padron:(item.item as Cementerio).num_orden
-            }
-            break;
-        case 'Vehiculo':
-            datos.id = parseInt((item.item as Vehiculo).pkvehiculo);
-            datos.ruta = 'Vehiculo';
-            break;
-        default:
-            break;
+        })
+        }else if(pantalla === 'Vehiculo'){
+          return  setDatos({
+                ...datos,
+            id: parseInt((item.item as Vehiculo).pkvehiculo),
+            ruta:'Vehiculo'
+            })
+        } else if( pantalla === 'Cementerio'){
+            return setDatos({
+                ...datos,
+                id:(item.item as Cementerio).pkcementerio,
+                ruta:'Cementerio',
+                updateInfo:{
+                    padron:(item.item as Cementerio).num_orden
+                }
+            })
+        }
     }
+   },[pantalla])
+    
     //guarda la informacion del inmueble
     const guardarInfo = () => {
         if(deuda && deuda.deudas.datosPadron){
             const {deudas} = deuda;
             const informacion = {
+                modal:true,
                 cuentaMunicipal: deudas.datosPadron.nro_cta,
                 partidaPovincial:deudas.datosPadron.part_prov,
                 baseImponible:deudas.datosPadron.baseimpo,
@@ -181,24 +209,22 @@ export const TableItem = ({item, navigation,setData, pantalla}:Props) => {
                     <Box
                         mr={2}
                         height={5}
-                        borderWidth={2}
-                        borderColor={'#2596be'} 
-                        borderRadius={'4'}
                         alignItems={'center'}
                         justifyContent={'center'} 
                         width={5}
                         >
-                        <Icon name={'information-variant'} size={12}/> 
+                            
+                        <Image size={7} source={info} alt='icono'/>
                     </Box>
 
-                    <Text width={'70%'} ellipsizeMode='tail' numberOfLines={1} textAlign={'center'} fontSize={13} >
+                    <Text width={'70%'} ellipsizeMode='tail' numberOfLines={1} textAlign={'center'} fontSize={texto16} >
                         { nombre }
                     </Text>
                 </Pressable>
             </Box>
            
             <Box width={'40%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'center'}>
-                <Text textAlign={'center'} fontSize={13} fontWeight={'bold'}>
+                <Text textAlign={'center'} fontSize={texto16} fontWeight={'bold'}>
                     {
                         deuda ? 
                         <Text>${deuda.deudas.totalCuotas.toFixed(2)}</Text> 
@@ -215,12 +241,13 @@ export const TableItem = ({item, navigation,setData, pantalla}:Props) => {
                     alignSelf={'center'}
                     ml={1}
                     height={5}
-                    backgroundColor={'#2596be'}
-                    borderRadius={'4'} 
                     alignItems={'center'}
                     justifyContent={'center'} 
-                    width={5}>
-                        <Icon name={'printer'} color={'#fff'} size={14}/>
+                    width={5}
+                    >
+                                
+                            <Image size={7} source={pago} alt='icono'/>
+                    
                 </Pressable>
             </Box>
         </Box>

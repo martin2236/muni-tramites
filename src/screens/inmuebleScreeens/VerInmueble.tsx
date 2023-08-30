@@ -1,4 +1,4 @@
-import React, { useEffect, memo, useState, useContext } from 'react';
+import React, { useEffect, memo, useState, useContext, useCallback } from 'react';
 import { Divider, Box, Text, Pressable, Checkbox, Button, Radio, FlatList } from 'native-base';
 
 //@ts-ignore
@@ -10,15 +10,28 @@ import { RowAnios } from '../../components/RowAnios';
 import { UpdateInfo } from '../../components/TableItem';
 import { useFetch } from '../../hooks/useFetch';
 import { UserContext } from '../../context/usuario/Usercontext';
+import { useFontSize } from '../../hooks/useFontsize';
+import { background } from '../../../App';
 
 interface Props extends StackScreenProps<RootStackParams,'VerInmueble'>{}
-//envolver en memo para ver si se conserva el estado
+
+interface CuotaAño {
+    anio: number;
+    // Otras propiedades de Cuota
+  }
+  
+  interface InfoByAnio {
+    [anio: number]: CuotaAño[];
+  }
+
 export const VerInmueble = memo(({navigation, route}:Props) => {
-    const {user}= useContext(UserContext)
-    const {makePost,data} = useFetch()
+    const {user}= useContext(UserContext);
+    const {texto14,textoResponsive} = useFontSize();
+    const {makePost,data} = useFetch();
     const [selected, setSelected] = useState<Cuota[]>([]);
     const [anios, setAnios] = useState<string[] | []>([]);
     const [totalSelected, setTotalSelected] = useState(0);
+    const [listaAnios,setListaAnios] = useState<CuotaAño[][] | []>([]);
     const [opcion, setOpcion] = useState<string | undefined>(undefined);
     const [error, setError]= useState({
         pago: false,
@@ -42,34 +55,41 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
         referencia,
         updateInfo
     }
+    console.log(editar.referencia)
     useEffect(() => {
         pagarPorAnios(anios)
     },[anios])
 
    const pagarPorAnios = (anios:String[]) => {
-    const nuevaLista = deuda.filter((deuda:Cuota) => anios.includes(deuda.anio));
+    const nuevaLista = deuda.filter((deuda:Cuota) => anios.includes(deuda.anio +''));
     const total = nuevaLista.reduce((acc:number,curr:Cuota)=> acc + curr['totalcuota'] ,0);
     setSelected(nuevaLista);
     setTotalSelected(total);
     }
     
-    const infoByAnio = {};
-
+    const infoByAnio:any = {};
     //organiza las deudas por año
-    deuda.forEach( (item:Cuota) => {
-        //@ts-ignore
-    if (!infoByAnio[item.anio]) {
-        //@ts-ignore
-        infoByAnio[item.anio] = [];
-    }
-    //@ts-ignore
-    infoByAnio[item.anio].push(item);
-    });
-    const listaAnios = [];
-    for (const key in infoByAnio) {
-        //@ts-ignore
-        listaAnios.push(infoByAnio[key]);
-    }
+   
+    useEffect(() => {
+        // Organiza las deudas por año
+        console.log('cambio deudas')
+        const infoByAnio: InfoByAnio = {};
+
+        deuda.forEach((item: CuotaAño) => {
+          if (!infoByAnio[item.anio]) {
+            infoByAnio[item.anio] = [];
+          }
+          infoByAnio[item.anio].push(item);
+        });
+        
+        const listaAnios: CuotaAño[][] = [];
+        for (const key in infoByAnio) {
+          listaAnios.push(infoByAnio[key]);
+        }
+    
+        // Actualiza los estados con los datos organizados
+        setListaAnios(listaAnios);
+      }, []);
 
     // verifica que haya alguna deuda seleccionada y que se haya 
     // elegido algun metodo de pago antes de pagar
@@ -86,7 +106,7 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
             const cuenta = (updateInfo as UpdateInfo).cuenta;
             //! cambiar a una fecha dinamica
             const vencimiento = "2023-08-14T13:01:23.832Z";
-            console.log('/inmuebles/traerCuotas',{cuenta,vencimiento,cunica});
+            
             makePost('/inmuebles/traerCuotas',{cuenta,vencimiento,cunica}, user?.token, 'pdf' );
             setError({...error,pago:false});
         }
@@ -123,7 +143,7 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
                     alignItems={'center'}
                     justifyContent={'center'}
                     borderRadius={'full'}
-                    backgroundColor={'#2596be'}>
+                    backgroundColor={background}>
                     <Icon name={'home'} size={50} color={'#fff'}/>
                 </Box>
                 <Box 
@@ -135,10 +155,10 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
                     justifyContent={'flex-start'}
                     backgroundColor={'gray.300'}>
                     <Box width={'15%'}></Box>
-                    <Text  width={'40%'}  fontSize={12} fontWeight={'bold'}>
+                    <Text ml={3} width={'40%'}  fontSize={texto14} fontWeight={'bold'}>
                         REFERENCIA
                     </Text>
-                    <Text fontSize={12} width={'30%'} textAlign={'center'} ellipsizeMode={'tail'} numberOfLines={1} fontWeight={'bold'}>
+                    <Text fontSize={texto14} width={'30%'} textAlign={'center'} ellipsizeMode={'tail'} numberOfLines={1} fontWeight={'bold'}>
                         {referencia}
                     </Text>
                     <Pressable borderWidth={1} onPress={() => navigation.navigate('EditarReferencia',editar)} borderRadius={5} position={'absolute'} right={2}>
@@ -156,10 +176,10 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
                     justifyContent={'flex-start'}
                     backgroundColor={'gray.300'}>
                         <Box width={'15%'}></Box>
-                    <Text  width={'40%'} fontWeight={'bold'} fontSize={12} >
+                    <Text ml={3}  width={'40%'} fontWeight={'bold'} fontSize={texto14} >
                         CUENTA
                     </Text>
-                    <Text width={'30%'} fontSize={12} textAlign={'center'}>
+                    <Text width={'30%'} fontSize={texto14} textAlign={'center'}>
                         456254/4
                     </Text>
                 </Box>
@@ -173,10 +193,10 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
                     justifyContent={'flex-start'}
                     backgroundColor={'gray.300'}>
                         <Box width={'15%'}></Box>
-                    <Text width={'40%'} fontWeight={'bold'} fontSize={12} >
+                    <Text ml={3} width={'40%'} fontWeight={'bold'} fontSize={texto14} >
                         PARTIDA
                     </Text>
-                    <Text width={'30%'} fontSize={12} textAlign={'center'}>
+                    <Text width={'30%'} fontSize={texto14} textAlign={'center'}>
                         157420
                     </Text>
                 </Box>
@@ -185,16 +205,16 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
             {/*+++++++++++++++++++++++++ lista +++++++++++++++++++*/}
             <Box flex={3} >
                 <Box mt={7} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
-                        <Text width={'15%'} fontSize={12} textAlign={'center'} fontWeight={'medium'}>
+                        <Text width={'15%'} fontSize={texto14} textAlign={'center'} fontWeight={'medium'}>
                             AÑO
                         </Text>
-                        <Text width={'29%'} fontSize={12} textAlign={'center'} fontWeight={'medium'} lineHeight={'sm'}>
+                        <Text width={'29%'} fontSize={texto14} textAlign={'center'} fontWeight={'medium'} lineHeight={'sm'}>
                             IMPORTE ORIGINAL
                         </Text>
-                        <Text width={'29%'} fontSize={12} textAlign={'center'} fontWeight={'medium'} lineHeight={'sm'}>
+                        <Text width={'29%'} fontSize={texto14} textAlign={'center'} fontWeight={'medium'} lineHeight={'sm'}>
                             IMPORTE ACTUALIZADO
                         </Text>
-                        <Text width={'27%'} fontSize={12} textAlign={'center'} fontWeight={'medium'} lineHeight={'sm'}>
+                        <Text width={'27%'} fontSize={texto14} textAlign={'center'} fontWeight={'medium'} lineHeight={'sm'}>
                             TOTAL A PAGAR
                         </Text>
                     </Box>
@@ -223,34 +243,15 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
                             null
                         }
             </Box>
-              
-                {/*********************METODOS DE PAGO************/}
-                    <Box flex={1}  width={'80%'}mb={8} alignSelf={'center'} >
-                    <Radio.Group width={'100%'} name="myRadioGroup" accessibilityLabel="favorite number" value={opcion} onChange={nextValue => {
-                        setOpcion(nextValue);
-                    }}>
-                        <Box  alignSelf={'center'} flexDirection={'row'} mt={2} alignItems={'center'} justifyContent={'space-around'}>
-                            <Radio value='macro' onTouchStart={() => setError({ ...error,pago:false})} borderColor={error.pago ? 'red.500' : 'black'}  accessibilityLabel='algo2' />
-                            <Text ml={5} width={'80%'} fontSize={'12'} fontWeight={'bold'} lineHeight={'sm'}>PAGAR CON TARJETA DE CREDITO/DEBITO</Text>
-                        </Box>
-                        <Box alignSelf={'center'} flexDirection={'row'} mt={2} alignItems={'center'} justifyContent={'space-around'}>
-                            <Radio value='pdf' onTouchStart={() => setError({ ...error,pago:false})} borderColor={error.pago ? 'red.500' : 'black'}  accessibilityLabel='algo2' />
-                            <Text ml={5} width={'80%'} fontSize={'12'} lineHeight={'sm'}>DESCARGAR/IMPRIMIR RECIBO PARA PAGO</Text>
-                        </Box>
-                    </Radio.Group>
-                    {
-                        error.pago ? 
-                        <Text textAlign={'center'} color={'red.500'}>seleccione un metodo de pago</Text>
-                        :
-                        null
-                    }
-                   
-                    <Button onPress={()=> verificarPago()} alignSelf={'center'} borderRadius={'2xl'} py={0} height={8} mt={3} backgroundColor={'#2596be'} px={5}>
-                        <Text color={'white'} fontSize={'md'} my={0}>
-                            PAGAR
-                        </Text>
+              <Box mb={3} mt={3} width={'full'} display={'flex'} flexDir={'row'} alignItems={'center'} justifyContent={'space-around'}>
+                <Button py={1} width={'45%'} background={background} borderRadius={50}>
+                        <Text fontWeight={'bold'} textAlign={'center'} fontSize={textoResponsive}>PAGAR CON TARJETA DE CRÉDITO / DÉBITO</Text>
                     </Button>
-                    </Box>
+                    <Button py={1} width={'45%'} background={background} borderRadius={50}>
+                        <Text fontWeight={'bold'} textAlign={'center'} fontSize={textoResponsive}>DESCARGAR / IMPRIMIR RECIBO PARA PAGO</Text>
+                    </Button>
+              </Box>
+                   
             </Box>
         </Box>
         )

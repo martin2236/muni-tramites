@@ -1,11 +1,12 @@
 import React,{useContext, useEffect, useState} from 'react';
-import { Box, Divider, Text, Pressable } from 'native-base';
+import { Box, Divider, Text, Pressable,Center } from 'native-base';
 //@ts-ignore
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import { useFetch } from '../hooks/useFetch';
 import { UserContext } from '../context/usuario/Usercontext';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import { RootDrawerParams } from '../navigation/DrawerNavigation';
+import { background } from '../../App';
 
 interface Props extends DrawerScreenProps<RootDrawerParams,'Home'>{}
 
@@ -91,18 +92,16 @@ export const HomeScreen = ({navigation}:Props) => {
         <Divider position={'absolute'} width={'90%'} height={'1.5'} backgroundColor={'gray.400'} alignSelf={'center'}/>
        {
         !cargando ? 
-        <>
+        <Center flex={1} alignSelf={'center'} width={'90%'} bg={'white'}>
             <Box 
-                height={'100%'}
-                width={'90%'}  
                 display={'flex'} 
                 flexDir={'row'} 
                 flexWrap={'wrap'} 
                 justifyContent={'space-around'}
+                alignItems={'center'}
                 alignSelf={'center'} 
                 backgroundColor={'white'}
               >
-                <Divider mb={10}/>
                 <Pressable 
                   isDisabled={disabled !== null && disabled !== 'Inmueble'}
                   width={'50%'}
@@ -116,10 +115,10 @@ export const HomeScreen = ({navigation}:Props) => {
                         alignItems={'center'} 
                         borderRadius={'3xl'} 
                         width={120} 
-                        backgroundColor={'#2596be'}>
+                        backgroundColor={background}>
                         <Icon 
                             name="home" 
-                            size={70} 
+                            size={90} 
                             color="#fff" />
                     </Box>
                     <Text 
@@ -141,11 +140,11 @@ export const HomeScreen = ({navigation}:Props) => {
                         alignItems={'center'} 
                         borderRadius={'3xl'} 
                         width={120} 
-                        backgroundColor={'#2596be'}
+                        backgroundColor={background}
                       >
                         <Icon 
                             name="car" 
-                            size={70} 
+                            size={90}
                             color="#fff" 
                           />
                     </Box>
@@ -169,10 +168,10 @@ export const HomeScreen = ({navigation}:Props) => {
                         alignItems={'center'} 
                         borderRadius={'3xl'} 
                         width={120} 
-                        backgroundColor={'#2596be'}>
+                        backgroundColor={background}>
                         <Icon 
                             name="file-document" 
-                            size={70} 
+                            size={90}
                             color="#fff" />
                     </Box>
                     <Text 
@@ -195,10 +194,10 @@ export const HomeScreen = ({navigation}:Props) => {
                         alignItems={'center'} 
                         borderRadius={'3xl'} 
                         width={120} 
-                        backgroundColor={'#2596be'}>
+                        backgroundColor={background}>
                         <Icon 
                             name="bank" 
-                            size={70} 
+                            size={90}
                             color="#fff" />
                     </Box>
                     <Text 
@@ -222,7 +221,7 @@ export const HomeScreen = ({navigation}:Props) => {
                         backgroundColor={'gray.400'}>
                         <Icon 
                             name="paperclip" 
-                            size={70} 
+                            size={90} 
                             color="#fff" />
                     </Box>
                     <Text 
@@ -246,7 +245,7 @@ export const HomeScreen = ({navigation}:Props) => {
                         backgroundColor={'gray.400'}>
                         <Icon 
                             name="scale-balance" 
-                            size={70} 
+                            size={90} 
                             color="#fff" />
                     </Box>
                     <Text 
@@ -257,7 +256,7 @@ export const HomeScreen = ({navigation}:Props) => {
                     </Text>
                 </Pressable>
             </Box>
-        </>
+        </Center>
         :
         <Box>
             cargando

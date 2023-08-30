@@ -3,6 +3,7 @@ import {Box, Text} from 'native-base'
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { HomeScreen } from '../screens/HomeScreen';
 import { DrawerMenu } from '../components/DrawerMenu';
+import { background } from '../../App';
 
 export type RootDrawerParams = {
     Home:undefined,
@@ -18,7 +19,7 @@ export const DrawerNavigation = () => {
             backgroundColor: '#FFFFFF',
         },
         headerStyle:{
-            backgroundColor: '#2596be',
+            backgroundColor: background,
         },
         swipeEdgeWidth: 0,
         headerTintColor:'#ffffff',

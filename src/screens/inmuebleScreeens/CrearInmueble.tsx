@@ -1,17 +1,23 @@
-import { Formik } from 'formik'
-import { Box, Button, Center, Divider, Input, Text } from 'native-base'
-import React, {useState, useEffect, useContext } from 'react'
-import { CustomInputForm } from '../../components/CustomInputForm'
-import { UserContext } from '../../context/usuario/Usercontext'
-import { useFetch } from '../../hooks/useFetch'
-import { AgregarInmuebleSchema } from '../../schemas/ValidationSchema'
-import { DatosContext } from '../../context/datos/DatosContext'
+import { Formik,useFormik } from 'formik';
+import { Box, Button, Center, Divider, Text } from 'native-base';
+import React, {useState, useEffect, useContext } from 'react';
+import { CustomInputForm } from '../../components/CustomInputForm';
+import { UserContext } from '../../context/usuario/Usercontext';
+import { useFetch } from '../../hooks/useFetch';
+import { AgregarInmuebleSchema } from '../../schemas/ValidationSchema';
+import { DatosContext } from '../../context/datos/DatosContext';
 import { CustomAlert } from '../../components/CustomAlert';
+import { background } from '../../../App';
+import { StackScreenProps } from '@react-navigation/stack';
+import { RootStackParams } from '../../navigation/StackNavigation';
+
+interface Props extends StackScreenProps<RootStackParams,'CrearInmueble'>{}
 
 interface NuevoInmueble{
     cuenta:string,
     partida:string,
     descripcion:string
+    digito:number
 }
 interface Data {
     estado: boolean;
@@ -19,7 +25,7 @@ interface Data {
 }
 
 
-export const CrearInmueble = () => {
+export const CrearInmueble = ({navigation}:Props) => {
 
     const {makePost, data} = useFetch()
     const {user} = useContext(UserContext);
@@ -30,23 +36,23 @@ export const CrearInmueble = () => {
     });
 
     useEffect(() => {
-        console.log(data);
+        console.log('ESTA ES LA DATA',data);
         if(data && data.inmuebles.estado){
             setAlert({
                 status:'success',
                 title:'Inmueble agregado con Éxito'
             })
             traerInmuebles();
+            setTimeout(() => {
+                navigation.pop();
+            }, 3000);
         }
     }, [data]);
 
-    
-    
-
-    const crearInmueble = ( values: NuevoInmueble) => {
+    const crearInmueble = ( values: NuevoInmueble, resetForm:any) => {
         //d-vefi es los que viene en cuenta municipal despues del / ej:57464/0
-        const cuenta = values.cuenta.slice(0,-1);
-        const d_vefi = values.cuenta.charAt(values.cuenta.length - 1);
+        const cuenta = values.cuenta;
+        const d_vefi = values.digito;
         let datos = {
             cuenta: Number(cuenta),
             d_vefi:Number(d_vefi),
@@ -82,62 +88,89 @@ export const CrearInmueble = () => {
                 </Text>
                 <Center 
                     mt={5}
+                    flex={1}
                     width={'90%'}
                     alignSelf={'center'}
                 >
                    <Formik
-                        initialValues={{ cuenta:'', partida:'', descripcion:'' }}
+                        initialValues={{ cuenta:'', partida:'', descripcion:'',digito:0 }}
                         validateOnChange={false}
-                        onSubmit={crearInmueble}
+                        onSubmit={(values, resetForm) => crearInmueble(values, resetForm)}
                         validationSchema={AgregarInmuebleSchema}
                    >
-                    {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
-                        <>
-                            <CustomInputForm
-                                 handleChange={handleChange}
-                                 errors={errors}
-                                 value={values.cuenta}
-                                 placeholder={'CUENTA MUNICIPAL'}
-                                 type={'cuenta'}
-                                 errorCheck={errors.cuenta}
-                                 margin={5}
-                            />
+                    {({ handleChange, resetForm, handleSubmit, values, errors }) => (
+                        <Box flex={1}>
+                            <Box width={'100%'} flexDir={'column'} alignItems={'center'} justifyContent={'space-between'}>
+                                    <Box width={'100%'} flexDir={'row'} alignItems={'center'} justifyContent={'space-between'}>
+                                        <CustomInputForm
+                                            handleChange={handleChange}
+                                            width={'60%'}
+                                            errors={errors}
+                                            value={values.cuenta}
+                                            placeholder={'CUENTA MUNICIPAL'}
+                                            type={'cuenta'}
+                                            keyboardType='numeric'
+                                            errorCheck={errors.cuenta}
+                                            margin={5}
+                                        />
+                                        <Text fontSize={25} mt={5} mx={3}>
+                                            /
+                                        </Text>
+                                        <CustomInputForm
+                                            width={'35%'}
+                                            handleChange={handleChange}
+                                            errors={errors}
+                                            value={values.digito}
+                                            placeholder={'DIGITO'}
+                                            type={'digito'}
+                                            keyboardType='numeric'
+                                            errorCheck={errors.digito}
+                                            margin={5}
+                                        />
+                                    </Box>
 
-                            <CustomInputForm
-                                 handleChange={handleChange}
-                                 errors={errors}
-                                 value={values.partida}
-                                 placeholder={'PARTIDA'}
-                                 type={'partida'}
-                                 errorCheck={errors.partida}
-                                 margin={5}
-                            />
-                            
-                            <CustomInputForm
-                                handleChange={handleChange}
-                                errors={errors}
-                                value={values.descripcion}
-                                placeholder={'DESCRIPCIÓN/NOMBRE DE REFERENCIA'}
-                                type={'descripcion'}
-                                errorCheck={errors.descripcion}
-                                margin={5}
-                            />
+                                        <CustomInputForm
+                                            width={'md'}
+                                            handleChange={handleChange}
+                                            errors={errors}
+                                            value={values.partida}
+                                            placeholder={'PARTIDA'}
+                                            type={'partida'}
+                                            keyboardType='numeric'
+                                            errorCheck={errors.partida}
+                                            margin={5}
+                                        />
+                                    
+                                    <CustomInputForm
+                                        width={'md'}
+                                        handleChange={handleChange}
+                                        errors={errors}
+                                        value={values.descripcion}
+                                        placeholder={'DESCRIPCIÓN/NOMBRE DE REFERENCIA'}
+                                        type={'descripcion'}
+                                        errorCheck={errors.descripcion}
+                                        margin={5}
+                                    />
+                            </Box>
 
                             <Button
                                 onPress={()=> handleSubmit()}
                                 mt={8}
+                                position={'absolute'}
+                                bottom={5}
+                                alignSelf={'center'}
                                 borderRadius={'2xl'}
-                                height={'8'}
-                                width={'80%'}
-                                backgroundColor={'gray.500'}
+                                height={'10'}
+                                width={'70%'}
+                                backgroundColor={background}
                                 py={0}
                                 px={8}
                             >
                                 <Text
                                     color={'white'}
-                                >GUARDAR DATOS</Text>
+                                >GUARDAR REGISTRO</Text>
                             </Button>
-                        </>
+                        </Box>
                     )}
                    </Formik>
                 </Center>

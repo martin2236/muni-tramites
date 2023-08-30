@@ -10,8 +10,10 @@ interface Props{
                     <T = string | React.ChangeEvent<any>>(field: T): T extends React.ChangeEvent<any> ? void : (e: string | React.ChangeEvent<any>) => void;
                 },
     errors:     FormikErrors<{}>,
+    bg?:string,
     value:any
     placeholder:string,
+    placeholderTextColor?:string,
     keyboardType?:KeyboardTypeOptions,
     type:string,
     errorCheck:string | undefined,
@@ -19,7 +21,7 @@ interface Props{
     width?: ResponsiveValue<"px" | "0" | "sm" | "md" | "lg" | "xl" | "2xl" | (string & {}) | (number & {}) | "container" | "3xs" | "2xs" | "xs" | "0.5" | "1" | "1.5" | "2" | "2.5" | "3" | "3.5" | "4" | "5" | "6"  | "full">
 }
 
-export const CustomInput = ({handleChange, errors, value, placeholder,keyboardType, type, margin = 0 ,errorCheck, width = '100%'}:Props) => {
+export const CustomInput = ({handleChange, errors,bg='white',placeholderTextColor='muted.400', value, placeholder,keyboardType, type, margin = 0 ,errorCheck, width = '100%'}:Props) => {
  
   return (
     <FormControl  width={width} isRequired isInvalid={type in errors}>
@@ -27,9 +29,9 @@ export const CustomInput = ({handleChange, errors, value, placeholder,keyboardTy
            
             onChangeText={handleChange(type)}
             borderRadius={'3xl'}
-            backgroundColor={'white'}
+            backgroundColor={bg}
             placeholder={placeholder}
-            placeholderTextColor={'black'}
+            placeholderTextColor={placeholderTextColor}
             keyboardType={keyboardType}
             value={value}
             textAlign={'center'}

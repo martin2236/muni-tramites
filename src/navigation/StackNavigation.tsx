@@ -29,6 +29,7 @@ import { CrearComercioScreen } from '../screens/comercioScreens/CrearComercioScr
 import { CrearCementerioScreen } from '../screens/cementerioScreens/CrearCementerioScreen';
 import { VerVehiculo } from '../screens/vehiculosScreen/verVehiculo';
 import { UserContext } from '../context/usuario/Usercontext';
+import { background } from '../../App';
 
 export type RootStackParams = {
     Login:undefined,
@@ -67,7 +68,7 @@ export const StackNavigation = () => {
     <Stack.Navigator
     screenOptions={{
         headerStyle:{
-            backgroundColor:'#2596be'
+            backgroundColor:background
         },
         headerTintColor:'#ffffff',
         headerTitleAlign:'center'

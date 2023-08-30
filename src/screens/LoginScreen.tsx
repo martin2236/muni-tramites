@@ -9,6 +9,7 @@ import { loginSchema } from '../schemas/ValidationSchema';
 import { useFetch } from '../hooks/useFetch';
 import { Dimensions } from 'react-native';
 import { User, UserContext } from '../context/usuario/Usercontext';
+import { background } from '../../App';
 
 const height = Dimensions.get('window').height;
 
@@ -47,12 +48,12 @@ export const LoginScreen = ({navigation}:Props) => {
     }
 
   return (
-    <Box flex={1} backgroundColor={'#2596be'} flexDirection={'column'} justifyContent={'space-around'}>
-       <KeyboardAvoidingView behavior='height'>
-       <Image mt={10} alignSelf={'center'} source={logo} alt='logo'/>
-        <Box height={height * 75 / 100}>
-        <ScrollView mt={10} >
-        <Box width={230} mb={5} alignSelf={'center'}>
+    <Box flex={1} backgroundColor={background} >
+       <KeyboardAvoidingView style={{flex:1}} behavior='height'>
+        
+       <Box flex={3} display={'flex'} flexDirection={'column'} justifyContent={'space-around'} bg={background}>
+            <Image  alignSelf={'center'} source={logo} alt='logo'/>
+            <Box width={230} alignSelf={'center'} bg={background}>
             <Text fontSize={32} fontWeight={'bold'} textAlign={'center'} color={'white'} lineHeight={'sm'}>
                 PORTAL DE TRÁMITES
             </Text>
@@ -61,10 +62,11 @@ export const LoginScreen = ({navigation}:Props) => {
                 Secretaria de Recursos Públicos Dirección de Informática
             </Text>
         </Box>
-        <Box width={'80%'} mt={5} alignSelf={'center'} backgroundColor={'#2596be'}>
-            {
+        </Box>
+        <Box flex={3} >
+        {
                 cargando ? 
-                <Box backgroundColor={'#2596be'}>
+                <Box backgroundColor={background}>
                     <Spinner mt={10} size={50} color={"white"}/>
                     <Text mt={8} fontWeight={'bold'} fontSize={22} alignSelf={'center'} color={'white'}>
                         Iniciando sesión
@@ -78,7 +80,18 @@ export const LoginScreen = ({navigation}:Props) => {
                 onSubmit={onLogin}
             >
                 {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
-                <>
+            <Box
+            flex={1}
+                backgroundColor={background}
+                display={'flex'}
+                flexDir={'column'}
+                justifyContent={'space-between'}
+            >
+                <Box
+                    width={'80%'}
+                    alignSelf={'center'}
+                    backgroundColor={background}
+                >
                     <CustomInput
                         handleChange={handleChange}
                         errors={errors}
@@ -117,24 +130,30 @@ export const LoginScreen = ({navigation}:Props) => {
                                 INGRESAR
                             </Text>        
                     </Button>
+                </Box>
+                <Box 
+                    width={'80%'}
+                    alignSelf={'center'}
+                    mb={1}
+                >
+                    <Divider alignSelf={'center'} background={'white'} height={'0.5'}/>
                     <Button 
                         onPress={() => navigation.navigate('Registro')}
                         height={'12'}
                         mt={3}
                         borderRadius={'3xl'}
-                        backgroundColor={'gray.500'}>
+                        backgroundColor={'white'}>
                         <Text 
-                            color={'white'} 
+                            color={background} 
                             fontWeight={'bold'}>
                                 REGISTRARSE
                             </Text>        
                     </Button>
-                </>
+                </Box>
+            </Box>
             )}
             </Formik>
-            }
-        </Box>
-        </ScrollView>
+        }
         </Box>
        </KeyboardAvoidingView>
     </Box>
