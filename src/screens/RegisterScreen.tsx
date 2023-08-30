@@ -1,5 +1,5 @@
 import React, {useState,useEffect, useContext} from 'react'
-import { Box, Center, Text, Button,ScrollView, Select, CheckIcon, Spinner} from 'native-base'
+import { Box, Center, Text, Button,ScrollView, Select, CheckIcon, Spinner,Divider} from 'native-base'
 import { CustomInput } from '../components/CustomInput'
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParams } from '../navigation/StackNavigation';
@@ -7,6 +7,7 @@ import { Formik } from 'formik';
 import { registerSchema } from '../schemas/ValidationSchema';
 import { useFetch } from '../hooks/useFetch';
 import { CustomAlert } from '../components/CustomAlert';
+import { background } from '../../App';
 
 interface Props extends StackScreenProps<RootStackParams,'Registro'>{}
 interface FormValues {
@@ -23,7 +24,6 @@ interface FormValues {
     celular_empresa:string,
     token?:string
 }
-
 export const RegisterScreen = ({navigation}:Props) => {
     const [service, setService] = useState("");
     const [alert,setAlert] = useState({
@@ -39,24 +39,31 @@ export const RegisterScreen = ({navigation}:Props) => {
    useEffect(() => {
     
     if(data && !data.msj){
-        console.log('error',cargando)
        setAlert({
         status:'error',
         title:'Ocurrió por favor intente mas tarde'
        })
     }else if(data && data.msj){
-        console.log('bien',cargando)
         setAlert({
             status:'success',
             title:data.msj
         })
+        setTimeout(() => {
+            navigation.navigate('Login');
+        }, 3000);
     }
 
 }, [data])
 
   return ( 
     <Box flex={1} alignItems={'center'}>
-        <Center mt={10} width={'80%'}>
+        <Divider backgroundColor={'gray.600'} height={'1.5'}/>
+        <Divider position={'absolute'} width={'90%'} height={'1.5'} backgroundColor={'gray.500'} alignSelf={'center'}/>
+            <Box 
+                height={'100%'} 
+                width={'90%'} 
+                backgroundColor={'white'}>
+        <Center width={'95%'}>
             {
                 alert.status != '' && <CustomAlert setAlert={setAlert} status={alert.status} title={alert.title}/>
             }
@@ -99,7 +106,7 @@ export const RegisterScreen = ({navigation}:Props) => {
                                     borderColor={'cyan.500'}
                                     borderRadius={'3xl'}
                                     backgroundColor={'white'}
-                                    placeholderTextColor={'black'}
+                                    placeholderTextColor={'muted.400'}
                                     fontSize={18}
                                     marginTop={4}
                                     marginLeft={4}
@@ -118,24 +125,7 @@ export const RegisterScreen = ({navigation}:Props) => {
                                 </Box>
                               
                             </Box>
-                            <CustomInput
-                                handleChange={handleChange}
-                                errors={errors}
-                                value={values.clave}
-                                placeholder={'CLAVE'}
-                                type={'clave'}
-                                errorCheck={errors.clave}
-                                margin={4}
-                            />
-                            <CustomInput
-                                handleChange={handleChange}
-                                errors={errors}
-                                value={values.verificacion}
-                                placeholder={'VERIFICAR CLAVE'}
-                                type={'verificacion'}
-                                errorCheck={errors.verificacion}
-                                margin={4}
-                            />
+                            
                             <CustomInput
                                 handleChange={handleChange}
                                 errors={errors}
@@ -203,7 +193,7 @@ export const RegisterScreen = ({navigation}:Props) => {
                                     borderColor={'cyan.500'}
                                     borderRadius={'3xl'}
                                     backgroundColor={'white'}
-                                    placeholderTextColor={'black'}
+                                    placeholderTextColor={'muted.400'}
                                     fontSize={18}
                                     marginTop={4}
                                     _selectedItem={{
@@ -220,6 +210,28 @@ export const RegisterScreen = ({navigation}:Props) => {
                                 </Select>
                                 {'celular_empresa' in errors ? <Text ml={4} color={'red.500'}> {errors.celular_empresa} </Text> : null} 
                             </Box>
+                            <CustomInput
+                                handleChange={handleChange}
+                                errors={errors}
+                                value={values.clave}
+                                placeholder={'GENERAR CONTRASEÑA'}
+                                type={'clave'}
+                                bg='muted.200'
+                                placeholderTextColor={background}
+                                errorCheck={errors.clave}
+                                margin={4}
+                            />
+                            <CustomInput
+                                handleChange={handleChange}
+                                errors={errors}
+                                value={values.verificacion}
+                                placeholder={'VERIFICAR CONTRASEÑA'}
+                                type={'verificacion'}
+                                bg='muted.200'
+                                placeholderTextColor={background}
+                                errorCheck={errors.verificacion}
+                                margin={4}
+                            />
                             <Button 
                                 width={'100%'}
                                 onPress={() => handleSubmit()}
@@ -227,10 +239,10 @@ export const RegisterScreen = ({navigation}:Props) => {
                                 mt={8}
                                 disabled={cargando}
                                 borderRadius={'3xl'}
-                                backgroundColor={'gray.500'}>
+                                backgroundColor={background}>
                                     {
                                     cargando ? 
-                                    <Box display={'flex'} flexDirection={'row'} width={'100%'}>
+                                    <Box display={'flex'}  flexDirection={'row'} width={'100%'}>
                                         <Spinner size={20} color={'white'}/>
                                         <Text 
                                             ml={5} 
@@ -244,7 +256,7 @@ export const RegisterScreen = ({navigation}:Props) => {
                                     <Text 
                                         color={'white'} 
                                         fontWeight={'bold'}>
-                                            REGISTRARSE
+                                           GUARDAR REGISTRO
                                     </Text>   
                                     </>
                                 }      
@@ -255,6 +267,7 @@ export const RegisterScreen = ({navigation}:Props) => {
                 )}
                 </Formik>
         </Center>
+        </Box>
     </Box>
   )
 }

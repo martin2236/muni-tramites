@@ -5,6 +5,7 @@ import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import { Cuota } from '../interfaces/inmuebles/deuda';
 import { TouchableOpacity } from 'react-native';
+import { useFontSize } from '../hooks/useFontsize';
 
 interface Props {
     item:Cuota[],
@@ -36,6 +37,7 @@ export const RowAnios = memo(({item, selected,anios, setSelected,setAnios ,setTo
         anio:'',
         mostrar:false,
      });
+     const {texto16,texto14,texto13} = useFontSize();
 
      const total = item.reduce((acc,curr)=> acc + curr.totalcuota,0);
      const recargo = item.reduce((acc,curr)=> acc + curr.totalcuota + curr.recargo,0);
@@ -100,8 +102,8 @@ export const RowAnios = memo(({item, selected,anios, setSelected,setAnios ,setTo
         <Divider mt={1}/>
         { show.anio === item[0].anio && show.mostrar ?
                 <Animatable.View animation='fadeInDown' style={{backgroundColor:'white'}}>
-                    <Box  mt={2} alignSelf={'center'} width={'95%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
-                        <Box width={'32%'} display={'flex'} flexDirection={'row'} justifyContent={'flex-start'} alignItems={'center'}>
+                    <Box  mt={2} alignSelf={'center'} width={'95%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'flex-start'}>
+                        <Box width={'25%'}  display={'flex'} flexDirection={'row'} justifyContent={'flex-start'} alignItems={'center'}>
                             <TouchableOpacity
                                 onPress={() => setAnios([...anios,item[0].anio])}
                                 style={{height:18, width:18,borderColor:'#2596be',backgroundColor:anios.findIndex((cuota:Cuota) => item[0].anio == cuota.anio) !== -1 ?'#2596be':'#fff' ,borderWidth:selected.findIndex((cuotas:Cuota) => item[0].anio == cuotas.anio) !== -1 ? 0:2, alignItems:'center', justifyContent:'center', marginLeft:2}}>
@@ -110,16 +112,19 @@ export const RowAnios = memo(({item, selected,anios, setSelected,setAnios ,setTo
                                         <Icon name={'check'} size={15} color={'white'}/> : null
                                     }
                             </TouchableOpacity>
-                            <Text fontSize={'sm'} ml={5} color={'#2596be'} textAlign={'center'} fontWeight={'bold'}>
+                            <Text fontSize={texto14}  ml={3} color={'#2596be'} textAlign={'center'} fontWeight={'bold'}>
                                 CUOTAS
                             </Text>
                         </Box>
+                <Text width={'22%'}  fontSize={texto14} color={'#2596be'} textAlign={'center'} fontWeight={'bold'} lineHeight={'sm'}>
+                    TASA
+                </Text>
                         
-                <Text width={'32%'} fontSize={'sm'} color={'#2596be'} textAlign={'center'} fontWeight={'bold'} lineHeight={'sm'}>
+                <Text width={'32%'}  fontSize={texto14} color={'#2596be'} textAlign={'center'} fontWeight={'bold'} lineHeight={'sm'}>
                     VENCIMIENTO
                 </Text>
                 
-                <Text width={'24%'} fontSize={'sm'} color={'#2596be'} textAlign={'center'} fontWeight={'bold'} lineHeight={'sm'}>
+                <Text width={'24%'}  fontSize={texto14} color={'#2596be'} textAlign={'center'} fontWeight={'bold'} lineHeight={'sm'}>
                     TOTAL
                 </Text>
                 </Box>
@@ -133,7 +138,7 @@ export const RowAnios = memo(({item, selected,anios, setSelected,setAnios ,setTo
                         <Box>
                             {item.map((cuota:Cuota, index) => (
                                 <Box key={index} alignSelf={'center'} width={'95%'} mt={2} display={'flex'} flexDirection={'row'} justifyContent={'space-around'} alignItems={'center'}>
-                                        <Box width={'32%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'flex-start'}>
+                                        <Box ml={1} width={'29%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'flex-start'}>
                                             <TouchableOpacity
                                                 onPress={() => toggleCuota(cuota)}
                                                 style={{height:16, width:16,borderColor:'#2596be',backgroundColor:selected.findIndex((item:Cuota) => item.cunica == cuota.cunica) !== -1 ?'#2596be':'#fff' ,borderWidth:selected.findIndex((item:Cuota) => item.cunica == cuota.cunica) !== -1 ? 0:1, alignItems:'center', justifyContent:'center', marginLeft:2}}>
@@ -142,19 +147,25 @@ export const RowAnios = memo(({item, selected,anios, setSelected,setAnios ,setTo
                                                         <Icon name={'check'} size={15} color={'white'}/> : null
                                                     }
                                             </TouchableOpacity>
-                                            <Text textAlign={'center'} marginLeft={5} fontSize={'sm'} >
+                                            <Text textAlign={'center'} marginLeft={3} fontSize={texto14} >
                                                 {cuota.cuota}
                                             </Text>
                                         </Box>
 
+                                            <Box width={'20%'} display={'flex'} alignItems={'center'} >
+                                                <Text textAlign={'center'} fontSize={texto14} >
+                                                    {cuota.tasa}
+                                                </Text>
+                                            </Box>
+
                                         <Box width={'32%'} display={'flex'} alignItems={'center'} >
-                                            <Text textAlign={'center'} fontSize={'sm'} >
+                                            <Text textAlign={'center'} fontSize={texto14} >
                                                 {ordenarFecha(cuota.fecha_ven1)}
                                             </Text>
                                         </Box>
 
                                         <Box  width={'24%'} display={'flex'}  alignItems={'center'}>
-                                            <Text textAlign={'center'} fontSize={'sm'} >
+                                            <Text textAlign={'center'} fontSize={texto14} >
                                                 {cuota.totalcuota.toFixed(2)}
                                             </Text>
                                         </Box>

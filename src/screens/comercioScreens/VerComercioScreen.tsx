@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState,useEffect } from 'react';
 import { Divider, Box, Text, Pressable, Button, Radio, FlatList } from 'native-base';
 //@ts-ignore
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
@@ -7,32 +7,56 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParams } from '../../navigation/StackNavigation';
 import { Cuota } from '../../interfaces/inmuebles/deuda';
 import { RowAnios } from '../../components/RowAnios';
+import { UserContext } from '../../context/usuario/Usercontext';
+import { useFetch } from '../../hooks/useFetch';
+import { UpdateInfo } from '../../components/TableItem';
 
 interface Props extends StackScreenProps<RootStackParams,'VerComercio'>{}
 
 export const VerComercioScreen = ({navigation, route}:Props) => {
-    const [show, setShow] = useState(false);
-    const [selected, setSelected] = useState([]);
-    const [totalSelected, setTotalSelected] = useState(0);
     const {cuotas, cuotasSeleccionadas} = useContext(DatosContext);
-    const [opcion, setOpcion] = useState<string | undefined>(undefined) 
-    const handlePress = () =>{
-        setShow(show => !show)
-    }
-    const {id,ruta,updateInfo,deuda, referencia} =  route.params;
 
+    const {user}= useContext(UserContext)
+    const {makePost,data} = useFetch()
+    const [selected, setSelected] = useState<Cuota[]>([]);
+    const [anios, setAnios] = useState<string[] | []>([]);
+    const [totalSelected, setTotalSelected] = useState(0);
+    const [opcion, setOpcion] = useState<string | undefined>(undefined);
+    const [error, setError]= useState({
+        pago: false,
+        cuota:false
+      });
 
+    useEffect(() =>{
+        if(data && data.pdf){
+            console.log('pdf',data)
+        }
+    },[data]);
+     
+    const {id,ruta, referencia, updateInfo,deuda} =  route.params;
     let editar = {
         id,
         ruta,
-        updateInfo,
-        referencia
+        deuda,
+        referencia,
+        updateInfo
     }
+    useEffect(() => {
+        pagarPorAnios(anios)
+    },[anios])
 
+   const pagarPorAnios = (anios:String[]) => {
+    const nuevaLista = deuda.filter((deuda:Cuota) => anios.includes(deuda.anio));
+    const total = nuevaLista.reduce((acc:number,curr:Cuota)=> acc + curr['totalcuota'] ,0);
+    setSelected(nuevaLista);
+    setTotalSelected(total);
+    }
+    
+    
     const infoByAnio = {};
 
-
-    cuotas.forEach( (item:Cuota) => {
+    //organiza las deudas por año
+    deuda.forEach( (item:Cuota) => {
         //@ts-ignore
     if (!infoByAnio[item.anio]) {
         //@ts-ignore
@@ -47,20 +71,28 @@ export const VerComercioScreen = ({navigation, route}:Props) => {
         listaAnios.push(infoByAnio[key]);
     }
 
+    // verifica que haya alguna deuda seleccionada y que se haya 
+    // elegido algun metodo de pago antes de pagar
     const verificarPago = () => {
-        if(! cuotasSeleccionadas.length){
+        if(!selected.length){
+            setError({...error,cuota:true})
             console.log('no se selecciono ninguna cuota')
         }else if(opcion =='macro'){
-            console.log(opcion)
-            console.log('navego a macro')
+            navigation.navigate('FormularioPagos')
+            setError({...error,pago:false})
         }else if(opcion == 'pdf'){
-            console.log('se descargo el pdf')
+            const cuotas = selected.map(item => item.cunica);
+            const cunica = cuotas.join(",");
+            const cuenta = (updateInfo as UpdateInfo).cuenta;
+            //! cambiar a una fecha dinamica
+            const vencimiento = "2023-08-14T13:01:23.832Z";
+            setError({...error,pago:false});
         }
         else{
             console.log('no se seleccionó una opcion')
+            setError({...error,pago:true})
         }
-    }
-
+    };
   return (
     <Box flex={1} backgroundColor={'gray.200'}>
     <Divider backgroundColor={'gray.600'} height={'1.5'}/>
@@ -165,7 +197,7 @@ export const VerComercioScreen = ({navigation, route}:Props) => {
                         <FlatList 
                             data={listaAnios}
                             keyExtractor={(item,index) => ` ${index}`}
-                            renderItem={({item}) => <RowAnios item={item} setTotalSelected={setTotalSelected} selected={selected} setSelected={setSelected}/>}
+                            renderItem={({item}) => <RowAnios item={item} setTotalSelected={(nuevaSuma) => setTotalSelected(nuevaSuma)} anios={anios} setAnios={setAnios} selected={selected} setSelected={setSelected}/>}
                             nestedScrollEnabled={true}
                         />
                     </Box>

@@ -29,6 +29,7 @@ export const CustomInputForm = ({handleChange, errors, value, placeholder,keyboa
             backgroundColor={'white'}
             placeholder={placeholder}
             keyboardType={keyboardType}
+            textAlign={'center'}
             value={value}
             borderColor={'cyan.500'}
             fontSize={14}
