@@ -10,7 +10,7 @@ import { RowAnios } from '../../components/RowAnios';
 import { UpdateInfo } from '../../components/TableItem';
 import { useFetch } from '../../hooks/useFetch';
 import { UserContext } from '../../context/usuario/Usercontext';
-import { useFontSize } from '../../hooks/useFontsize';
+import { useResponsiveSize } from '../../hooks/useResponsiveSize';
 import { background } from '../../../App';
 
 interface Props extends StackScreenProps<RootStackParams,'VerInmueble'>{}
@@ -26,7 +26,7 @@ interface CuotaAño {
 
 export const VerInmueble = memo(({navigation, route}:Props) => {
     const {user}= useContext(UserContext);
-    const {texto14,textoResponsive} = useFontSize();
+    const {R14,textoTotal,textoResponsive} = useResponsiveSize();
     const {makePost,data} = useFetch();
     const [selected, setSelected] = useState<Cuota[]>([]);
     const [anios, setAnios] = useState<string[] | []>([]);
@@ -55,7 +55,6 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
         referencia,
         updateInfo
     }
-    console.log(editar.referencia)
     useEffect(() => {
         pagarPorAnios(anios)
     },[anios])
@@ -155,13 +154,13 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
                     justifyContent={'flex-start'}
                     backgroundColor={'gray.300'}>
                     <Box width={'15%'}></Box>
-                    <Text ml={3} width={'40%'}  fontSize={texto14} fontWeight={'bold'}>
+                    <Text ml={3} width={'40%'}  fontSize={R14} fontWeight={'bold'}>
                         REFERENCIA
                     </Text>
-                    <Text fontSize={texto14} width={'30%'} textAlign={'center'} ellipsizeMode={'tail'} numberOfLines={1} fontWeight={'bold'}>
+                    <Text fontSize={R14} width={'30%'} textAlign={'center'} ellipsizeMode={'tail'} numberOfLines={1} fontWeight={'bold'}>
                         {referencia}
                     </Text>
-                    <Pressable borderWidth={1} onPress={() => navigation.navigate('EditarReferencia',editar)} borderRadius={5} position={'absolute'} right={2}>
+                    <Pressable borderWidth={1} bg={'white'} borderColor={background} onPress={() => navigation.navigate('EditarReferencia',editar)} borderRadius={5} position={'absolute'} right={2}>
                         <Icon name={'pencil-outline'} size={15} color={'gray'}/>
                     </Pressable>
                 </Box>
@@ -176,10 +175,10 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
                     justifyContent={'flex-start'}
                     backgroundColor={'gray.300'}>
                         <Box width={'15%'}></Box>
-                    <Text ml={3}  width={'40%'} fontWeight={'bold'} fontSize={texto14} >
+                    <Text ml={3}  width={'40%'} fontWeight={'bold'} fontSize={R14} >
                         CUENTA
                     </Text>
-                    <Text width={'30%'} fontSize={texto14} textAlign={'center'}>
+                    <Text width={'30%'} fontSize={R14} textAlign={'center'}>
                         456254/4
                     </Text>
                 </Box>
@@ -193,10 +192,10 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
                     justifyContent={'flex-start'}
                     backgroundColor={'gray.300'}>
                         <Box width={'15%'}></Box>
-                    <Text ml={3} width={'40%'} fontWeight={'bold'} fontSize={texto14} >
+                    <Text ml={3} width={'40%'} fontWeight={'bold'} fontSize={R14} >
                         PARTIDA
                     </Text>
-                    <Text width={'30%'} fontSize={texto14} textAlign={'center'}>
+                    <Text width={'30%'} fontSize={R14} textAlign={'center'}>
                         157420
                     </Text>
                 </Box>
@@ -205,16 +204,16 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
             {/*+++++++++++++++++++++++++ lista +++++++++++++++++++*/}
             <Box flex={3} >
                 <Box mt={7} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
-                        <Text width={'15%'} fontSize={texto14} textAlign={'center'} fontWeight={'medium'}>
+                        <Text width={'15%'} fontSize={R14} textAlign={'center'} fontWeight={'medium'}>
                             AÑO
                         </Text>
-                        <Text width={'29%'} fontSize={texto14} textAlign={'center'} fontWeight={'medium'} lineHeight={'sm'}>
+                        <Text width={'29%'} fontSize={R14} textAlign={'center'} fontWeight={'medium'} lineHeight={'sm'}>
                             IMPORTE ORIGINAL
                         </Text>
-                        <Text width={'29%'} fontSize={texto14} textAlign={'center'} fontWeight={'medium'} lineHeight={'sm'}>
+                        <Text width={'29%'} fontSize={R14} textAlign={'center'} fontWeight={'medium'} lineHeight={'sm'}>
                             IMPORTE ACTUALIZADO
                         </Text>
-                        <Text width={'27%'} fontSize={texto14} textAlign={'center'} fontWeight={'medium'} lineHeight={'sm'}>
+                        <Text width={'27%'} fontSize={R14} textAlign={'center'} fontWeight={'medium'} lineHeight={'sm'}>
                             TOTAL A PAGAR
                         </Text>
                     </Box>
@@ -228,11 +227,11 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
                             nestedScrollEnabled={true}
                         />
                     </Box>
-                    <Box mt={2} bg={'gray.300'} flexDirection={'row'} justifyContent={'flex-end'}>
-                            <Text  fontSize={12} fontWeight={'bold'}>
+                    <Box mt={2} py={1} bg={'gray.300'} flexDirection={'row'} justifyContent={'flex-end'}>
+                            <Text  fontSize={textoTotal} fontWeight={'bold'}>
                                 TOTAL A PAGAR
                             </Text>
-                            <Text width={"27%"} textAlign={'center'}  fontSize={12} fontWeight={'bold'}>
+                            <Text width={"27%"} textAlign={'center'}  fontSize={textoTotal} fontWeight={'bold'}>
                                 ${totalSelected.toFixed(2)}
                             </Text>
                         </Box>
@@ -243,7 +242,7 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
                             null
                         }
             </Box>
-              <Box mb={3} mt={3} width={'full'} display={'flex'} flexDir={'row'} alignItems={'center'} justifyContent={'space-around'}>
+              <Box mb={5} mt={5} width={'full'} display={'flex'} flexDir={'row'} alignItems={'center'} justifyContent={'space-around'}>
                 <Button py={1} width={'45%'} background={background} borderRadius={50}>
                         <Text fontWeight={'bold'} textAlign={'center'} fontSize={textoResponsive}>PAGAR CON TARJETA DE CRÉDITO / DÉBITO</Text>
                     </Button>

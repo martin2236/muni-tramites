@@ -1,5 +1,5 @@
 import React,{useEffect, useContext} from 'react'
-import { Text, Box, Image, Divider, Button, ScrollView, KeyboardAvoidingView, Spinner} from 'native-base'
+import { Text, Box, Image, Divider, Button, ScrollView,Center, KeyboardAvoidingView, Spinner} from 'native-base'
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParams } from '../navigation/StackNavigation';
 const logo = require('../assets/loginLogo.png');
@@ -10,8 +10,9 @@ import { useFetch } from '../hooks/useFetch';
 import { Dimensions } from 'react-native';
 import { User, UserContext } from '../context/usuario/Usercontext';
 import { background } from '../../App';
+import { useResponsiveSize } from '../hooks/useResponsiveSize';
 
-const height = Dimensions.get('window').height;
+const {width} = Dimensions.get('window');
 
 interface Props extends StackScreenProps<RootStackParams,'Login'>{}
 
@@ -25,6 +26,7 @@ export interface LoginReq {
 }
 
 export const LoginScreen = ({navigation}:Props) => {
+    const {R12,R15, R32, customInputHeight, loginImageWidth, LoginImageHeight} = useResponsiveSize();
 
     const {makePost, data, cargando, setCargando} = useFetch();
 
@@ -51,14 +53,14 @@ export const LoginScreen = ({navigation}:Props) => {
     <Box flex={1} backgroundColor={background} >
        <KeyboardAvoidingView style={{flex:1}} behavior='height'>
         
-       <Box flex={3} display={'flex'} flexDirection={'column'} justifyContent={'space-around'} bg={background}>
-            <Image  alignSelf={'center'} source={logo} alt='logo'/>
+       <Box flex={2} display={'flex'} flexDirection={'column'} justifyContent={'space-around'} bg={background}>
+            <Image style={{ width: loginImageWidth, height: LoginImageHeight }} resizeMode='contain' alignSelf={'center'} source={logo} alt='logo'/>
             <Box width={230} alignSelf={'center'} bg={background}>
-            <Text fontSize={32} fontWeight={'bold'} textAlign={'center'} color={'white'} lineHeight={'sm'}>
+            <Text fontSize={R32} fontWeight={'bold'} textAlign={'center'} color={'white'} lineHeight={'sm'}>
                 PORTAL DE TRÁMITES
             </Text>
             <Divider background={'white'} height={'0.5'}/>
-            <Text textAlign={'center'} color={'white'}>
+            <Text textAlign={'center'} fontSize={R15} color={'white'}>
                 Secretaria de Recursos Públicos Dirección de Informática
             </Text>
         </Box>
@@ -66,12 +68,12 @@ export const LoginScreen = ({navigation}:Props) => {
         <Box flex={3} >
         {
                 cargando ? 
-                <Box backgroundColor={background}>
+                <Center  backgroundColor={background} mt={10}>
                     <Spinner mt={10} size={50} color={"white"}/>
                     <Text mt={8} fontWeight={'bold'} fontSize={22} alignSelf={'center'} color={'white'}>
                         Iniciando sesión
                     </Text>
-                </Box>
+                </Center>
                 :
                 <Formik
                 initialValues={{ cuit: '', clave:'' }}
@@ -81,7 +83,8 @@ export const LoginScreen = ({navigation}:Props) => {
             >
                 {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
             <Box
-            flex={1}
+                mt={10}
+                flex={1}
                 backgroundColor={background}
                 display={'flex'}
                 flexDir={'column'}
@@ -114,13 +117,13 @@ export const LoginScreen = ({navigation}:Props) => {
                     <Text 
                         mt={1} 
                         textAlign={'center'}
-                        fontSize={12} 
+                        fontSize={R12} 
                         color={'white'}>
                             OLVIDÉ MI CONTRASEÑA
                     </Text>
                     <Button 
                         onPress={() => handleSubmit()}
-                        height={'12'}
+                        height={customInputHeight}
                         mt={5}
                         borderRadius={'3xl'}
                         backgroundColor={'gray.500'}>
@@ -139,8 +142,9 @@ export const LoginScreen = ({navigation}:Props) => {
                     <Divider alignSelf={'center'} background={'white'} height={'0.5'}/>
                     <Button 
                         onPress={() => navigation.navigate('Registro')}
-                        height={'12'}
+                        height={customInputHeight}
                         mt={3}
+                        mb={4}
                         borderRadius={'3xl'}
                         backgroundColor={'white'}>
                         <Text 

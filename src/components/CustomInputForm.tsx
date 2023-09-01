@@ -3,6 +3,7 @@ import { FormControl, Input, Text } from 'native-base'
 import { ResponsiveValue } from 'native-base/lib/typescript/components/types/responsiveValue';
 import React from 'react'
 import { KeyboardTypeOptions } from 'react-native';
+import { useResponsiveSize } from '../hooks/useResponsiveSize';
 
 interface Props{
     handleChange:{
@@ -20,7 +21,7 @@ interface Props{
 }
 
 export const CustomInputForm = ({handleChange, errors, value, placeholder,keyboardType, type, margin = 0 ,errorCheck, width = '100%'}:Props) => {
- 
+   const {R14} = useResponsiveSize();
   return (
     <FormControl  width={width} isRequired isInvalid={type in errors}>
         <Input
@@ -32,7 +33,7 @@ export const CustomInputForm = ({handleChange, errors, value, placeholder,keyboa
             textAlign={'center'}
             value={value}
             borderColor={'cyan.500'}
-            fontSize={14}
+            fontSize={R14}
             height={10}
             mt={margin}
         />

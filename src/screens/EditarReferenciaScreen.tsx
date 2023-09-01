@@ -1,15 +1,19 @@
-import React,{useContext, useEffect, useState} from 'react'
-import { Center,Button,Box,Divider,Input,Text,Spinner} from 'native-base'
-import { StackScreenProps } from '@react-navigation/stack'
-import { RootStackParams } from '../navigation/StackNavigation'
-import { useFetch } from '../hooks/useFetch'
-import { UserContext } from '../context/usuario/Usercontext'
-import { DatosContext } from '../context/datos/DatosContext'
+import React,{useContext, useEffect, useState} from 'react';
+import { Center,Button,Box,Divider,Input,Text,Spinner} from 'native-base';
+import { StackScreenProps } from '@react-navigation/stack';
+import { RootStackParams } from '../navigation/StackNavigation';
+import { useFetch } from '../hooks/useFetch';
+import { UserContext } from '../context/usuario/Usercontext';
+import { DatosContext } from '../context/datos/DatosContext';
+import { CustomInput } from '../components/CustomInput';
+import { background } from '../../App';
+import { useResponsiveSize } from '../hooks/useResponsiveSize';
 
-interface Props extends StackScreenProps<RootStackParams,'EditarReferencia'>{}
+interface Props extends StackScreenProps<RootStackParams,'EditarReferencia'>{};
 
 export const EditarReferenciaScreen = ({navigation,route}:Props) => {
   const {id, ruta,referencia,deuda,updateInfo} =  route.params;
+  const {customInputHeight,R18} = useResponsiveSize();
   const[nuevaReferencia, setNuevaReferencia] = useState('');
   const [show, setShow] = useState(true);
   const {user} = useContext(UserContext);
@@ -36,9 +40,9 @@ export const EditarReferenciaScreen = ({navigation,route}:Props) => {
       } else if( ruta === 'Cementerio'){
         console.log(`cementerio/${id}`,user.token,data)
           makePut(`cementerios/${id}`,user.token,data);
-      }
-  }
-}
+      };
+  };
+};
 //!revisar aca
   useEffect(() => {
     if(data && nuevaReferencia){
@@ -76,44 +80,66 @@ export const EditarReferenciaScreen = ({navigation,route}:Props) => {
             width={'90%'} 
             alignSelf={'center'} 
             backgroundColor={'white'}>
-            <Center
+            <Box
               flex={1}
             >
+                <Text
+                    mt={7}
+                    alignSelf={'center'}
+                    fontWeight={'bold'} 
+                    fontSize={20}>
+                    EDITAR REFERENCIA
+                  </Text>
               {
                 show ? 
                 (<>
-                  <Text mb={10} fontSize={20} >
-                  Referencia anterior: "{referencia}" 
+                  <Text textAlign={'center'}mt={10} fontWeight={'bold'} color={background} mb={10} fontSize={R18} >
+                  REFERENCIA ANTERIOR: "{referencia}" 
                  </Text>
+
+                 
                  <Input
-                 placeholder='Nueva Referencia'
-                 onChangeText={(text) => setNuevaReferencia(text)}
-   
-                   width={'90%'}
+                  placeholder='NUEVA REFERENCIA'
+                  onChangeText={(text) => setNuevaReferencia(text)}
+                  height={customInputHeight}
+                  fontSize={R18}
+                  borderRadius={'3xl'}
+                  textAlign={'center'}
+                  borderColor={'cyan.500'}
+                  alignSelf={'center'}
+                  width={'90%'}
                  >
                  </Input>
                  <Button
-                   onPress={() => onUpdate()}
-                   marginTop={5}
-                   width={'90%'}
+                  onPress={() => onUpdate()}
+                  mt={8}
+                  position={'absolute'}
+                  bottom={5}
+                  alignSelf={'center'}
+                  borderRadius={'2xl'}
+                  height={customInputHeight}
+                  width={'70%'}
+                  backgroundColor={background}
+                  py={0}
+                  px={8}
                  >
                      Guardar Cambios
                  </Button>
                 </>)
                  :
                  (
-                 <>
-                   <Text mb={10} fontWeight={'bold'} color={'#2596be'} fontSize={20} >
+                 <Center>
+                   <Text mt={10} mb={10} fontWeight={'bold'} color={background} fontSize={20} >
                   Actualizando referencia a: "{nuevaReferencia}"
                   </Text>
                   <Spinner size={70} color={'#2596be'}>
                     
                   </Spinner>
-                 </>
+                 </Center>
                  )
               }
 
-            </Center>
+            </Box>
             </Box>
     </Box>
   )
