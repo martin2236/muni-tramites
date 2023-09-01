@@ -4,6 +4,8 @@ import { Dimensions, ImageSourcePropType } from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParams } from '../navigation/StackNavigation';
+import { useResponsiveSize } from '../hooks/useResponsiveSize';
+import { background } from '../../App';
 
 const {height : screenHeight, width : screenWidth } = Dimensions.get('window')
 
@@ -17,12 +19,13 @@ interface Slide {
 interface Props extends StackScreenProps<RootStackParams>{}
 
 export const CarouselScreen = ({navigation}:Props) => {
+  const {carouselImageWidth,carouselImageHeight} = useResponsiveSize()
   const [posicion, setPosicion] = useState(0)
   const [defaultIndex, setDefaultIndex] = useState(0)
   const items: Slide[] = [
     {
       title:"Fácilmente podrás",
-      lista:['- Crearte un usuario', '- consultar tus deudas' , '- realizar pagos', '- y más'],
+      lista:['Crearte un usuario', 'Consultar tus deudas' , 'Realizar pagos', 'y más'],
       img:require("../assets/primera.jpeg")
     },
     {
@@ -53,7 +56,7 @@ export const CarouselScreen = ({navigation}:Props) => {
     <Box flex={1}  backgroundColor={'white'} >
       
       <Box mt={10} justifyContent={'space-around'} alignItems={'center'}> 
-        <Image mb={5} mt={5} width={300} height={300} source={item.img} alt={'una imagen'}/>
+        <Image mb={5} mt={5} width={carouselImageWidth} height={carouselImageHeight} resizeMode='cover' source={item.img} alt={'una imagen'}/>
         <Text mb={5} fontSize={'27'}  fontWeight={'bold'}>
           {item.title}
         </Text>
@@ -67,7 +70,9 @@ export const CarouselScreen = ({navigation}:Props) => {
           {item.lista.length ? 
             item.lista.map((item, index) => {
               return(
-                <Text mb={1} fontSize={18} fontWeight={'semibold'}  key={index}>{item}</Text>
+                <Box display={'flex'} flexDir={'row'}  key={index} width={180}  alignSelf={'center'} justifyContent={'flex-start'}>
+                  <Text mb={1}  fontSize={18} fontWeight={'semibold'}  >{item}</Text>
+                </Box>
                 )
             })
             :
@@ -107,11 +112,11 @@ export const CarouselScreen = ({navigation}:Props) => {
         </Box>
         <Box width={'35%'} bg={'red.100'}>
           {posicion === 2 ? 
-          <Button onPress={() => navigation.replace('Login')} p={0} bg={'white'} >
+          <Button onPress={() => navigation.replace('Login')} colorScheme={'cyan'} bg={'white'} >
             <Text fontSize={18} fontWeight={'bold'}>Empezar</Text>
           </Button>
           :
-          <Button onPress={() => nextSlide()} bg={'white'} >
+          <Button onPress={() => nextSlide()} colorScheme={'cyan'} bg={'white'} >
             <Text fontSize={18} fontWeight={'bold'}>Entiendo</Text>
           </Button>
           }

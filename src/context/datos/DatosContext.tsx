@@ -55,6 +55,7 @@ export interface Vehiculo {
     condicontri: string;
     condimoncho: number;
     descripcion: string;
+    pkvehiculo:  string;
 }
 
 export interface updateInfo {

@@ -226,7 +226,8 @@ export const HomeScreen = ({navigation}:Props) => {
                     </Box>
                     <Text 
                         mt={1} 
-                        fontWeight={'bold'} 
+                        fontWeight={'bold'}
+                        color={'warmGray.400'}
                         textAlign={'center'}>
                             Obras privadas
                     </Text>
@@ -251,6 +252,7 @@ export const HomeScreen = ({navigation}:Props) => {
                     <Text 
                         mt={1} 
                         fontWeight={'bold'} 
+                        color={'warmGray.400'}
                         textAlign={'center'}>
                             Escribanos
                     </Text>

@@ -10,7 +10,7 @@ import { UserContext } from '../context/usuario/Usercontext';
 import info from '../assets/info-icon.png'
 //@ts-ignore
 import pago from '../assets/pago-icon.png'
-import { useFontSize } from '../hooks/useFontsize';
+import { useResponsiveSize } from '../hooks/useResponsiveSize';
 
 interface ListItem{
     item:Inmueble | Comercio | Cementerio | Vehiculo
@@ -34,7 +34,7 @@ interface Props{
 
 export const TableItem = ({item, navigation,setData, pantalla}:Props) => {
     const {user} = useContext(UserContext);
-    const { texto16} = useFontSize();
+    const { R16} = useResponsiveSize();
     const [deuda, setDeuda] = useState<Deuda | null>(null);
     const [cuotas,setCuotas] = useState(null);
     const { makePost, data} = useFetch();
@@ -47,13 +47,6 @@ export const TableItem = ({item, navigation,setData, pantalla}:Props) => {
         updateInfo:{}
         });
 
-    // let datos = {
-    //     id:0,
-    //     ruta:'',
-    //     deuda: cuotas,
-    //     referencia: nombre,
-    //     updateInfo:{}
-    // }
     //chequea los datos y hace un post al endpoint correspondiente
     const clasificarTipo = (valor:any) => {
        //! cambiar a una fecha dinamica
@@ -76,7 +69,7 @@ export const TableItem = ({item, navigation,setData, pantalla}:Props) => {
             const dominio = (valor as Vehiculo).dominio;
             const vencimiento = "2023-06-28T15:46:20.265Z";
             let tipo;
-            switch (item.item.tipo) {
+            switch ((item.item as Vehiculo).tipo) {
                 case "Vehiculo Particular":
                   tipo = "auto"
                   break;
@@ -105,9 +98,7 @@ export const TableItem = ({item, navigation,setData, pantalla}:Props) => {
     
     // verifica que se hayan acomodados los datos cuando se ejecuta el switch y navega a otra pantalla
     useEffect(()=> {
-        console.log(datos.deuda)
         if(datos.deuda){
-            console.log('navegando a ',pantalla)
             navigation.navigate(`Ver${pantalla}` as never, datos as never )
         }
     },[datos.deuda])
@@ -115,7 +106,6 @@ export const TableItem = ({item, navigation,setData, pantalla}:Props) => {
     //verifica que haya cuotas y agrega la propiedad checked para
     //despues poder seleccionarla
     const organizarData = () => {
-        console.log('organizando data')
         if(!deuda){
           return console.log('no hay deudas')
         }
@@ -125,6 +115,7 @@ export const TableItem = ({item, navigation,setData, pantalla}:Props) => {
                 checked:false
             }
         })
+        
         setDatos({
             ...datos,
             deuda:dato
@@ -133,7 +124,6 @@ export const TableItem = ({item, navigation,setData, pantalla}:Props) => {
     }
     //acomoda los datos para usarse en la pantalla `ver${pantalla}`
    useEffect(()=>{
-    if(pantalla){
         if(pantalla === 'Inmueble'){
           return setDatos({...datos, 
             id:(item.item as Inmueble).pkinmueble,
@@ -169,7 +159,6 @@ export const TableItem = ({item, navigation,setData, pantalla}:Props) => {
                 }
             })
         }
-    }
    },[pantalla])
     
     //guarda la informacion del inmueble
@@ -217,14 +206,14 @@ export const TableItem = ({item, navigation,setData, pantalla}:Props) => {
                         <Image size={7} source={info} alt='icono'/>
                     </Box>
 
-                    <Text width={'70%'} ellipsizeMode='tail' numberOfLines={1} textAlign={'center'} fontSize={texto16} >
+                    <Text width={'70%'} ellipsizeMode='tail' numberOfLines={1} textAlign={'center'} fontSize={R16} >
                         { nombre }
                     </Text>
                 </Pressable>
             </Box>
            
             <Box width={'40%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'center'}>
-                <Text textAlign={'center'} fontSize={texto16} fontWeight={'bold'}>
+                <Text textAlign={'center'} fontSize={R16} fontWeight={'bold'}>
                     {
                         deuda ? 
                         <Text>${deuda.deudas.totalCuotas.toFixed(2)}</Text> 

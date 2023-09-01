@@ -6,7 +6,7 @@ import { UserProvider } from './src/context/usuario/UserProvider';
 import SplashScreen from 'react-native-splash-screen'
 import { DatosProvider } from './src/context/datos/DatosProvider';
 
-export const background = '#1a91ff'
+export const background = '#3cb4ec'
 
 const UserState = ({children}:any) =>{
   return(

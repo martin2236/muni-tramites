@@ -5,7 +5,7 @@ import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import { Cuota } from '../interfaces/inmuebles/deuda';
 import { TouchableOpacity } from 'react-native';
-import { useFontSize } from '../hooks/useFontsize';
+import { useResponsiveSize } from '../hooks/useResponsiveSize';
 
 interface Props {
     item:Cuota[],
@@ -37,7 +37,7 @@ export const RowAnios = memo(({item, selected,anios, setSelected,setAnios ,setTo
         anio:'',
         mostrar:false,
      });
-     const {texto16,texto14,texto13} = useFontSize();
+     const {R14} = useResponsiveSize();
 
      const total = item.reduce((acc,curr)=> acc + curr.totalcuota,0);
      const recargo = item.reduce((acc,curr)=> acc + curr.totalcuota + curr.recargo,0);
@@ -85,17 +85,17 @@ export const RowAnios = memo(({item, selected,anios, setSelected,setAnios ,setTo
             </Box>
             <Box width={'29%'}  display={'flex'}  alignItems={'center'}>
                 <Text textAlign={'center'} fontSize={'sm'} >
-                {total.toFixed(2)}
+                ${total.toFixed(2)}
                 </Text>
             </Box>
             <Box width={'29%'} display={'flex'} alignItems={'center'} >
-                <Text textAlign={'center'} fontSize={'sm'} fontWeight={'bold'}>
-                {recargo.toFixed(2) }
+                <Text textAlign={'center'} fontSize={'sm'} >
+                ${recargo.toFixed(2) }
                 </Text>
             </Box>
             <Box width={'27%'} display={'flex'}  alignItems={'center'}>
                 <Text textAlign={'center'} fontSize={'sm'} >
-                {total.toFixed(2)}
+                ${total.toFixed(2)}
                 </Text>
             </Box>
         </Box>
@@ -112,19 +112,19 @@ export const RowAnios = memo(({item, selected,anios, setSelected,setAnios ,setTo
                                         <Icon name={'check'} size={15} color={'white'}/> : null
                                     }
                             </TouchableOpacity>
-                            <Text fontSize={texto14}  ml={3} color={'#2596be'} textAlign={'center'} fontWeight={'bold'}>
+                            <Text fontSize={R14}  ml={3} color={'#2596be'} textAlign={'center'} fontWeight={'bold'}>
                                 CUOTAS
                             </Text>
                         </Box>
-                <Text width={'22%'}  fontSize={texto14} color={'#2596be'} textAlign={'center'} fontWeight={'bold'} lineHeight={'sm'}>
+                <Text width={'22%'}  fontSize={R14} color={'#2596be'} textAlign={'center'} fontWeight={'bold'} lineHeight={'sm'}>
                     TASA
                 </Text>
                         
-                <Text width={'32%'}  fontSize={texto14} color={'#2596be'} textAlign={'center'} fontWeight={'bold'} lineHeight={'sm'}>
+                <Text width={'32%'}  fontSize={R14} color={'#2596be'} textAlign={'center'} fontWeight={'bold'} lineHeight={'sm'}>
                     VENCIMIENTO
                 </Text>
                 
-                <Text width={'24%'}  fontSize={texto14} color={'#2596be'} textAlign={'center'} fontWeight={'bold'} lineHeight={'sm'}>
+                <Text width={'24%'}  fontSize={R14} color={'#2596be'} textAlign={'center'} fontWeight={'bold'} lineHeight={'sm'}>
                     TOTAL
                 </Text>
                 </Box>
@@ -147,26 +147,26 @@ export const RowAnios = memo(({item, selected,anios, setSelected,setAnios ,setTo
                                                         <Icon name={'check'} size={15} color={'white'}/> : null
                                                     }
                                             </TouchableOpacity>
-                                            <Text textAlign={'center'} marginLeft={3} fontSize={texto14} >
+                                            <Text textAlign={'center'} marginLeft={3} fontSize={R14} >
                                                 {cuota.cuota}
                                             </Text>
                                         </Box>
 
                                             <Box width={'20%'} display={'flex'} alignItems={'center'} >
-                                                <Text textAlign={'center'} fontSize={texto14} >
+                                                <Text textAlign={'center'} fontSize={R14} >
                                                     {cuota.tasa}
                                                 </Text>
                                             </Box>
 
                                         <Box width={'32%'} display={'flex'} alignItems={'center'} >
-                                            <Text textAlign={'center'} fontSize={texto14} >
+                                            <Text textAlign={'center'} fontSize={R14} >
                                                 {ordenarFecha(cuota.fecha_ven1)}
                                             </Text>
                                         </Box>
 
                                         <Box  width={'24%'} display={'flex'}  alignItems={'center'}>
-                                            <Text textAlign={'center'} fontSize={texto14} >
-                                                {cuota.totalcuota.toFixed(2)}
+                                            <Text textAlign={'center'} fontSize={R14} >
+                                                ${cuota.totalcuota.toFixed(2)}
                                             </Text>
                                         </Box>
                                 </Box>

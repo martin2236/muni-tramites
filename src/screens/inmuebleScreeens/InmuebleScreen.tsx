@@ -7,7 +7,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { TableItem } from '../../components/TableItem';
 import { CustomModal } from '../../components/CustomModal';
 import { Inmueble,DatosContext } from '../../context/datos/DatosContext';
-import { useFontSize } from '../../hooks/useFontsize';
+import { useResponsiveSize } from '../../hooks/useResponsiveSize';
 
 
 interface Props {
@@ -34,7 +34,7 @@ export interface Info {
 //apretar el boton i
 export const InmuebleScreen = memo(({navigation}:Props) => {
         const { inmuebles} = useContext(DatosContext);
-        const {texto16} = useFontSize();
+        const {R16} = useResponsiveSize();
         const [info, setInfo] = useState<Info | null>(null);
         const renderItem = (item:ListProps)=> {return (<TableItem item={item} pantalla={'Inmueble'} setData={setInfo} navigation={navigation}/>)};  
         const keyExtractor = (item:Inmueble, index:number)=> `${item.pkinmueble}${index}`;
@@ -73,13 +73,13 @@ export const InmuebleScreen = memo(({navigation}:Props) => {
                     inmuebles ? (
                     <>
                         <Box mt={10} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'space-around'}>
-                            <Text width={'40%'} fontSize={texto16} textAlign={'center'} fontWeight={'bold'}>
+                            <Text width={'40%'} fontSize={R16} textAlign={'center'} fontWeight={'bold'}>
                                 REFERENCIA
                             </Text>
-                            <Text width={'40%'} fontSize={texto16}  textAlign={'center'} fontWeight={'bold'}>
+                            <Text width={'40%'} fontSize={R16}  textAlign={'center'} fontWeight={'bold'}>
                                 DEUDA
                             </Text>
-                            <Text width={'20%'} fontSize={texto16}  textAlign={'center'} fontWeight={'bold'}>
+                            <Text width={'20%'} fontSize={R16}  textAlign={'center'} fontWeight={'bold'}>
                                 PAGAR
                             </Text>
                         </Box>

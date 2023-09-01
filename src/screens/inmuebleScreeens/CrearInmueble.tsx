@@ -10,6 +10,10 @@ import { CustomAlert } from '../../components/CustomAlert';
 import { background } from '../../../App';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParams } from '../../navigation/StackNavigation';
+import { Dimensions } from 'react-native';
+import { useResponsiveSize } from '../../hooks/useResponsiveSize';
+
+const {width} = Dimensions.get('window');
 
 interface Props extends StackScreenProps<RootStackParams,'CrearInmueble'>{}
 
@@ -27,9 +31,10 @@ interface Data {
 
 export const CrearInmueble = ({navigation}:Props) => {
 
-    const {makePost, data} = useFetch()
+    const {makePost, data} = useFetch();
     const {user} = useContext(UserContext);
-    const {traerInmuebles} = useContext(DatosContext)
+    const {textoBoton} = useResponsiveSize();
+    const {traerInmuebles} = useContext(DatosContext);
     const [alert,setAlert] = useState({
         status:'',
         title:''
@@ -100,11 +105,11 @@ export const CrearInmueble = ({navigation}:Props) => {
                    >
                     {({ handleChange, resetForm, handleSubmit, values, errors }) => (
                         <Box flex={1}>
-                            <Box width={'100%'} flexDir={'column'} alignItems={'center'} justifyContent={'space-between'}>
-                                    <Box width={'100%'} flexDir={'row'} alignItems={'center'} justifyContent={'space-between'}>
+                            <Box flex={6} flexDir={'column'} alignItems={'center'} justifyContent={'flex-start'}>
+                                    <Box width={'100%'}  flexDir={'row'} alignItems={'center'} justifyContent={'space-between'}>
                                         <CustomInputForm
                                             handleChange={handleChange}
-                                            width={'60%'}
+                                            width={'58%'}
                                             errors={errors}
                                             value={values.cuenta}
                                             placeholder={'CUENTA MUNICIPAL'}
@@ -113,11 +118,11 @@ export const CrearInmueble = ({navigation}:Props) => {
                                             errorCheck={errors.cuenta}
                                             margin={5}
                                         />
-                                        <Text fontSize={25} mt={5} mx={3}>
+                                        <Text fontSize={25} mt={5} mx={2}>
                                             /
                                         </Text>
                                         <CustomInputForm
-                                            width={'35%'}
+                                            width={'30%'}
                                             handleChange={handleChange}
                                             errors={errors}
                                             value={values.digito}
@@ -129,20 +134,23 @@ export const CrearInmueble = ({navigation}:Props) => {
                                         />
                                     </Box>
 
+                                    <Box >
                                         <CustomInputForm
-                                            width={'md'}
-                                            handleChange={handleChange}
-                                            errors={errors}
-                                            value={values.partida}
-                                            placeholder={'PARTIDA'}
-                                            type={'partida'}
-                                            keyboardType='numeric'
-                                            errorCheck={errors.partida}
-                                            margin={5}
-                                        />
+                                                width={width * 0.85}
+                                                handleChange={handleChange}
+                                                errors={errors}
+                                                value={values.partida}
+                                                placeholder={'PARTIDA'}
+                                                type={'partida'}
+                                                keyboardType='numeric'
+                                                errorCheck={errors.partida}
+                                                margin={5}
+                                            />
+                                    </Box>
                                     
+                                    <Box >
                                     <CustomInputForm
-                                        width={'md'}
+                                        width={width * 0.85}
                                         handleChange={handleChange}
                                         errors={errors}
                                         value={values.descripcion}
@@ -151,8 +159,10 @@ export const CrearInmueble = ({navigation}:Props) => {
                                         errorCheck={errors.descripcion}
                                         margin={5}
                                     />
+                                    </Box>
                             </Box>
 
+                            <Box flex={1}>
                             <Button
                                 onPress={()=> handleSubmit()}
                                 mt={8}
@@ -167,9 +177,11 @@ export const CrearInmueble = ({navigation}:Props) => {
                                 px={8}
                             >
                                 <Text
+                                    fontSize={textoBoton}
                                     color={'white'}
                                 >GUARDAR REGISTRO</Text>
                             </Button>
+                            </Box>
                         </Box>
                     )}
                    </Formik>
