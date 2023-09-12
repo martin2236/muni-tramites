@@ -1,9 +1,11 @@
 import { FormikErrors } from 'formik/dist/types';
-import { FormControl, Input, Text } from 'native-base'
+import { FormControl, Input, Text, Pressable } from 'native-base'
 import { ResponsiveValue } from 'native-base/lib/typescript/components/types/responsiveValue';
 import React from 'react'
 import { KeyboardTypeOptions } from 'react-native';
 import { useResponsiveSize } from '../hooks/useResponsiveSize';
+//@ts-ignore
+import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 
 interface Props{
     handleChange:{
@@ -24,10 +26,31 @@ interface Props{
 
 export const CustomInput = ({handleChange, errors,bg='white',placeholderTextColor='muted.400', value, placeholder,keyboardType, type, margin = 0 ,errorCheck, width = '100%'}:Props) => {
  const {customInputHeight,R18} = useResponsiveSize();
+ const [show, setShow] = React.useState(false);
   return (
     <FormControl  width={width} isRequired isInvalid={type in errors}>
+        {
+            type == 'clave' ? 
+            <Input  
+            onChangeText={handleChange(type)}
+            borderRadius={'3xl'}
+            backgroundColor={bg}
+            placeholder={placeholder}
+            placeholderTextColor={placeholderTextColor}
+            keyboardType={keyboardType}
+            value={value}
+            textAlign={'center'}
+            borderColor={'cyan.500'}
+            height={customInputHeight}
+            fontSize={R18}
+            mt={margin}
+            type={show ? "text" : "password"} InputRightElement={
+                <Pressable position={'absolute'} right={5} onPress={() => setShow(!show)}>
+                    <Icon name={show ? "eye" : "eye-off"}  size={20} mr="2" color="gray" />
+                </Pressable>} 
+        />
+        :
         <Input
-           
             onChangeText={handleChange(type)}
             borderRadius={'3xl'}
             backgroundColor={bg}
@@ -42,6 +65,7 @@ export const CustomInput = ({handleChange, errors,bg='white',placeholderTextColo
             mt={margin}
             secureTextEntry={type === 'clave' ? true : false}
         />
+        }
         {type in errors ? <Text ml={4} color={'red.500'}> {errorCheck} </Text> : null}  
     </FormControl>
   )

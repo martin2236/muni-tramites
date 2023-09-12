@@ -51,13 +51,21 @@ export interface User {
   token?:             string
 }
 
+export interface CarouselStatus{
+    estado:string | null
+}
+
 export interface ContextProps  {
     user: User | null,
     setUser: (user: User | null) => void,
+    carouselStatus:CarouselStatus,
+    setCarouselVerification: React.Dispatch<React.SetStateAction<boolean>>
   };
 
   const initialState = {
     user:null,
     setUser:() => {},
+    carouselStatus:{estado:null},
+    setCarouselVerification:() => {}
   }
 export const UserContext = createContext<ContextProps>(initialState);

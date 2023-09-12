@@ -199,7 +199,7 @@ export const CrearInmueble = ({navigation,route}:Props) => {
                             <Box flex={1}>
                             <Button
                                 onPress={()=> handleSubmit()}
-                                mt={8}
+                                mt={20}
                                 position={'absolute'}
                                 bottom={5}
                                 alignSelf={'center'}

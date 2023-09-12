@@ -1,5 +1,6 @@
 import React, { createContext } from 'react';
 import { Cuota } from '../../interfaces/inmuebles/deuda';
+import Carousel from 'react-native-reanimated-carousel';
 
 export interface Inmueble {
     pkinmueble:     number;
@@ -104,7 +105,7 @@ const initialState = {
     setUpdated:() => {},
     cuotasSeleccionadas:[],
     setCuotasSeleccionadas:() => {},
-    traerInmuebles: () => {}
+    traerInmuebles: () => {},
 }
 
 export const DatosContext = createContext<DatosInterface>(initialState);

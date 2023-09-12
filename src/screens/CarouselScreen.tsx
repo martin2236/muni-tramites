@@ -6,6 +6,7 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParams } from '../navigation/StackNavigation';
 import { useResponsiveSize } from '../hooks/useResponsiveSize';
 import { background } from '../../App';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const {height : screenHeight, width : screenWidth } = Dimensions.get('window')
 
@@ -19,9 +20,19 @@ interface Slide {
 interface Props extends StackScreenProps<RootStackParams>{}
 
 export const CarouselScreen = ({navigation}:Props) => {
-  const {carouselImageWidth,carouselImageHeight} = useResponsiveSize()
-  const [posicion, setPosicion] = useState(0)
-  const [defaultIndex, setDefaultIndex] = useState(0)
+  const {carouselImageWidth,carouselImageHeight} = useResponsiveSize();
+  const [posicion, setPosicion] = useState(0);
+  const [defaultIndex, setDefaultIndex] = useState(0);
+
+  const terminarTutorial = async () => {
+        const tutorial = {estado:'completado'}
+        try {
+            await AsyncStorage.setItem('@carousel',JSON.stringify(tutorial));
+          } catch (e) {
+            console.log('error al guardre el estado del tutorial')
+          };
+  };
+
   const items: Slide[] = [
     {
       title:"Fácilmente podrás",
@@ -99,7 +110,7 @@ export const CarouselScreen = ({navigation}:Props) => {
       />
       <Box width={'full'} height={'12'} bg={'white'} alignItems={'center'} flexDirection={'row'} >
         <Box width={'25%' }>
-          <Button onPress={() => navigation.replace('Login')} bg={'white'}>
+          <Button onPress={() => terminarTutorial()} bg={'white'}>
             <Text fontSize={18} fontWeight={'bold'}>
               Omitir
             </Text>
@@ -112,7 +123,7 @@ export const CarouselScreen = ({navigation}:Props) => {
         </Box>
         <Box width={'35%'} bg={'red.100'}>
           {posicion === 2 ? 
-          <Button onPress={() => navigation.replace('Login')} colorScheme={'cyan'} bg={'white'} >
+          <Button onPress={() => terminarTutorial()} colorScheme={'cyan'} bg={'white'} >
             <Text fontSize={18} fontWeight={'bold'}>Empezar</Text>
           </Button>
           :

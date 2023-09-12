@@ -67,7 +67,7 @@ const user = null;
 
 export const StackNavigation = () => {
   const {R18,textoTotal} = useResponsiveSize();
-  const {user} = useContext(UserContext)
+  const {user,carouselStatus} = useContext(UserContext)
   return (
     <Stack.Navigator
     screenOptions={{
@@ -82,10 +82,15 @@ export const StackNavigation = () => {
         {
           !user ? 
           <>
-            <Stack.Screen name="Carousel" options={{headerShown:false}} component={CarouselScreen}/>
-            <Stack.Screen name="Login" options={{headerShown:false}} component={LoginScreen} />
-            <Stack.Screen name="Registro" options={{headerTitle:'Registro'}} component={RegisterScreen}/>
-            <Stack.Screen name="OlvideContraseña" options={{headerTitle:'Cambiar Contraseña'}} component={OlvideContraseña}/>
+            {!carouselStatus.estado ? 
+             <Stack.Screen name="Carousel" options={{headerShown:false}} component={CarouselScreen}/>
+             :
+             <>
+              <Stack.Screen name="Login" options={{headerShown:false}} component={LoginScreen} />
+              <Stack.Screen name="Registro" options={{headerTitle:'Registro'}} component={RegisterScreen}/>
+              <Stack.Screen name="OlvideContraseña" options={{headerTitle:'Cambiar Contraseña'}} component={OlvideContraseña}/>
+             </>   
+            }
           </>
           :
           <>

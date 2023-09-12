@@ -1,5 +1,6 @@
-import React, {useState,useEffect, useContext} from 'react'
-import { Box, Center, Text, Button,ScrollView, Select, CheckIcon, Spinner,Divider} from 'native-base'
+import React, {useState,useEffect, useContext} from 'react';
+import { Box, Center, Text, Button,ScrollView, Select, CheckIcon, Spinner,Divider} from 'native-base';
+import { KeyboardAvoidingView } from 'react-native';
 import { CustomInput } from '../components/CustomInput'
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParams } from '../navigation/StackNavigation';
@@ -8,8 +9,9 @@ import { registerSchema } from '../schemas/ValidationSchema';
 import { useFetch } from '../hooks/useFetch';
 import { CustomAlert } from '../components/CustomAlert';
 import { background } from '../../App';
+import { Platform } from 'react-native';
 
-interface Props extends StackScreenProps<RootStackParams,'Registro'>{}
+interface Props extends StackScreenProps<RootStackParams,'Registro'>{};
 export interface FormValues {
     nombre:string, 
     cuit?:number, 
@@ -22,18 +24,18 @@ export interface FormValues {
     celular:string, 
     celular_area:string, 
     token?:string
-}
+};
 export const RegisterScreen = ({navigation}:Props) => {
     const [service, setService] = useState("");
     const [alert,setAlert] = useState({
         status:'',
         title:''
     });
-    const {makePost, data, cargando, setCargando} = useFetch()
+    const {makePost, data, cargando, setCargando} = useFetch();
     const onRegister = (values:FormValues) => {
         const{celular,celular_area,telefono,telefono_area,nombre,tipo_cuit,clave,mail,cuit}= values;
         makePost('/auth/register',{cuit:Number(cuit),celular,celular_area,telefono,telefono_area,nombre,tipo_cuit,clave, mail},undefined,'registro');
-    }
+    };
 
    useEffect(() => {
     console.log(data)
@@ -41,18 +43,17 @@ export const RegisterScreen = ({navigation}:Props) => {
        setAlert({
         status:'error',
         title:'Ocurrió por favor intente mas tarde'
-       })
+       });
     }else if(data && data.msj){
         setAlert({
             status:'success',
             title:data.msj
-        })
+        });
         setTimeout(() => {
             navigation.navigate('Login');
         }, 3000);
-    }
-
-}, [data])
+    };
+}, [data]);
 
   return ( 
     <Box flex={1} alignItems={'center'}>
@@ -62,7 +63,6 @@ export const RegisterScreen = ({navigation}:Props) => {
                 height={'100%'} 
                 width={'90%'} 
                 backgroundColor={'white'}>
-        <Center  width={'95%'}>
             {
                 alert.status != '' && <CustomAlert setAlert={setAlert} status={alert.status} title={alert.title}/>
             }
@@ -74,9 +74,7 @@ export const RegisterScreen = ({navigation}:Props) => {
                 >
                     {({ handleChange, setFieldValue, handleSubmit, values, errors }) => (
                     <>
-                       <ScrollView
-                        showsVerticalScrollIndicator={false}
-                       >
+                     <KeyboardAvoidingView keyboardVerticalOffset={60} style={{flex:1}} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
                         <CustomInput
                                 handleChange={handleChange}
                                 errors={errors}
@@ -238,11 +236,10 @@ export const RegisterScreen = ({navigation}:Props) => {
                                 }      
                                       
                             </Button>
-                       </ScrollView>
+                       </KeyboardAvoidingView>
                     </>
                 )}
                 </Formik>
-        </Center>
         </Box>
     </Box>
   )

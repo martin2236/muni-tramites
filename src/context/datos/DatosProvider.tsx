@@ -1,8 +1,9 @@
-import React, { useContext, useEffect,useState } from 'react'
-import { useFetch } from '../../hooks/useFetch'
-import { UserContext } from '../usuario/Usercontext'
-import { DatosContext, Inmueble } from './DatosContext'
-import { Cuota } from '../../interfaces/inmuebles/deuda'
+import React, { useContext, useEffect,useState } from 'react';
+import { useFetch } from '../../hooks/useFetch';
+import { UserContext } from '../usuario/Usercontext';
+import { DatosContext, Inmueble } from './DatosContext';
+import { Cuota } from '../../interfaces/inmuebles/deuda';
+import Carousel from 'react-native-reanimated-carousel';
 
 interface Props{
     children: JSX.Element | JSX.Element[]
@@ -99,6 +100,7 @@ export const DatosProvider = ({children}:Props) => {
       makeGet('/vehiculos/traerVehiculos', user?.token, undefined, 'vehiculos')
       };
     
+    
   return (
     <DatosContext.Provider
         value={{
@@ -120,7 +122,7 @@ export const DatosProvider = ({children}:Props) => {
             setInmuebleId,
             updated,
             setUpdated,
-            traerInmuebles
+            traerInmuebles,
         }}
     >
         {children}

@@ -1,5 +1,6 @@
-import React,{useEffect,useState, useContext} from 'react'
-import { Text, Box, Image, Divider, Button, ScrollView,Center, KeyboardAvoidingView, Spinner} from 'native-base'
+import React,{useEffect,useState, useContext} from 'react';
+import { Text, Box, Image, Divider, Button, ScrollView,Center,Spinner} from 'native-base';
+import {KeyboardAvoidingView} from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParams } from '../navigation/StackNavigation';
 const logo = require('../assets/loginLogo.png');
@@ -7,7 +8,7 @@ import { Formik } from 'formik';
 import { CustomInput } from '../components/CustomInput';
 import { loginSchema } from '../schemas/ValidationSchema';
 import { useFetch } from '../hooks/useFetch';
-import { Dimensions } from 'react-native';
+import { Dimensions, Platform } from 'react-native';
 import { User, UserContext } from '../context/usuario/Usercontext';
 import { background } from '../../App';
 import { useResponsiveSize } from '../hooks/useResponsiveSize';
@@ -28,7 +29,6 @@ export interface LoginReq {
 
 export const LoginScreen = ({navigation}:Props) => {
     const {R12,R15, R32, customInputHeight, loginImageWidth, LoginImageHeight} = useResponsiveSize();
-    console.log('custom input height', customInputHeight)
     const {makePost, data, cargando, setCargando} = useFetch();
 
     const [alert,setAlert] = useState({
@@ -74,7 +74,7 @@ export const LoginScreen = ({navigation}:Props) => {
                 <CustomAlert setAlert={setAlert} status={alert.status} title={alert.title}/>
             </Box>
         }
-       <KeyboardAvoidingView style={{flex:1}} behavior='height'>
+       <KeyboardAvoidingView keyboardVerticalOffset={60} style={{flex:1}} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         
        <Box flex={2} display={'flex'} flexDirection={'column'} justifyContent={'space-around'} bg={background}>
             <Image style={{ width: loginImageWidth, height: LoginImageHeight }} resizeMode='contain' alignSelf={'center'} source={logo} alt='logo'/>
