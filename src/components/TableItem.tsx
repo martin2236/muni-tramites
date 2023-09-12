@@ -91,7 +91,6 @@ export const TableItem = ({item, navigation,setData, pantalla}:Props) => {
     //chequea cuando cambia el estado de data y si no es null guarda la deuda
     useEffect(()=>{
         if(data){
-            console.log('CAMBIO DATA')
             setDeuda(data);
         }
     },[data])

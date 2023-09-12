@@ -54,9 +54,6 @@ export const loginSchema = object({
     celular_area:
     string()
     .required('ingrese un codigo de area'),
-    celular_empresa:
-    string()
-    .required('ingrese su compañia'),
   })
 
 //* CREAR INMUEBLE
@@ -70,6 +67,22 @@ export const AgregarInmuebleSchema = object({
   .required('Ingrese una partida')
   .min(4,'La partida debe tener más de 4 caracteres'),
   descripcion:
+  string()
+  .required('Ingrese una descripcion o nombre')
+  .min(5,'El nombre debe tener más de 5 caracteres'),
+  
+})
+
+//* OLVIDE CONTRASEÑA
+export const olvideContraseñaSchema = object({
+  cuit:
+   string()
+  .required('Ingrese un CUIT/CUIL'),
+  clavevieja:
+  string()
+  .required('Ingrese una partida')
+  .min(5,'La partida debe tener más de 5 caracteres'),
+  clavenueva:
   string()
   .required('Ingrese una descripcion o nombre')
   .min(5,'El nombre debe tener más de 5 caracteres'),

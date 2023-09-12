@@ -63,8 +63,19 @@ export const useFetch = () => {
           const datos = await res.data;
           setData(datos);
           setCargando(false);
-        } catch (error) {
+        } catch (error:any) {
           console.log(error);
+          if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            console.log(error.response.data);
+            setData({status:'error',title:error.response.data})
+          } else if (error.request) {
+            console.log(error.request);
+            setData({status:'error',title:error.request["_response"]})
+          } else {
+            console.log('Error', error.message);
+          }
           setCargando(false);
         }
       }else if( token === '' && tipo == 'registro'){
@@ -75,8 +86,18 @@ export const useFetch = () => {
           const datos = await res.data;
           setData(datos);
           setCargando(false);
-        } catch (error) {
-          console.log(error);
+        } catch (error:any) {
+          if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            console.log(error.response.data);
+            setData({status:'error',title:error.response.data})
+          } else if (error.request) {
+            console.log(error.request);
+            setData({status:'error',title:error.request["_response"]})
+          } else {
+            console.log('Error', error.message);
+          }
           setData(error)
           setCargando(false);
         }
@@ -87,7 +108,17 @@ export const useFetch = () => {
           const objData = {[`${tipo}`]: datos}
           setData(objData);
           setCargando(false);
-        } catch (error) {
+        } catch (error:any) {
+          //menejo de errores segun la documentacion de axios
+          if (error.response) {
+            console.log(error.response.data);
+            setData({status:'error',title:error.response.data})
+          } else if (error.request) {
+            console.log(error.request["_response"]);
+            setData({status:'error',title:error.request["_response"]})
+          } else {
+            console.log('Error', error.message);
+          }
           console.log(error);
           setCargando(false);
         }

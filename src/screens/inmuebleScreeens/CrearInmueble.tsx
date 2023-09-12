@@ -29,20 +29,31 @@ interface Data {
 }
 
 
-export const CrearInmueble = ({navigation}:Props) => {
-
+export const CrearInmueble = ({navigation,route}:Props) => {
+    const {inmuebles} = route.params;
     const {makePost, data} = useFetch();
     const {user} = useContext(UserContext);
     const {textoBoton} = useResponsiveSize();
     const {traerInmuebles} = useContext(DatosContext);
+    const [registrados, setRegistrados] = useState([])
     const [alert,setAlert] = useState({
         status:'',
         title:''
     });
 
+   useEffect(() =>{
+    const inmueblesRegistrados = inmuebles.map((inmueble:any) => inmueble.partida) 
+    setRegistrados(inmueblesRegistrados)
+   },[inmuebles])
+
     useEffect(() => {
-        console.log('ESTA ES LA DATA',data);
-        if(data && data.inmuebles.estado){
+        let peticion;
+        if(!data){
+            peticion = {};
+            return
+        };
+        peticion = data;
+        if(peticion.inmuebles){
             setAlert({
                 status:'success',
                 title:'Inmueble agregado con Éxito'
@@ -51,11 +62,35 @@ export const CrearInmueble = ({navigation}:Props) => {
             setTimeout(() => {
                 navigation.pop();
             }, 3000);
+        }else{
+            setAlert({
+                status:peticion.status,
+                title:peticion.title.message
+            })
+            setTimeout(() => {
+                setAlert({
+                    status:'',
+                    title:''
+                })
+            }, 3000);
         }
     }, [data]);
 
     const crearInmueble = ( values: NuevoInmueble, resetForm:any) => {
-        //d-vefi es los que viene en cuenta municipal despues del / ej:57464/0
+        const inmuebleExistente = registrados.find(item => item == values.partida)
+        if(inmuebleExistente){
+            setAlert({
+                status:'error',
+                title:'el inmueble ya se encuentra registrado'
+            })
+            setTimeout(() => {
+                setAlert({
+                    status:'',
+                    title:''
+                })
+            }, 3000);
+            return
+        }
         const cuenta = values.cuenta;
         const d_vefi = values.digito;
         let datos = {
@@ -65,7 +100,6 @@ export const CrearInmueble = ({navigation}:Props) => {
             descripcion: values.descripcion,
             titular: true
         }
-        console.log('ESTOS SON LOS DATOS',datos)
         makePost('/inmuebles', datos, user?.token,'inmuebles');
     }
 

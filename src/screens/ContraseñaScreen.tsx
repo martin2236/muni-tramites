@@ -1,10 +1,12 @@
 import React, {useState} from 'react'
 import {Box, Text, Divider, Input, Center, Button, Spinner} from 'native-base'
+import { useResponsiveSize } from '../hooks/useResponsiveSize'
+import { background } from '../../App'
 
 export const ContraseñaScreen = () => {
   const [show, setShow] = useState(true)
   const [nuevaContraseña, setNuevaContraseña] = useState<string | null>(null)
-
+  const {R18,customInputHeight} = useResponsiveSize();
   const onUpdate = () => {
     console.log(nuevaContraseña)
   }
@@ -18,44 +20,62 @@ export const ContraseñaScreen = () => {
             width={'90%'} 
             alignSelf={'center'} 
             backgroundColor={'white'}>
-            <Center
+            <Box
               flex={1}
             >
+                <Text
+                    mt={7}
+                    alignSelf={'center'}
+                    fontWeight={'bold'} 
+                    fontSize={20}>
+                    EDITAR CONTRASEÑA
+                  </Text>
               {
                 show ? 
                 (<>
-                  <Text mb={10} fontSize={20} >
-                  cambiar contraseña
-                 </Text>
                  <Input
-                 placeholder='Nueva Contraseña'
-                 onChangeText={(text) => setNuevaContraseña(text)}
-   
-                   width={'90%'}
+                  mt={'1/3'}
+                  placeholder='NUEVA CONTRASEÑA'
+                  onChangeText={(text) => setNuevaContraseña(text)}
+                  height={customInputHeight}
+                  fontSize={R18}
+                  borderRadius={'3xl'}
+                  textAlign={'center'}
+                  borderColor={'cyan.500'}
+                  alignSelf={'center'}
+                  width={'90%'}
                  >
                  </Input>
                  <Button
-                   onPress={() => onUpdate()}
-                   marginTop={5}
-                   width={'90%'}
+                  onPress={() => onUpdate()}
+                  mt={8}
+                  position={'absolute'}
+                  bottom={5}
+                  alignSelf={'center'}
+                  borderRadius={'2xl'}
+                  height={customInputHeight}
+                  width={'70%'}
+                  backgroundColor={background}
+                  py={0}
+                  px={8}
                  >
                      Guardar Cambios
                  </Button>
                 </>)
                  :
                  (
-                 <>
-                   <Text mb={10} fontWeight={'bold'} color={'#2596be'} fontSize={20} >
-                  Cave actualizada con éxito
+                 <Center>
+                   <Text mt={10} mb={10} fontWeight={'bold'} color={background} fontSize={20} >
+                  Actualizando contraseña
                   </Text>
                   <Spinner size={70} color={'#2596be'}>
                     
                   </Spinner>
-                 </>
+                 </Center>
                  )
               }
 
-            </Center>
+            </Box>
             </Box>
     </Box>
   )

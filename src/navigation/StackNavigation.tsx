@@ -30,6 +30,8 @@ import { CrearCementerioScreen } from '../screens/cementerioScreens/CrearCemente
 import { VerVehiculo } from '../screens/vehiculosScreen/verVehiculo';
 import { UserContext } from '../context/usuario/Usercontext';
 import { background } from '../../App';
+import { useResponsiveSize } from '../hooks/useResponsiveSize';
+import { OlvideContraseña } from '../screens/OlvideContraseña';
 
 export type RootStackParams = {
     Login:undefined,
@@ -38,6 +40,7 @@ export type RootStackParams = {
     Inmueble:undefined,
     Contacto:undefined,
     Contraseña:undefined,
+    OlvideContraseña:undefined,
     MediosPago:undefined,
     Notificaciones:undefined,
     Oficinas:undefined,
@@ -52,7 +55,7 @@ export type RootStackParams = {
     CrearCementerio:undefined
     ObrasPrivadas:undefined,
     Escribanos:undefined,
-    CrearInmueble:undefined,
+    CrearInmueble:{inmuebles:any},
     CrearComercio:undefined,
     FormularioPagos:undefined,
     EditarReferencia:{id:number,ruta:string, referencia:string ,updateInfo:object,deuda:any},
@@ -63,6 +66,7 @@ const Stack = createStackNavigator<RootStackParams>();
 const user = null;
 
 export const StackNavigation = () => {
+  const {R18,textoTotal} = useResponsiveSize();
   const {user} = useContext(UserContext)
   return (
     <Stack.Navigator
@@ -81,13 +85,14 @@ export const StackNavigation = () => {
             <Stack.Screen name="Carousel" options={{headerShown:false}} component={CarouselScreen}/>
             <Stack.Screen name="Login" options={{headerShown:false}} component={LoginScreen} />
             <Stack.Screen name="Registro" options={{headerTitle:'Registro'}} component={RegisterScreen}/>
+            <Stack.Screen name="OlvideContraseña" options={{headerTitle:'Cambiar Contraseña'}} component={OlvideContraseña}/>
           </>
           :
           <>
            <Stack.Screen name="Main" options={{headerShown:false}} component={DrawerNavigation}/>
             <Stack.Screen name="Oficinas" options={{headerTitle:()=>(<IconRouteTitle icono='office-building-marker' titulo={'ATENCION AL CONTRIBUYENTE'}/>)}} component={OficinasScreen}/>
             <Stack.Screen name="Notificaciones" options={{headerTitle:'Notificaciones'}} component={NotificacionesScreen}/>
-            <Stack.Screen name="Contraseña" options={{headerTitle:'Cambiar Contraseña'}} component={ContraseñaScreen}/>
+            <Stack.Screen name="Contraseña" options={{headerTitle:()=>(<IconRouteTitle icono='key-variant' titulo={'CAMBIAR CONTRASEÑA'}/>)}} component={ContraseñaScreen}/>
             <Stack.Screen name="Contacto" options={{headerTitle:()=>(<IconRouteTitle icono='wechat' titulo={'CONTACTO'}/>)}} component={ContactoScreen}/>
             <Stack.Screen name="MediosPago" options={{headerTitle:()=>(<IconRouteTitle icono='card-bulleted' titulo={'MEDIOS DE PAGO'}/>)}} component={MediosPagosScreen}/>
             <Stack.Screen name="Pagos" options={{headerTitle:'Metodos de Pago'}} component={PagoScreen}/>

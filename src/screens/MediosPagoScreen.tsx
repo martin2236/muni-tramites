@@ -19,8 +19,9 @@ export const MediosPagosScreen = () => {
                 justifyContent={'space-around'}
                 alignSelf={'center'} 
                 backgroundColor={'white'}>
-            <ScrollView>
-            <Box width={'100%'} display={'flex'} flexDirection={'column'}>
+            
+            <Box flex={1} display={'flex'} flexDirection={'column'}>
+            <ScrollView flex={1}>
               <Box mt={5} display={'flex'} flexDirection={'row'} alignItems={'center'}>
                 <Icon style={{marginLeft:10}} name='credit-card' size={25}/>
                 <Text ml={3} fontSize={R18}>
@@ -76,8 +77,9 @@ export const MediosPagosScreen = () => {
               <Text ml={12} fontSize={R16}>
                 A travéz de Red Link, Banelco, Interbanking, Pago Mis Cuentas y Visa Home
               </Text>
+              </ScrollView>
             </Box>
-            </ScrollView>
+            
         </Box>
     </Box>
   )

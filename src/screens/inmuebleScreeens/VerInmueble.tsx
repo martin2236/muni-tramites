@@ -1,5 +1,5 @@
-import React, { useEffect, memo, useState, useContext, useCallback } from 'react';
-import { Divider, Box, Text, Pressable, Checkbox, Button, Radio, FlatList } from 'native-base';
+import React, { useEffect, memo, useState, useContext} from 'react';
+import { Divider, Box, Text, Pressable, Button, FlatList } from 'native-base';
 
 //@ts-ignore
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
@@ -29,7 +29,7 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
     const {R14,textoTotal,textoResponsive} = useResponsiveSize();
     const {makePost,data} = useFetch();
     const [selected, setSelected] = useState<Cuota[]>([]);
-    const [anios, setAnios] = useState<string[] | []>([]);
+    const [anios, setAnios] = useState<string[] | null>(null);
     const [totalSelected, setTotalSelected] = useState(0);
     const [listaAnios,setListaAnios] = useState<CuotaAño[][] | []>([]);
     const [opcion, setOpcion] = useState<string | undefined>(undefined);
@@ -44,9 +44,7 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
         }
     },[data]);
 
-     
     const {id,ruta, referencia, updateInfo,deuda} =  route.params;
-
 
     let editar = {
         id,
@@ -55,12 +53,23 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
         referencia,
         updateInfo
     }
+
     useEffect(() => {
-        pagarPorAnios(anios)
+        console.log('estos son los anios en verInmuebles',anios)
+        if(anios){
+            pagarPorAnios(anios);
+        };
     },[anios])
 
    const pagarPorAnios = (anios:String[]) => {
+    if(!anios.length){
+        setSelected([]);
+        setTotalSelected(0);
+        return
+    };
     const nuevaLista = deuda.filter((deuda:Cuota) => anios.includes(deuda.anio +''));
+    //!inmueble nueva3 tiene items con la cunica repetida por eso se rompe,
+    //nuevaLista.forEach((item:Cuenta) => console.log(item.cunica))
     const total = nuevaLista.reduce((acc:number,curr:Cuota)=> acc + curr['totalcuota'] ,0);
     setSelected(nuevaLista);
     setTotalSelected(total);
@@ -71,7 +80,7 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
    
     useEffect(() => {
         // Organiza las deudas por año
-        console.log('cambio deudas')
+        console.log('cambio deudas y acomodo todas las cuentas')
         const infoByAnio: InfoByAnio = {};
 
         deuda.forEach((item: CuotaAño) => {

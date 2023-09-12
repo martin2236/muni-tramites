@@ -58,7 +58,7 @@ export const InmuebleScreen = memo(({navigation}:Props) => {
                         MIS INMUEBLES
                     </Text>
                     <Button 
-                        onPress={()=> navigation.navigate('CrearInmueble')}
+                        onPress={()=> navigation.navigate('CrearInmueble',{inmuebles})}
                         height={'30px'}
                         py={0}
                         px={4}
