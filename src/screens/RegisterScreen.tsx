@@ -10,7 +10,7 @@ import { CustomAlert } from '../components/CustomAlert';
 import { background } from '../../App';
 
 interface Props extends StackScreenProps<RootStackParams,'Registro'>{}
-interface FormValues {
+export interface FormValues {
     nombre:string, 
     cuit?:number, 
     clave:string, 
@@ -21,7 +21,6 @@ interface FormValues {
     telefono_area:string, 
     celular:string, 
     celular_area:string, 
-    celular_empresa:string,
     token?:string
 }
 export const RegisterScreen = ({navigation}:Props) => {
@@ -32,12 +31,12 @@ export const RegisterScreen = ({navigation}:Props) => {
     });
     const {makePost, data, cargando, setCargando} = useFetch()
     const onRegister = (values:FormValues) => {
-        const{celular,celular_area,telefono,telefono_area,nombre,tipo_cuit,clave,mail,celular_empresa,cuit}= values;
-        makePost('/auth/register',{cuit:Number(cuit),celular,celular_area,telefono,telefono_area,nombre,tipo_cuit,clave, mail,celular_empresa},undefined,'registro');
+        const{celular,celular_area,telefono,telefono_area,nombre,tipo_cuit,clave,mail,cuit}= values;
+        makePost('/auth/register',{cuit:Number(cuit),celular,celular_area,telefono,telefono_area,nombre,tipo_cuit,clave, mail},undefined,'registro');
     }
 
    useEffect(() => {
-    
+    console.log(data)
     if(data && !data.msj){
        setAlert({
         status:'error',
@@ -63,7 +62,7 @@ export const RegisterScreen = ({navigation}:Props) => {
                 height={'100%'} 
                 width={'90%'} 
                 backgroundColor={'white'}>
-        <Center width={'95%'}>
+        <Center  width={'95%'}>
             {
                 alert.status != '' && <CustomAlert setAlert={setAlert} status={alert.status} title={alert.title}/>
             }
@@ -121,7 +120,7 @@ export const RegisterScreen = ({navigation}:Props) => {
                                     <Select.Item label="MASCULINO" value="M" />
                                     <Select.Item label="EMPRESA" value="E" />
                                 </Select>
-                                {'tipo_cuit' in errors ? <Text ml={8} color={'red.500'}> {errors.celular_empresa} </Text> : null} 
+                                {'tipo_cuit' in errors ? <Text ml={8} color={'red.500'}> {errors.tipo_cuit} </Text> : null} 
                                 </Box>
                               
                             </Box>
@@ -186,30 +185,7 @@ export const RegisterScreen = ({navigation}:Props) => {
                                 margin={4}
                             />
                             </Box>
-                            <Box>
-                            <Select selectedValue={service} flex={1} accessibilityLabel="Choose Service" 
-                                    placeholder="COMPAÑIA DE CELULAR"
-                                    textAlign={'center'}
-                                    borderColor={'cyan.500'}
-                                    borderRadius={'3xl'}
-                                    backgroundColor={'white'}
-                                    placeholderTextColor={'muted.400'}
-                                    fontSize={18}
-                                    marginTop={4}
-                                    _selectedItem={{
-                                        bg: "teal.600",
-                                        endIcon: <CheckIcon size="5" />
-                                    }} mt={1} onValueChange={itemValue => {
-                                            setService(itemValue);
-                                            setFieldValue("celular_empresa", itemValue);
-                                        }}>
-                                    <Select.Item label="PERSONAL" value="personal" />
-                                    <Select.Item label="MOVISTAR" value="movistar" />
-                                    <Select.Item label="CLARO" value="claro" />
-                                    <Select.Item label="TWENTI" value="twenti" />
-                                </Select>
-                                {'celular_empresa' in errors ? <Text ml={4} color={'red.500'}> {errors.celular_empresa} </Text> : null} 
-                            </Box>
+                           
                             <CustomInput
                                 handleChange={handleChange}
                                 errors={errors}

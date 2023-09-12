@@ -10,10 +10,10 @@ import { useResponsiveSize } from '../hooks/useResponsiveSize';
 interface Props {
     item:Cuota[],
     selected:any,
-    anios:any[],
+    anios:string[] | null,
     setSelected:React.Dispatch<React.SetStateAction<Cuota[]>>,
     setTotalSelected:React.Dispatch<React.SetStateAction<number>>,
-    setAnios: React.Dispatch<React.SetStateAction<string[]>>
+    setAnios: React.Dispatch<React.SetStateAction<string[] | null>>
 }   
 
 const isSelected = (cuota: Cuota, selectedCuotas: Cuota[]) => {
@@ -43,15 +43,17 @@ export const RowAnios = memo(({item, selected,anios, setSelected,setAnios ,setTo
      const recargo = item.reduce((acc,curr)=> acc + curr.totalcuota + curr.recargo,0);
 
         const toggleCuota = (cuota:Cuota) => {
-            let index = selected.findIndex((item:Cuota) => item.cunica == cuota.cunica);
-            const arraySelected = [...selected];
-            if(index !== -1){
-                arraySelected.splice(index,1);
-            }else{
-                arraySelected.push(cuota as never);
+            const index = selected.findIndex((item: Cuota) => item.cunica === cuota.cunica);
+            const newSelected = [...selected];
+
+            if (index !== -1) {
+                newSelected.splice(index, 1);
+            } else {
+                newSelected.push(cuota as never);
             }
-            const total = arraySelected.reduce((acc,curr)=> acc + curr['totalcuota'] ,0);
-            setSelected(arraySelected);
+
+            const total = newSelected.reduce((acc, curr) => acc + curr.totalcuota, 0);
+            setSelected(newSelected);
             setTotalSelected(total);
         }
 
@@ -62,6 +64,25 @@ export const RowAnios = memo(({item, selected,anios, setSelected,setAnios ,setTo
             return `${dia}/${fechaArray[1]}/${fechaArray[0]}`
             }
             return 'Sin fecha';   
+        }
+
+        const nueva = () =>{
+
+            //primer if para saber si es la primera cuota que se va a agregar
+            if( !anios  ) return setAnios([item[0].anio]);
+
+            // En esta parte ya se sabe que hay almenos una cuota agregada asi que
+            // se busca saber si el ultimo año ya esta en la lista, si no esta se agrega 
+            // el año para que se marquen todas las cuotas  y si esta se alimina el año
+            // para que se desmarquen todas las cuotas
+            const existe = anios!.find(anio => anio == item[0].anio);
+            if(existe){
+                const ultimoAño = item[0].anio;
+                const añosSinRepetir = anios!.filter(item => item !== ultimoAño);
+               return setAnios([...añosSinRepetir]);
+            }else{
+                setAnios([...anios!,item[0].anio])
+            }
         }
 
      //checks if show changed and modifies item.checked
@@ -78,23 +99,23 @@ export const RowAnios = memo(({item, selected,anios, setSelected,setAnios ,setTo
             <Box width={'15%'} display={'flex'} p={0} flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'}>
                 <Pressable  p={1} onPress={() => handleShow()} width={'100%'} flexDirection={'row'} alignItems={'center'}>
                     <Icon name={'chevron-right'} size={16} color={'cyan'}/>
-                    <Text textAlign={'center'} fontSize={'sm'}>
+                    <Text textAlign={'center'} fontSize={R14}>
                         {item[0].anio}
                     </Text>
                 </Pressable>
             </Box>
             <Box width={'29%'}  display={'flex'}  alignItems={'center'}>
-                <Text textAlign={'center'} fontSize={'sm'} >
+                <Text textAlign={'center'} fontSize={R14} >
                 ${total.toFixed(2)}
                 </Text>
             </Box>
             <Box width={'29%'} display={'flex'} alignItems={'center'} >
-                <Text textAlign={'center'} fontSize={'sm'} >
+                <Text textAlign={'center'} fontSize={R14} >
                 ${recargo.toFixed(2) }
                 </Text>
             </Box>
             <Box width={'27%'} display={'flex'}  alignItems={'center'}>
-                <Text textAlign={'center'} fontSize={'sm'} >
+                <Text textAlign={'center'} fontSize={R14} >
                 ${total.toFixed(2)}
                 </Text>
             </Box>
@@ -105,11 +126,11 @@ export const RowAnios = memo(({item, selected,anios, setSelected,setAnios ,setTo
                     <Box  mt={2} alignSelf={'center'} width={'95%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'flex-start'}>
                         <Box width={'25%'}  display={'flex'} flexDirection={'row'} justifyContent={'flex-start'} alignItems={'center'}>
                             <TouchableOpacity
-                                onPress={() => setAnios([...anios,item[0].anio])}
-                                style={{height:18, width:18,borderColor:'#2596be',backgroundColor:anios.findIndex((cuota:Cuota) => item[0].anio == cuota.anio) !== -1 ?'#2596be':'#fff' ,borderWidth:selected.findIndex((cuotas:Cuota) => item[0].anio == cuotas.anio) !== -1 ? 0:2, alignItems:'center', justifyContent:'center', marginLeft:2}}>
+                                onPress={() => nueva()}
+                                style={{height:18, width:18,borderColor:'#2596be',backgroundColor:anios && anios?.findIndex((cuota:any) => item[0].anio == cuota) !== -1 ?'#2596be':'#fff' ,borderWidth:2, alignItems:'center', justifyContent:'center', marginLeft:2}}>
                                     {
-                                        anios.findIndex((cuota:Cuota) => cuota.anio == item[0].anio) !== -1 ?
-                                        <Icon name={'check'} size={15} color={'white'}/> : null
+                                      anios && anios?.findIndex((cuota:any) => cuota == item[0].anio) !== -1 ?
+                                        <Icon name={'check'} size={16} color={'white'}/> : null
                                     }
                             </TouchableOpacity>
                             <Text fontSize={R14}  ml={3} color={'#2596be'} textAlign={'center'} fontWeight={'bold'}>
@@ -133,7 +154,6 @@ export const RowAnios = memo(({item, selected,anios, setSelected,setAnios ,setTo
                     scrollEnabled={true}
                     nestedScrollEnabled={true}
                     keyboardShouldPersistTaps='always'
-                    height={'40'}
                     >
                         <Box>
                             {item.map((cuota:Cuota, index) => (

@@ -1,4 +1,4 @@
-import React,{useEffect, useContext} from 'react'
+import React,{useEffect,useState, useContext} from 'react'
 import { Text, Box, Image, Divider, Button, ScrollView,Center, KeyboardAvoidingView, Spinner} from 'native-base'
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParams } from '../navigation/StackNavigation';
@@ -11,6 +11,7 @@ import { Dimensions } from 'react-native';
 import { User, UserContext } from '../context/usuario/Usercontext';
 import { background } from '../../App';
 import { useResponsiveSize } from '../hooks/useResponsiveSize';
+import { CustomAlert } from '../components/CustomAlert';
 
 const {width} = Dimensions.get('window');
 
@@ -27,13 +28,18 @@ export interface LoginReq {
 
 export const LoginScreen = ({navigation}:Props) => {
     const {R12,R15, R32, customInputHeight, loginImageWidth, LoginImageHeight} = useResponsiveSize();
-
+    console.log('custom input height', customInputHeight)
     const {makePost, data, cargando, setCargando} = useFetch();
+
+    const [alert,setAlert] = useState({
+        status:'',
+        title:''
+    });
 
     const {setUser} = useContext(UserContext);
 
     useEffect(() => {
-        if(data){
+        if(data != undefined && data.user){
             console.log('Respuesta del backend',data)
             const usuario = {
                 ...(data as LoginReq).user[0], token:(data as LoginReq).token
@@ -41,7 +47,18 @@ export const LoginScreen = ({navigation}:Props) => {
             if(usuario){
                 setUser(usuario);
             };
-        } 
+        }else if(data != undefined && data.status){
+            setAlert({
+                status:data.status,
+                title:'los datos de la cuenta no coinciden'
+            })
+            setTimeout(() => {
+                setAlert({
+                    status:'',
+                    title:''
+                })
+            }, 3000);
+        }
     }, [data])
     
     const onLogin = (values : Login) =>{
@@ -51,6 +68,12 @@ export const LoginScreen = ({navigation}:Props) => {
 
   return (
     <Box flex={1} backgroundColor={background} >
+        {
+            alert.status != '' && 
+            <Box alignSelf={'center'} mt={10} width={'80%'}>
+                <CustomAlert setAlert={setAlert} status={alert.status} title={alert.title}/>
+            </Box>
+        }
        <KeyboardAvoidingView style={{flex:1}} behavior='height'>
         
        <Box flex={2} display={'flex'} flexDirection={'column'} justifyContent={'space-around'} bg={background}>
@@ -114,13 +137,14 @@ export const LoginScreen = ({navigation}:Props) => {
                         margin={5}
                     />
                    
-                    <Text 
+                    <Button 
+                        variant={'link'}
+                        colorScheme={'white'}
+                        onPress={() => navigation.navigate('OlvideContraseña')}
                         mt={1} 
-                        textAlign={'center'}
-                        fontSize={R12} 
-                        color={'white'}>
-                            OLVIDÉ MI CONTRASEÑA
-                    </Text>
+                        fontSize={R12} >
+                            <Text color={'white'}>OLVIDÉ MI CONTRASEÑA</Text>
+                    </Button>
                     <Button 
                         onPress={() => handleSubmit()}
                         height={customInputHeight}

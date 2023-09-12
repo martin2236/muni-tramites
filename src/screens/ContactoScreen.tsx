@@ -2,8 +2,10 @@ import React from 'react'
 import {Box, Text, Divider} from 'native-base'
 //@ts-ignore
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
+import { useResponsiveSize } from '../hooks/useResponsiveSize';
 
 export const ContactoScreen = () => {
+  const {R18} = useResponsiveSize();
   return (
     <Box flex={1} backgroundColor={'gray.200'}>
     <Divider backgroundColor={'gray.600'} height={'1.5'}/>
@@ -20,7 +22,7 @@ export const ContactoScreen = () => {
            <Box width={'100%'}>
               <Box mt={5} display={'flex'} flexDirection={'row'} alignItems={'center'}>
                 <Icon style={{marginLeft:10}} name='whatsapp' size={25}/>
-                <Text ml={3} fontSize={18}>
+                <Text ml={3} fontSize={R18}>
                   VIA WHATSAPP
                 </Text>
               </Box>
@@ -38,7 +40,7 @@ export const ContactoScreen = () => {
                 </Text>
               <Box mt={5} display={'flex'} flexDirection={'row'} alignItems={'center'}>
                 <Icon style={{marginLeft:10}} name='phone' size={25}/>
-                <Text ml={3} fontSize={18}>
+                <Text ml={3} mr={5} fontSize={R18}>
                   VIA TELEFÓNICA (lunes a viernes de 9 a 14 hs)
                 </Text>
               </Box>
@@ -57,7 +59,7 @@ export const ContactoScreen = () => {
                 </Text>
               <Box mt={5} display={'flex'} flexDirection={'row'} alignItems={'center'}>
                 <Icon style={{marginLeft:10}} name='email' size={25}/>
-                <Text ml={3} fontSize={18}>
+                <Text ml={3} fontSize={R18}>
                 VIA CORREO ELECTRONICO
                 </Text>
               </Box>
