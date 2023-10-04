@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import { useResponsiveSize } from '../hooks/useResponsiveSize';
 
 export const ContactoScreen = () => {
-  const {R18} = useResponsiveSize();
+  const {R18, R16} = useResponsiveSize();
   return (
     <Box flex={1} backgroundColor={'gray.200'}>
     <Divider backgroundColor={'gray.600'} height={'1.5'}/>
@@ -63,25 +63,25 @@ export const ContactoScreen = () => {
                 VIA CORREO ELECTRONICO
                 </Text>
               </Box>
-              <Text mt={2} ml={12}>
+              <Text fontSize={R16} mt={2} ml={12}>
                   atenciónadistacia@lacosta.gob.ar
                 </Text>
-                <Text mt={2} ml={12}>
+                <Text fontSize={R16} mt={2} ml={12}>
                   contribuyentes@lacosta.gob.ar
                 </Text>
-                <Text mt={2} ml={12}>
+                <Text fontSize={R16} mt={2} ml={12}>
                   recursos@lacosta.gob.ar
                 </Text>
-                <Text mt={2} ml={12}>
+                <Text fontSize={R16} mt={2} ml={12}>
                   consultadeuda@lacosta.gob.ar
                 </Text>
-                <Text mt={2} ml={12}>
+                <Text fontSize={R16} mt={2} ml={12}>
                   recaudaciones@lacosta.gob.ar
                 </Text>
-                <Text mt={2} ml={12}>
+                <Text fontSize={R16} mt={2} ml={12}>
                   catastro@lacosta.gob.ar
                 </Text>
-                <Text mt={2} ml={12}>
+                <Text fontSize={R16} mt={2} ml={12}>
                   patentes@lacosta.gob.ar
                 </Text>
            </Box>

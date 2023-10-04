@@ -3,37 +3,37 @@ import { Text, Box, Divider, Button,Pressable, Center, FlatList, ScrollView, Spi
 //@ts-ignore
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import { RootStackParams } from '../../navigation/StackNavigation';
-import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { TableItem } from '../../components/TableItem';
 import { CustomModal } from '../../components/CustomModal';
 import { DatosContext, Vehiculo } from '../../context/datos/DatosContext';
-import { useFetch } from '../../hooks/useFetch';
-import { UserContext } from '../../context/usuario/Usercontext';
-import { Cuota } from '../../interfaces/inmuebles/deuda';
 
 interface Props {
-    navigation: StackNavigationProp<RootStackParams, "Inmueble", undefined>,
+    navigation: StackNavigationProp<RootStackParams, "Vehiculo", undefined>,
     route:any
 }
 interface ListProps{
     index:number,
     item:Vehiculo
 }
-export interface Info {
-    cuentaMunicipal: string;
-    partidaPovincial: number;
-    categoria: string;
-    codigoServicio: string;
-    baseImponible: number;
-    nomenclatura: string;
+export interface InfoVehiculo {
+    modal:boolean,
+    tipoModal:string,
+    referencia:string,
+    dominioActual: string,
+    dominioOriginal:string,
+    modelo:string,
+    marca: string,
+    año: number,
+    tipo: any,
 }
 
 export const VehiculoScreen = ({navigation,route}:Props) => {
 
-        const { vehiculos} = useContext(DatosContext);
-        const [info, setInfo] = useState<Info | null>(null);
-        const renderItem = (item:ListProps)=> {return (<TableItem item={item} pantalla={'Vehiculo'} setData={setInfo} navigation={navigation}/>)};  
-        const keyExtractor = (item:Vehiculo, index:number)=> `${item.dominio}${index}` 
+    const { vehiculos} = useContext(DatosContext);
+    const [info, setInfo] = useState<InfoVehiculo | null>(null);
+    const renderItem = (item:ListProps)=> {return (<TableItem item={item} pantalla={'Vehiculo'} setData={setInfo} navigation={navigation}/>)};  
+    const keyExtractor = (item:Vehiculo, index:number)=> `${item.dominio}${index}` 
 
 
   return (
@@ -55,7 +55,7 @@ export const VehiculoScreen = ({navigation,route}:Props) => {
                     MIS VEHICULOS
                 </Text>
                 <Button 
-                    onPress={()=> navigation.navigate('CrearInmueble')}
+                    onPress={()=> navigation.navigate('CrearVehiculo',{vehiculos})}
                     height={'30px'}
                     py={0}
                     px={4}
@@ -64,7 +64,7 @@ export const VehiculoScreen = ({navigation,route}:Props) => {
                     alignSelf={'center'}
                     backgroundColor={'gray.500'}
                     >
-                    <Text fontWeight={'bold'} fontSize={'sm'} color={'white'}>AGREGAR INMUEBLE</Text>
+                    <Text fontWeight={'bold'} fontSize={'sm'} color={'white'}>AGREGAR VEHICULO</Text>
                 </Button>
                {
                 vehiculos && vehiculos.length ? (
@@ -97,71 +97,19 @@ export const VehiculoScreen = ({navigation,route}:Props) => {
                     </Center>
                 )
                }
-                    
-                <Box mt={5}>
+               
+             </>
+            
+             <Box mt={5}>
                     {
-                        info ? 
+                    info ? 
                         <>
-                            <Box 
-                            height={'10'}
-                            display={'flex'} 
-                            flexDirection={'row'} 
-                            borderWidth={1}
-                            borderColor={'cyan.500'} 
-                            width={'80%'}
-                            shadow={'6'}
-                            backgroundColor={'white'}
-                            borderRadius={'3xl'} 
-                            alignSelf={'center'}
-                            alignItems={'center'}
-                            zIndex={200}
-                            justifyContent={'space-evenly'}>
-                                <Pressable 
-                                    height={4}
-                                    borderWidth={2}
-                                    borderColor={'cyan.500'} 
-                                    borderRadius={'4'}
-                                    alignItems={'center'}
-                                    justifyContent={'center'} 
-                                    width={4}>
-                                        <Icon name={'information-variant'} size={12}/>
-                                </Pressable>
-                                <Text fontWeight={'bold'} fontSize={13} color={'cyan.500'}>Información del inmueble</Text>
-                                </Box>
-                                <Box mt={7} width={'90%'} borderColor={'cyan.500'} borderRadius={'md'} borderWidth={1} position={'absolute'} alignSelf={'center'} zIndex={10}>
-                                    <Box mt={5} flexDirection={'row'}>
-                                        <Text ml={2} fontSize={12} fontWeight={'bold'} color={'cyan.500'}>Cuenta municipal :</Text>
-                                        <Text ml={2}>{info.cuentaMunicipal}</Text>
-                                    </Box>
-                                    <Box mt={1} flexDirection={'row'}>
-                                        <Text ml={2} fontWeight={'bold'} color={'cyan.500'}>Partida provincial :</Text>
-                                        <Text ml={2}>{info.partidaPovincial}</Text>
-                                    </Box>
-                                    <Box mt={1} flexDirection={'row'}>
-                                        <Text ml={2} fontSize={12} fontWeight={'bold'} color={'cyan.500'}>Categoria :</Text>
-                                        <Text ml={2}>{info.categoria}</Text>
-                                    </Box>
-                                    <Box mt={1} flexDirection={'row'}>
-                                        <Text ml={2} fontSize={12} fontWeight={'bold'} color={'cyan.500'}>Código de servicio :</Text>
-                                        <Text ml={2}>{info.codigoServicio}</Text>
-                                    </Box>
-                                    <Box mt={1} flexDirection={'row'}>
-                                        <Text ml={2} fontWeight={'bold'} color={'cyan.500'}>Base imponible :</Text>
-                                        <Text ml={2}>{info.baseImponible}</Text>
-                                    </Box>
-                                    <Box mt={1} mb={3} flexDirection={'row'}>
-                                        <Text ml={2} fontSize={12} fontWeight={'bold'} color={'cyan.500'}>N/ catastral :</Text>
-                                        <Text ml={1} fontSize={12} >{info.nomenclatura}</Text>
-                                    </Box>
-                            </Box>
+                            <CustomModal info={info} setData={setInfo} />
                         </>
                         :
                         null
                     }
                 </Box>
-             </>
-            
-                <CustomModal/>
         </Box>
     </Box>
   )

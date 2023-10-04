@@ -1,4 +1,4 @@
-import React, {useEffect, type PropsWithChildren} from 'react';
+import React, {useEffect} from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { StackNavigation } from './src/navigation/StackNavigation';
 import { NativeBaseProvider} from "native-base";

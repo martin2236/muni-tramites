@@ -83,7 +83,10 @@ interface DatosInterface{
     setUpdated:({}:updateInfo) => void,
     cuotasSeleccionadas:Cuota[] | [],
     setCuotasSeleccionadas:(cuotas:Cuota[] | []) => void,
-    traerInmuebles: () => void
+    traerInmuebles: () => void,
+    traerVehiculos: () => void,
+    traerComercios: () => void,
+    traerCementerios: () => void,
 }
 
 const initialState = {
@@ -106,6 +109,9 @@ const initialState = {
     cuotasSeleccionadas:[],
     setCuotasSeleccionadas:() => {},
     traerInmuebles: () => {},
+    traerVehiculos: () => {},
+    traerComercios: () => {},
+    traerCementerios: () => {},
 }
 
 export const DatosContext = createContext<DatosInterface>(initialState);

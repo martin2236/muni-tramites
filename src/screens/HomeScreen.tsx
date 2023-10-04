@@ -1,5 +1,5 @@
 import React,{useContext, useEffect, useState} from 'react';
-import { Box, Divider, Text, Pressable,Center } from 'native-base';
+import { Box, Divider, Text, Pressable,Center,Spinner } from 'native-base';
 //@ts-ignore
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import { useFetch } from '../hooks/useFetch';
@@ -7,6 +7,7 @@ import { UserContext } from '../context/usuario/Usercontext';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import { RootDrawerParams } from '../navigation/DrawerNavigation';
 import { background } from '../../App';
+import { useResponsiveSize } from '../hooks/useResponsiveSize';
 
 interface Props extends DrawerScreenProps<RootDrawerParams,'Home'>{}
 
@@ -17,10 +18,19 @@ export const HomeScreen = ({navigation}:Props) => {
     const [pantalla, setPantalla] = useState('');
     const [disabled,setDisabled] = useState<string | null>(null);
     const {makeGet, data, cargando} = useFetch();
+    const [feed,setFeed] = useState<string | null>(null);
+    const {R16,R14} = useResponsiveSize()
 
     //pide los datos a mostrar en la siguiente pantalla y desabilita la navegacion a otras
     //pantallas mientras los datos se cargan 
+    useEffect(()=>{
+      if(feed){
+        console.log('esto es feed', feed)
+      }
+    },[feed])
+
     const pedirInformacion = (data: string) =>{
+      setFeed(data)
       setDisabled(data)
         switch (data) {
             case 'Inmueble':
@@ -42,6 +52,7 @@ export const HomeScreen = ({navigation}:Props) => {
             default:
               console.log(`No se encontro el tipo ${data}.`);
           }
+          console.log('ESTO ES FEED',feed);
     };
 
     //recibe los datos que trae la funcion traerInformaciony los procesa
@@ -69,7 +80,6 @@ export const HomeScreen = ({navigation}:Props) => {
 
      //verifica la existencia de una cuenta para navegar a la pantalla seleccionada
      useEffect(()=>{
-      console.log('algo',cuenta,pantalla)
         if(cuenta && pantalla){
           console.log(cuenta,pantalla)
            navigation.navigate(pantalla as never,cuenta as never);
@@ -80,6 +90,7 @@ export const HomeScreen = ({navigation}:Props) => {
     //quita la propiedad disabled despues de haber presionado una ruta
     useEffect(()=>{
       const unsubscribe = navigation.addListener('focus', () => {
+        setFeed(null)
         setDisabled(null)
       });
       return unsubscribe;
@@ -115,14 +126,20 @@ export const HomeScreen = ({navigation}:Props) => {
                         alignItems={'center'} 
                         borderRadius={'3xl'} 
                         width={120} 
-                        backgroundColor={background}>
-                        <Icon 
-                            name="home" 
-                            size={90} 
-                            color="#fff" />
+                        backgroundColor={feed == 'Inmueble' || feed == null ? background : 'gray.400'}>
+                        {feed == 'Inmueble'  ? 
+                          <Spinner size={90} color={'white'}/>
+                          :
+                          <Icon 
+                              name="home" 
+                              size={90} 
+                              color="#fff" 
+                            />
+                        }
                     </Box>
                     <Text 
                         mt={1} 
+                        fontSize={R16}
                         fontWeight={'bold'} 
                         textAlign={'center'}>
                             Inmueble
@@ -140,16 +157,21 @@ export const HomeScreen = ({navigation}:Props) => {
                         alignItems={'center'} 
                         borderRadius={'3xl'} 
                         width={120} 
-                        backgroundColor={background}
+                        backgroundColor={feed == 'Vehiculo' || feed == null ? background : 'gray.400'}
                       >
-                        <Icon 
-                            name="car" 
-                            size={90}
-                            color="#fff" 
-                          />
+                        {feed == 'Vehiculo'  ? 
+                          <Spinner size={90} color={'white'}/>
+                          :
+                          <Icon 
+                              name="car" 
+                              size={90} 
+                              color="#fff" 
+                            />
+                        }
                     </Box>
                     <Text 
-                        mt={1} 
+                        mt={1}
+                        fontSize={R16} 
                         fontWeight={'bold'} 
                         textAlign={'center'}>
                             Vehiculo
@@ -168,14 +190,21 @@ export const HomeScreen = ({navigation}:Props) => {
                         alignItems={'center'} 
                         borderRadius={'3xl'} 
                         width={120} 
-                        backgroundColor={background}>
-                        <Icon 
-                            name="file-document" 
-                            size={90}
-                            color="#fff" />
+                        backgroundColor={feed == 'Comercio' || feed == null ? background : 'gray.400'}
+                        >
+                         {feed == 'Comercio'  ? 
+                          <Spinner size={90} color={'white'}/>
+                          :
+                          <Icon 
+                              name="file-document" 
+                              size={90} 
+                              color="#fff" 
+                            />
+                        }
                     </Box>
                     <Text 
-                        mt={1} 
+                        mt={1}
+                        fontSize={R16} 
                         fontWeight={'bold'} 
                         textAlign={'center'}>
                             Comercio
@@ -194,14 +223,21 @@ export const HomeScreen = ({navigation}:Props) => {
                         alignItems={'center'} 
                         borderRadius={'3xl'} 
                         width={120} 
-                        backgroundColor={background}>
-                        <Icon 
-                            name="bank" 
-                            size={90}
-                            color="#fff" />
+                        backgroundColor={feed == 'Cementerio' || feed == null ? background : 'gray.400'}
+                        >
+                         {feed == 'Cementerio'  ? 
+                          <Spinner size={90} color={'white'}/>
+                          :
+                          <Icon 
+                              name="bank" 
+                              size={90} 
+                              color="#fff" 
+                            />
+                        }
                     </Box>
                     <Text 
-                        mt={1} 
+                        mt={1}
+                        fontSize={R16} 
                         fontWeight={'bold'} 
                         textAlign={'center'}>
                             Cementerio
@@ -225,7 +261,8 @@ export const HomeScreen = ({navigation}:Props) => {
                             color="#fff" />
                     </Box>
                     <Text 
-                        mt={1} 
+                        mt={1}
+                        fontSize={R16} 
                         fontWeight={'bold'}
                         color={'warmGray.400'}
                         textAlign={'center'}>
@@ -250,7 +287,8 @@ export const HomeScreen = ({navigation}:Props) => {
                             color="#fff" />
                     </Box>
                     <Text 
-                        mt={1} 
+                        mt={1}
+                        fontSize={R16} 
                         fontWeight={'bold'} 
                         color={'warmGray.400'}
                         textAlign={'center'}>

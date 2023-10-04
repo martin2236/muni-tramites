@@ -126,22 +126,44 @@ export const useFetch = () => {
     }
 
     //este endpoint se usa para hacer todas las peticiones put de la app
-    const makePut =  async(uri:string,token:string ,data:{}) => {
-      let config = {
-        headers: {
-          'Authorization':`Bearer ${token}`,
+    const makePut =  async(uri:string,token:string='' ,data:{}) => {
+      if(token != ''){
+        let config = {
+          headers: {
+            'Authorization':`Bearer ${token}`,
+          }
         }
+          try {
+            const res = await instance.patch(uri, data,config);
+            const ruta = uri.split('/')[0]
+            const datos = {...res.data,ruta};
+            setData(datos);
+            setCargando(false);
+          } catch (error) {
+            console.log(error);
+            setCargando(false);
+          }
       }
-        try {
-          const res = await instance.patch(uri, data,config);
-          const ruta = uri.split('/')[0]
-          const datos = {...res.data,ruta};
-          setData(datos);
-          setCargando(false);
-        } catch (error) {
-          console.log(error);
-          setCargando(false);
+      try {
+        const res = await instance.patch(uri, data);
+        const ruta = uri.split('/')[0]
+        const datos = {...res.data,ruta};
+        setData(datos);
+        setCargando(false);
+      } catch (error:any) {
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          console.log(error.response.data);
+          setData({status:'error',title:error.response.data})
+        } else if (error.request) {
+          console.log(error.request);
+          setData({status:'error',title:error.request["_response"]})
+        } else {
+          console.log('Error', error.message);
         }
+        setCargando(false);
+      }
     }
 
   return {

@@ -28,7 +28,7 @@ export interface LoginReq {
 }
 
 export const LoginScreen = ({navigation}:Props) => {
-    const {R12,R15, R32, customInputHeight, loginImageWidth, LoginImageHeight} = useResponsiveSize();
+    const {R12,R13,R15, R32, customInputHeight, loginImageWidth, LoginImageHeight} = useResponsiveSize();
     const {makePost, data, cargando, setCargando} = useFetch();
 
     const [alert,setAlert] = useState({
@@ -44,9 +44,20 @@ export const LoginScreen = ({navigation}:Props) => {
             const usuario = {
                 ...(data as LoginReq).user[0], token:(data as LoginReq).token
             };
-            if(usuario){
+            if(usuario && usuario.fkestado == 2){
                 setUser(usuario);
-            };
+            }else{
+                setAlert({
+                    status:'error',
+                    title:'el usuario no se encuentra dado de alta, por favor revice su casilla de correos'
+                })
+                setTimeout(() => {
+                    setAlert({
+                        status:'',
+                        title:''
+                    })
+                }, 4000);
+            }
         }else if(data != undefined && data.status){
             setAlert({
                 status:data.status,
@@ -83,7 +94,7 @@ export const LoginScreen = ({navigation}:Props) => {
                 PORTAL DE TRÁMITES
             </Text>
             <Divider background={'white'} height={'0.5'}/>
-            <Text textAlign={'center'} fontSize={R15} color={'white'}>
+            <Text textAlign={'center'} fontSize={R13} color={'white'}>
                 Secretaria de Recursos Públicos Dirección de Informática
             </Text>
         </Box>
@@ -142,8 +153,8 @@ export const LoginScreen = ({navigation}:Props) => {
                         colorScheme={'white'}
                         onPress={() => navigation.navigate('OlvideContraseña')}
                         mt={1} 
-                        fontSize={R12} >
-                            <Text color={'white'}>OLVIDÉ MI CONTRASEÑA</Text>
+                         >
+                            <Text fontSize={R13} color={'white'}>OLVIDÉ MI CONTRASEÑA</Text>
                     </Button>
                     <Button 
                         onPress={() => handleSubmit()}

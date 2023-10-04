@@ -24,14 +24,12 @@ interface FormValues {
         clavevieja:string,
         clavenueva:string
     }
-    const {makePost, data, cargando, setCargando} = useFetch()
+    const {makePut, data, cargando, setCargando} = useFetch()
 
     const onRegister = (values:FormValues) => {
         const{cuit,clavevieja,clavenueva}= values;
         const numero = Number(cuit);
-        console.log(typeof(numero),cuit)
-        console.log({cuit:Number(cuit),clavevieja,clavenueva})
-        makePost('/users/changePassword',{cuit,clavevieja,clavenueva});
+        makePut('/users/changePassword',undefined,{cuit:Number(cuit),clavevieja,clavenueva});
     }
 
    useEffect(() => {
@@ -39,8 +37,14 @@ interface FormValues {
     if(data && !data.msj){
        setAlert({
         status:'error',
-        title:'Ocurrió por favor intente mas tarde'
+        title:'Ocurrió un error, por favor intente mas tarde'
        })
+       setTimeout(() => {
+        setAlert({
+            status:'',
+            title:''
+        })
+    }, 3000);
     }else if(data && data.msj){
         setAlert({
             status:'success',
@@ -116,8 +120,6 @@ return(
                                 keyboardType='default'
                                 margin={10}
                             />
-                            
-                          
                             <Button 
                                 width={'100%'}
                                 onPress={() => handleSubmit()}

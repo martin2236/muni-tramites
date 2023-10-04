@@ -30,7 +30,7 @@ export const FormularioPagos = () => {
 
 
     const getData = async() =>{
-        console.log(user?.token)
+        //agregar tipo sandbox cambiar a post en vez de get
          let response = await fetch(`https://backend.tramites.lacosta.gob.ar/funciones/macroPago?monto=2000`,{
             method: 'GET',
             headers: {

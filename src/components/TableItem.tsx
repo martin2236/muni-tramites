@@ -1,16 +1,19 @@
 import React ,{memo,useState,useEffect,useCallback,useContext}from 'react'
 import {Box, Divider, Image, Pressable, Text} from 'native-base';
-import {Info} from '../screens/inmuebleScreeens/InmuebleScreen';
 import { Comercio,Inmueble, Cementerio, Vehiculo } from '../context/datos/DatosContext';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParams } from '../navigation/StackNavigation';
 import { useFetch } from '../hooks/useFetch';
 import { UserContext } from '../context/usuario/Usercontext';
-//@ts-ignore
+//@ts-ignoreinfo
 import info from '../assets/info-icon.png'
 //@ts-ignore
 import pago from '../assets/pago-icon.png'
 import { useResponsiveSize } from '../hooks/useResponsiveSize';
+import { InfoVehiculo } from '../screens/vehiculosScreen/VehiculoScreen';
+import { InfoComercio } from '../screens/comercioScreens/ComercioScreen';
+import { InfoInmueble } from '../screens/inmuebleScreeens/InmuebleScreen';
+import { InfoCementerio } from '../screens/cementerioScreens/CementerioScreen';
 
 interface ListItem{
     item:Inmueble | Comercio | Cementerio | Vehiculo
@@ -26,7 +29,7 @@ export interface UpdateInfo{
 
 }
 interface Props{
-    setData:React.Dispatch<React.SetStateAction< Info|null>>,
+    setData:React.Dispatch<React.SetStateAction< InfoInmueble | InfoComercio | InfoVehiculo | InfoCementerio|null>>,
     item:ListItem,
     pantalla: string,
     navigation: StackNavigationProp<RootStackParams, "Inmueble", undefined> | StackNavigationProp<RootStackParams, "Comercio", undefined> | StackNavigationProp<RootStackParams, "Cementerio", undefined> | StackNavigationProp<RootStackParams, "Vehiculo", undefined>
@@ -52,22 +55,22 @@ export const TableItem = ({item, navigation,setData, pantalla}:Props) => {
        //! cambiar a una fecha dinamica
         if((valor as Inmueble).cuenta){
             const cuenta = (valor as Inmueble).cuenta
-            const vencimiento = "2023-03-28T15:46:20.265Z"
+            const vencimiento = new Date()
             return makePost('/inmuebles/traerCuotas',{cuenta, vencimiento}, user?.token, 'deudas' );
         }
         if((valor as Comercio).padron){
             const padron = (valor as Comercio).padron
-            const vencimiento = "2023-03-28T15:46:20.265Z"
+            const vencimiento = new Date()
             return makePost('/comercios/traerCuotas',{padron,vencimiento}, user?.token, 'deudas' );
         }
         if((valor as Cementerio).num_orden){
             const orden = (valor as Cementerio).num_orden;
-            const vencimiento = "2023-06-28T15:46:20.265Z";
+            const vencimiento = new Date()
             return makePost('/cementerios/traerCuotas',{orden,vencimiento}, user?.token, 'deudas' );
         }
         if((valor as Vehiculo).dominio){
             const dominio = (valor as Vehiculo).dominio;
-            const vencimiento = "2023-06-28T15:46:20.265Z";
+            const vencimiento = new Date()
             let tipo;
             switch ((item.item as Vehiculo).tipo) {
                 case "Vehiculo Particular":
@@ -160,13 +163,16 @@ export const TableItem = ({item, navigation,setData, pantalla}:Props) => {
         }
    },[pantalla])
     
-    //guarda la informacion del inmueble
+    //guarda la informacion que se va a mostrar en el custom modal
     const guardarInfo = () => {
-        if(deuda && deuda.deudas.datosPadron){
+        console.log(item.item.descripcion);
+        if(deuda && deuda.deudas.datosPadron.baseimpo){
             const {deudas} = deuda;
             const informacion = {
                 modal:true,
-                cuentaMunicipal: deudas.datosPadron.nro_cta,
+                tipoModal:'inmueble',
+                referencia:item.item.descripcion,
+                cuentaMunicipal: deudas.datosPadron.cuenta,
                 partidaPovincial:deudas.datosPadron.part_prov,
                 baseImponible:deudas.datosPadron.baseimpo,
                 categoria: deudas.datosPadron.catDeta,
@@ -177,7 +183,57 @@ export const TableItem = ({item, navigation,setData, pantalla}:Props) => {
                 deudas.datosPadron.nc_uf.trim() +"-"+ deudas.datosPadron.nc_chacra.trim() +"-"+ deudas.datosPadron.nc_lchacra.trim() +"-"+
                 deudas.datosPadron.nc_quinta.trim() +"-"+ deudas.datosPadron.nc_fracci.trim() +"-"+ deudas.datosPadron.n_c_serv.trim()
             }   
-            setData(informacion);
+           return setData(informacion);
+        }
+        if(deuda && deuda.deudas.datosPadron.fec_habi){
+            const {deudas} = deuda;
+            const informacion = {
+                modal:true,
+                tipoModal:'comercio',
+                referencia:item.item.descripcion,
+                numeroPadron: deudas.datosPadron.nrropadro,
+                razonSocial:deudas.datosPadron.razosoci,
+                domicilio:'',
+                habilitacion: deudas.datosPadron.fec_habi,
+                condicion: deudas.datosPadron.destDeta,
+            }   
+            return setData(informacion);
+        }
+        if(deuda && deuda.deudas.datosPadron.desmodelo){
+            const {deudas} = deuda;
+            const informacion = {
+                modal:true,
+                tipoModal:'vehiculo',
+                referencia:item.item.descripcion,
+                dominioActual: deudas.datosPadron.domia,
+                dominioOriginal:deudas.datosPadron.domio,
+                modelo:deudas.datosPadron.desmodelo,
+                marca: deudas.datosPadron.marcamot,
+                año: deudas.datosPadron.modelo,
+                tipo: deudas.datosPadron.modelo,
+            }   
+            return setData(informacion);
+        }
+        if(deuda && deuda.deudas.datosPadron.fallfech){
+            const {deudas} = deuda;
+            console.log(deuda)
+            const informacion = {
+                modal:true,
+                tipoModal:'cementerio',
+                referencia:item.item.descripcion,
+                numOrden: deudas.datosPadron.fnrorden,
+                nombre:deudas.datosPadron.fapenom,
+                fechaIngresp:deudas.datosPadron.feching,
+                fechaFallecido: deudas.datosPadron.fallfech,
+                codigoPago: deudas.datosPadron.t_deta,
+                galeria:deudas.datosPadron.galeria,
+                sector:deudas.datosPadron.sector,
+                manzana:deudas.datosPadron.manzana,
+                fila:deudas.datosPadron.fila,
+                nicho:deudas.datosPadron.nicho,
+                sepultura:deudas.datosPadron.sepultura
+            }   
+            return setData(informacion as InfoCementerio);
         }
     };
 
@@ -225,18 +281,16 @@ export const TableItem = ({item, navigation,setData, pantalla}:Props) => {
             </Box>
             <Box width={'20%'} display={'flex'}  alignItems={'center'}>
             <Pressable      
-                    onPress={() => organizarData()}
-                    alignSelf={'center'}
-                    ml={1}
-                    height={5}
-                    alignItems={'center'}
-                    justifyContent={'center'} 
-                    width={5}
-                    >
-                                
-                            <Image size={7} source={pago} alt='icono'/>
-                    
-                </Pressable>
+                onPress={() => organizarData()}
+                alignSelf={'center'}
+                ml={1}
+                height={5}
+                alignItems={'center'}
+                justifyContent={'center'} 
+                width={5}
+                >
+                    <Image size={7} source={pago} alt='icono'/>
+            </Pressable>
             </Box>
         </Box>
         <Divider mt={1}/>

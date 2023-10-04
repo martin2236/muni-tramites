@@ -123,6 +123,9 @@ export const DatosProvider = ({children}:Props) => {
             updated,
             setUpdated,
             traerInmuebles,
+            traerVehiculos,
+            traerComercios,
+            traerCementerios,
         }}
     >
         {children}

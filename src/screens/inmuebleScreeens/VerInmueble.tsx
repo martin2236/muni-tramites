@@ -17,21 +17,23 @@ interface Props extends StackScreenProps<RootStackParams,'VerInmueble'>{}
 
 interface CuotaAño {
     anio: number;
-    // Otras propiedades de Cuota
   }
-  
-  interface InfoByAnio {
-    [anio: number]: CuotaAño[];
-  }
+
+interface AnioConCuotas {
+anio: number;
+cuotas: CuotaAño[];
+cantidadCuotas:number
+}
+ 
 
 export const VerInmueble = memo(({navigation, route}:Props) => {
     const {user}= useContext(UserContext);
-    const {R14,textoTotal,textoResponsive} = useResponsiveSize();
+    const {R14,R16} = useResponsiveSize();
     const {makePost,data} = useFetch();
     const [selected, setSelected] = useState<Cuota[]>([]);
     const [anios, setAnios] = useState<string[] | null>(null);
     const [totalSelected, setTotalSelected] = useState(0);
-    const [listaAnios,setListaAnios] = useState<CuotaAño[][] | []>([]);
+    const [listaAnios,setListaAnios] = useState<AnioConCuotas[] | []>([]);
     const [opcion, setOpcion] = useState<string | undefined>(undefined);
     const [error, setError]= useState({
         pago: false,
@@ -55,11 +57,39 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
     }
 
     useEffect(() => {
-        console.log('estos son los anios en verInmuebles',anios)
         if(anios){
             pagarPorAnios(anios);
         };
     },[anios])
+
+    const toggleCuota = (cuota:Cuota) => {
+        const index = selected.findIndex((item: Cuota) => item.cunica === cuota.cunica);
+
+        let newSelected = [];
+
+         newSelected = [...selected];
+
+        if (index !== -1) {
+            newSelected.splice(index, 1);
+        } else {
+            newSelected.push(cuota as never);
+            if(cuota.tasa == '1'){
+                const anio = listaAnios.filter((item) => {return item.anio == Number(cuota.anio)});
+                const tasa8 = anio[0].cuotas.filter(item => item.tasa == '8' && item.cuota == cuota.cuota)
+                tasa8.length && newSelected.push(...tasa8);
+            } 
+        }
+        const anosUnicos = new Set();
+
+        // Iteramos sobre la lista de cuotas para agregar los años al conjunto
+        newSelected.forEach((cuota) => {
+        anosUnicos.add(cuota.anio);
+        });
+
+        const total = newSelected.reduce((acc, curr) => acc + curr.totalcuota, 0);
+        setSelected(newSelected);
+        setTotalSelected(total);
+    }
 
    const pagarPorAnios = (anios:String[]) => {
     if(!anios.length){
@@ -68,7 +98,6 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
         return
     };
     const nuevaLista = deuda.filter((deuda:Cuota) => anios.includes(deuda.anio +''));
-    //!inmueble nueva3 tiene items con la cunica repetida por eso se rompe,
     //nuevaLista.forEach((item:Cuenta) => console.log(item.cunica))
     const total = nuevaLista.reduce((acc:number,curr:Cuota)=> acc + curr['totalcuota'] ,0);
     setSelected(nuevaLista);
@@ -81,47 +110,68 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
     useEffect(() => {
         // Organiza las deudas por año
         console.log('cambio deudas y acomodo todas las cuentas')
-        const infoByAnio: InfoByAnio = {};
-
-        deuda.forEach((item: CuotaAño) => {
-          if (!infoByAnio[item.anio]) {
-            infoByAnio[item.anio] = [];
-          }
-          infoByAnio[item.anio].push(item);
-        });
         
-        const listaAnios: CuotaAño[][] = [];
-        for (const key in infoByAnio) {
-          listaAnios.push(infoByAnio[key]);
-        }
-    
-        // Actualiza los estados con los datos organizados
+      const listaAnios = organizeDataByYear(deuda);
+         // Actualiza los estados con los datos organizados
         setListaAnios(listaAnios);
       }, []);
+      
+      const organizeDataByYear = (deuda: CuotaAño[]): AnioConCuotas[] => {
+        const infoByAnio: { [anio: number]: CuotaAño[] } = {};
+      
+         deuda.forEach((item) => {
+            const anio = item.anio;
+            if (!infoByAnio[anio]) {
+            infoByAnio[anio] = [];
+            }
+            infoByAnio[anio].push(item);
+        });
+
+        const listaAnios: AnioConCuotas[] = [];
+        for (const key in infoByAnio) {
+            const anio = parseInt(key);
+            const cuotas = infoByAnio[key];
+            const cantidadCuotas = cuotas.length; 
+
+            listaAnios.push({ anio, cuotas, cantidadCuotas });
+        }
+
+      
+        return listaAnios;
+      };
+      
+      // Llamar a la función y almacenar el resultado en una variable
 
     // verifica que haya alguna deuda seleccionada y que se haya 
     // elegido algun metodo de pago antes de pagar
-    const verificarPago = () => {
+    const imprimirPDF = async() => {
         if(!selected.length){
             setError({...error,cuota:true})
             console.log('no se selecciono ninguna cuota')
-        }else if(opcion =='macro'){
-            navigation.navigate('FormularioPagos')
-            setError({...error,pago:false})
-        }else if(opcion == 'pdf'){
-            const cuotas = selected.map(item => item.cunica);
-            const cunica = cuotas.join(",");
+        }
+            const cunica = selected.map(item => parseInt(item.cunica));
             const cuenta = (updateInfo as UpdateInfo).cuenta;
             //! cambiar a una fecha dinamica
-            const vencimiento = "2023-08-14T13:01:23.832Z";
-            
-            makePost('/inmuebles/traerCuotas',{cuenta,vencimiento,cunica}, user?.token, 'pdf' );
-            setError({...error,pago:false});
-        }
-        else{
-            console.log('no se seleccionó una opcion')
-            setError({...error,pago:true})
-        }
+            const vencimiento = new Date();
+            const data = {
+                cuenta,
+                cunica
+            }
+            // console.log('Imprimir pdf',{cunica})
+
+            // makePost('/inmuebles/imprimirRecibo',{cuenta,vencimiento,cunica}, user?.token, 'pdf' );
+            // setError({...error,pago:false});
+            console.log('pidiendoPdf',data);
+            let response = await fetch(`https://backend.tramites.lacosta.gob.ar/inmuebles/ImprimirRecibo`,{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization':`Bearer ${user?.token}`,
+            },
+            body: JSON.stringify(data),
+        })
+        const datos = await response.json();
+        console.log('respuesta del back', datos)
     };
 
   return (
@@ -231,16 +281,16 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
                         {/* lista */}
                         <FlatList
                             data={listaAnios}
-                            renderItem={({item}) => <RowAnios item={item} setTotalSelected={(nuevaSuma) => setTotalSelected(nuevaSuma)} anios={anios} setAnios={setAnios} selected={selected} setSelected={setSelected}/>}
+                            renderItem={({item}) => <RowAnios item={item}  anios={anios} setAnios={setAnios} toggleCuota={toggleCuota} selected={selected} setSelected={setSelected}/>}
                             keyExtractor={(item,index) => ` ${index}`}
                             nestedScrollEnabled={true}
                         />
                     </Box>
                     <Box mt={2} py={1} bg={'gray.300'} flexDirection={'row'} justifyContent={'flex-end'}>
-                            <Text  fontSize={textoTotal} fontWeight={'bold'}>
+                            <Text  fontSize={R16} fontWeight={'bold'}>
                                 TOTAL A PAGAR
                             </Text>
-                            <Text width={"27%"} textAlign={'center'}  fontSize={textoTotal} fontWeight={'bold'}>
+                            <Text width={"27%"} textAlign={'center'}  fontSize={R16} fontWeight={'bold'}>
                                 ${totalSelected.toFixed(2)}
                             </Text>
                         </Box>
@@ -252,11 +302,11 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
                         }
             </Box>
               <Box mb={5} mt={5} width={'full'} display={'flex'} flexDir={'row'} alignItems={'center'} justifyContent={'space-around'}>
-                <Button py={1} width={'45%'} background={background} borderRadius={50}>
-                        <Text fontWeight={'bold'} textAlign={'center'} fontSize={textoResponsive}>PAGAR CON TARJETA DE CRÉDITO / DÉBITO</Text>
+                <Button py={1} width={'45%'} background={background} borderRadius={50} onPress={()=> navigation.navigate('FormularioPagos')}>
+                        <Text fontWeight={'bold'} textAlign={'center'} fontSize={R14}>PAGAR CON TARJETA DE CRÉDITO / DÉBITO</Text>
                     </Button>
-                    <Button py={1} width={'45%'} background={background} borderRadius={50}>
-                        <Text fontWeight={'bold'} textAlign={'center'} fontSize={textoResponsive}>DESCARGAR / IMPRIMIR RECIBO PARA PAGO</Text>
+                    <Button py={1} width={'45%'} background={background} borderRadius={50} onPress={()=>imprimirPDF()}>
+                        <Text fontWeight={'bold'} textAlign={'center'} fontSize={R14}>DESCARGAR / IMPRIMIR RECIBO PARA PAGO</Text>
                     </Button>
               </Box>
                    

@@ -18,8 +18,10 @@ interface ListProps{
     index:number,
     item:Inmueble
 }
-export interface Info {
+export interface InfoInmueble {
     modal:boolean;
+    tipoModal:string;
+    referencia:string,
     cuentaMunicipal: string;
     partidaPovincial: number;
     categoria: string;
@@ -35,7 +37,7 @@ export interface Info {
 export const InmuebleScreen = memo(({navigation}:Props) => {
         const { inmuebles} = useContext(DatosContext);
         const {R16} = useResponsiveSize();
-        const [info, setInfo] = useState<Info | null>(null);
+        const [info, setInfo] = useState<InfoInmueble | null>(null);
         const renderItem = (item:ListProps)=> {return (<TableItem item={item} pantalla={'Inmueble'} setData={setInfo} navigation={navigation}/>)};  
         const keyExtractor = (item:Inmueble, index:number)=> `${item.pkinmueble}${index}`;
 

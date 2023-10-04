@@ -14,7 +14,6 @@ import { CrearInmueble } from '../screens/inmuebleScreeens/CrearInmueble';
 import { VerInmueble } from '../screens/inmuebleScreeens/VerInmueble';
 import { CarouselScreen } from '../screens/CarouselScreen';
 import { RegisterScreen } from '../screens/RegisterScreen';
-import { PagoScreen } from '../screens/PagoScreen';
 import { Deuda } from '../interfaces/inmuebles/deuda';
 import { VerComercioScreen } from '../screens/comercioScreens/VerComercioScreen';
 import { VerCementerioScreen } from '../screens/cementerioScreens/VerCementerioScreen';
@@ -32,11 +31,13 @@ import { UserContext } from '../context/usuario/Usercontext';
 import { background } from '../../App';
 import { useResponsiveSize } from '../hooks/useResponsiveSize';
 import { OlvideContraseña } from '../screens/OlvideContraseña';
+import { InitialScreen } from '../screens/InitialScreen';
+import { CrearVehiculoScreen } from '../screens/vehiculosScreen/CrearVehiculoScreen';
 
 export type RootStackParams = {
     Login:undefined,
     Main:undefined,
-    Pagos:undefined,
+    Inicio:undefined,
     Inmueble:undefined,
     Contacto:undefined,
     Contraseña:undefined,
@@ -47,16 +48,17 @@ export type RootStackParams = {
     VerInmueble: {  referencia: string; id:number; ruta:string; updateInfo:object; deuda:any},
     Vehiculo:undefined,
     VerVehiculo: { deuda?: Deuda; referencia: string; ruta:string, id:number; updateInfo:object;},
+    CrearVehiculo:{vehiculos:any},
     Comercio:undefined,
     VerComercio: { deuda?: Deuda; referencia: string; ruta:string, id:number; updateInfo:object;},
     Carousel:undefined,
     Cementerio:undefined,
     VerCementerio: { deuda?: Deuda;ruta:string, referencia: string; id:number; updateInfo:object;},
-    CrearCementerio:undefined
+    CrearCementerio:{cementerios:any},
     ObrasPrivadas:undefined,
     Escribanos:undefined,
     CrearInmueble:{inmuebles:any},
-    CrearComercio:undefined,
+    CrearComercio:{comercios:any},
     FormularioPagos:undefined,
     EditarReferencia:{id:number,ruta:string, referencia:string ,updateInfo:object,deuda:any},
     Registro:undefined,
@@ -83,7 +85,10 @@ export const StackNavigation = () => {
           !user ? 
           <>
             {!carouselStatus.estado ? 
+            <>
+            <Stack.Screen name="Inicio" options={{headerShown:false}} component={InitialScreen}/>
              <Stack.Screen name="Carousel" options={{headerShown:false}} component={CarouselScreen}/>
+             </>
              :
              <>
               <Stack.Screen name="Login" options={{headerShown:false}} component={LoginScreen} />
@@ -100,12 +105,12 @@ export const StackNavigation = () => {
             <Stack.Screen name="Contraseña" options={{headerTitle:()=>(<IconRouteTitle icono='key-variant' titulo={'CAMBIAR CONTRASEÑA'}/>)}} component={ContraseñaScreen}/>
             <Stack.Screen name="Contacto" options={{headerTitle:()=>(<IconRouteTitle icono='wechat' titulo={'CONTACTO'}/>)}} component={ContactoScreen}/>
             <Stack.Screen name="MediosPago" options={{headerTitle:()=>(<IconRouteTitle icono='card-bulleted' titulo={'MEDIOS DE PAGO'}/>)}} component={MediosPagosScreen}/>
-            <Stack.Screen name="Pagos" options={{headerTitle:'Metodos de Pago'}} component={PagoScreen}/>
             <Stack.Screen name="FormularioPagos" options={{headerTitle:'Forma de Pago'}} component={FormularioPagos}/>
             <Stack.Screen name="Inmueble" options={{headerTitle:()=>(<IconRouteTitle icono='home' titulo={'INMUEBLE'}/>)}} component={InmuebleScreen}/>
             <Stack.Screen name="CrearInmueble" options={{headerTitle:()=>(<IconRouteTitle icono='home' titulo={'INMUEBLE'}/>)}} component={CrearInmueble}/>
             <Stack.Screen name="VerInmueble" options={{headerTitle:()=>(<IconRouteTitle icono='home' titulo={'INMUEBLE'}/>)}} component={VerInmueble}/>
             <Stack.Screen name="Vehiculo" options={{headerTitle:()=>(<IconRouteTitle icono='car' titulo={'VEHICULO'}/>)}} component={VehiculoScreen}/>
+            <Stack.Screen name="CrearVehiculo" options={{headerTitle:()=>(<IconRouteTitle icono='car' titulo={'VEHICULO'}/>)}} component={CrearVehiculoScreen}/>
             <Stack.Screen name="VerVehiculo" options={{headerTitle:()=>(<IconRouteTitle icono='car' titulo={'VEHICULO'}/>)}} component={VerVehiculo}/>
             <Stack.Screen name="Comercio" options={{headerTitle:()=>(<IconRouteTitle icono='file-document' titulo={'COMERCIO'}/>)}} component={ComercioScreen}/>
             <Stack.Screen name="CrearComercio" options={{headerTitle:()=>(<IconRouteTitle icono='file-document' titulo={'COMERCIO'}/>)}} component={CrearComercioScreen}/>

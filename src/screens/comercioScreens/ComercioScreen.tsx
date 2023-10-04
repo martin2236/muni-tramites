@@ -1,15 +1,12 @@
-import React, { useContext, useState, useEffect } from 'react'
-import { Text, Box, Divider, Button,Pressable, Center, FlatList, ScrollView, Spinner } from 'native-base';
+import React, { useContext, useState} from 'react'
+import { Text, Box, Divider, Button, Center, FlatList } from 'native-base';
 //@ts-ignore
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import { RootStackParams } from '../../navigation/StackNavigation';
 import { StackNavigationProp} from '@react-navigation/stack';
 import { TableItem } from '../../components/TableItem';
 import { CustomModal } from '../../components/CustomModal';
-import { Inmueble,DatosContext, Comercio } from '../../context/datos/DatosContext';
-import { useFetch } from '../../hooks/useFetch';
-import { UserContext } from '../../context/usuario/Usercontext';
-import { Cuota } from '../../interfaces/inmuebles/deuda';
+import { DatosContext, Comercio } from '../../context/datos/DatosContext';
 
 interface Props {
     navigation: StackNavigationProp<RootStackParams, "Comercio", undefined>,
@@ -19,22 +16,22 @@ interface ListProps{
     index:number,
     item:Comercio
 }
-export interface Info {
-    cuentaMunicipal: string;
-    partidaPovincial: number;
-    categoria: string;
-    codigoServicio: string;
-    baseImponible: number;
-    nomenclatura: string;
+export interface InfoComercio {
+    modal:boolean,
+    tipoModal:string,
+    referencia:string,
+    numeroPadron: number,
+    razonSocial:string,
+    domicilio:string,
+    habilitacion: string,
+    condicion: string,
 }
 
 export const ComercioScreen = ({navigation,route}:Props) => {
     const { comercios} = useContext(DatosContext);
-    const [info, setInfo] = useState<Info | null>(null);
-        const renderItem = (item:ListProps)=> {return (<TableItem item={item} pantalla={'Comercio'} setData={setInfo} navigation={navigation}/>)};  
-        const keyExtractor = (item:Comercio, index:number)=> `${item.padron}${index}` 
-
-      
+    const [info, setInfo] = useState<InfoComercio | null>(null);
+    const renderItem = (item:ListProps)=> {return (<TableItem item={item} pantalla={'Comercio'} setData={setInfo} navigation={navigation}/>)};  
+    const keyExtractor = (item:Comercio, index:number)=> `${item.padron}${index}` 
 
   return (
     <Box flex={1} backgroundColor={'gray.200'}>
@@ -55,7 +52,7 @@ export const ComercioScreen = ({navigation,route}:Props) => {
                     MIS COMERCIOS
                 </Text>
                 <Button 
-                    onPress={()=> navigation.navigate('CrearComercio')}
+                    onPress={()=> navigation.navigate('CrearComercio',{comercios})}
                     height={'30px'}
                     py={0}
                     px={4}
@@ -98,11 +95,11 @@ export const ComercioScreen = ({navigation,route}:Props) => {
                 )
                }
                     
-                    <Box mt={5}>
+                <Box mt={5}>
                     {
                     info ? 
                         <>
-                        <CustomModal info={info} setData={setInfo} modalOpen={info.modal} cuenta={info.cuentaMunicipal} categoria={info.categoria} partida={info.partidaPovincial} servicio={info.codigoServicio} base={info.baseImponible} nomenclatura={info.nomenclatura}/>
+                        <CustomModal info={info} setData={setInfo} />
                         </>
                         :
                         null
