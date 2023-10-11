@@ -1,12 +1,12 @@
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Box, Image, Text, Center, Button, Pressable } from 'native-base';
 import { Dimensions, ImageSourcePropType } from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParams } from '../navigation/StackNavigation';
 import { useResponsiveSize } from '../hooks/useResponsiveSize';
-import { background } from '../../App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { UserContext } from '../context/usuario/Usercontext';
 
 const {height : screenHeight, width : screenWidth } = Dimensions.get('window')
 
@@ -17,21 +17,28 @@ interface Slide {
   img:ImageSourcePropType
 }
 
-interface Props extends StackScreenProps<RootStackParams>{}
-
+interface Props extends StackScreenProps<RootStackParams,'Carousel'>{}
 export const CarouselScreen = ({navigation}:Props) => {
   const {carouselImageWidth,carouselImageHeight} = useResponsiveSize();
+  const {setCarouselVerification,carouselVerification} = useContext(UserContext)
   const [posicion, setPosicion] = useState(0);
+  const [terminado, setTerminado] = useState<{estado:string}|null>(null);
   const [defaultIndex, setDefaultIndex] = useState(0);
 
   const terminarTutorial = async () => {
-        const tutorial = {estado:'completado'}
         try {
-            await AsyncStorage.setItem('@carousel',JSON.stringify(tutorial));
+            await AsyncStorage.setItem('@carousel',JSON.stringify(terminado));
           } catch (e) {
             console.log('error al guardre el estado del tutorial')
           };
+          setCarouselVerification(!carouselVerification)
   };
+
+  useEffect(()=>{
+    if(terminado){
+      terminarTutorial();
+    }
+  },[terminado])
 
   const items: Slide[] = [
     {
@@ -110,7 +117,7 @@ export const CarouselScreen = ({navigation}:Props) => {
       />
       <Box width={'full'} height={'12'} bg={'white'} alignItems={'center'} flexDirection={'row'} >
         <Box width={'25%' }>
-          <Button onPress={() => terminarTutorial()} bg={'white'}>
+          <Button onPress={() => setTerminado({estado:'completado'})} bg={'white'}>
             <Text fontSize={18} fontWeight={'bold'}>
               Omitir
             </Text>
@@ -123,7 +130,7 @@ export const CarouselScreen = ({navigation}:Props) => {
         </Box>
         <Box width={'35%'} bg={'red.100'}>
           {posicion === 2 ? 
-          <Button onPress={() => terminarTutorial()} colorScheme={'cyan'} bg={'white'} >
+          <Button onPress={() => setTerminado({estado:'completado'})} colorScheme={'cyan'} bg={'white'} >
             <Text fontSize={18} fontWeight={'bold'}>Empezar</Text>
           </Button>
           :

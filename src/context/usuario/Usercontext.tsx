@@ -59,12 +59,14 @@ export interface ContextProps  {
     user: User | null,
     setUser: (user: User | null) => void,
     carouselStatus:CarouselStatus,
+    carouselVerification:boolean,
     setCarouselVerification: React.Dispatch<React.SetStateAction<boolean>>
   };
 
   const initialState = {
     user:null,
     setUser:() => {},
+    carouselVerification:false,
     carouselStatus:{estado:null},
     setCarouselVerification:() => {}
   }

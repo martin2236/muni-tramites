@@ -21,6 +21,7 @@ export const UserProvider = ({children}:Props) => {
     const getCarouselStatus = async () => {
         try {
           const value = await AsyncStorage.getItem('@carousel');
+          console.log('datos guardados',value)
           if (value === null) {
             setCarouselStatus({estado:null});
           }else{
@@ -37,6 +38,7 @@ export const UserProvider = ({children}:Props) => {
     value={{
         user,
         carouselStatus,
+        carouselVerification,
         setUser,
         setCarouselVerification
     }}

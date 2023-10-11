@@ -3,10 +3,13 @@ import {Box, Text, Divider} from 'native-base'
 import {WebView} from 'react-native-webview';
 import { DatosContext } from '../context/datos/DatosContext';
 import { UserContext } from '../context/usuario/Usercontext';
+import axios from 'axios';
+import { StackScreenProps } from '@react-navigation/stack';
+import { RootStackParams } from '../navigation/StackNavigation';
 
 interface FormData {
     callbackCancel:     string;
-    callbackSucces:    string;
+    callbackSuccess:    string;
     hash:          string;
     id_user:             string;
     monto:              string;
@@ -14,13 +17,14 @@ interface FormData {
     comercio:           string;
 }
 
-export const FormularioPagos = () => {
+interface Props extends StackScreenProps<RootStackParams,'FormularioPagos'>{}
+
+export const FormularioPagos = ({navigation,route}:Props) => {
     const {cuotasSeleccionadas} = useContext(DatosContext);
-    const {user} = useContext(UserContext)
+    const {user} = useContext(UserContext);
+    const {data} = route.params;
     const [formData, setFormData] = useState<FormData | null>(null);
-    const [ipCel, setIpCel] = useState<FormData | null>(null)
-    const monto = 1500
-    const totalRecargo = cuotasSeleccionadas.reduce((acc:any,curr:any)=> acc + curr.totalcuota + curr.recargo,0);
+    const totalRecargo = data.selected.reduce((acc:any,curr:any)=> acc + curr.totalcuota + curr.recargo,0);
     const randomNumber = Math.floor(Math.random() * 100000) + 1
     
 
@@ -29,19 +33,32 @@ export const FormularioPagos = () => {
     },[])
 
 
-    const getData = async() =>{
-        //agregar tipo sandbox cambiar a post en vez de get
-         let response = await fetch(`https://backend.tramites.lacosta.gob.ar/funciones/macroPago?monto=2000`,{
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization':`Bearer ${user?.token}`,
-            }
-        })
-        const data = await response.json();
-        console.log('respuesta del back', data)
-        setFormData(data)
-    }
+    const getData = async () => {
+        const config = {
+        headers: {
+            Authorization: `Bearer ${user?.token}`,
+        },
+        };
+
+        let cunica = data.selected.map(item => parseInt(item.cunica));
+        let datosBack = {cuenta:data.cuenta,cunica}
+        try {
+          const res = await axios.post('https://backend.tramites.lacosta.gob.ar/inmuebles/pagarCuotas', datosBack, config);
+          const datos = res.data;
+          setFormData(datos);
+          console.log('respuesta del back', datos);
+        } catch (error:any) {
+            if (error.response) {
+                console.log(error.response.data);
+              } else if (error.request) {
+                console.log(error.request);
+              } else {
+                console.log('Error', error.message);
+              }
+        }
+        
+      };
+
     const inputStyles = " color:blue;margin:0; font-size:15px; height:20px; width:80%;";
     
     let html =`
@@ -51,7 +68,7 @@ export const FormularioPagos = () => {
 </head>
 <form id="form" style="width:100% height:100%;"  method="post" action="https://sandboxpp.asjservicios.com.ar/"> 
 <p>callbackSuccess</p>
-    <input  name="CallbackSuccess" value="${formData?.callbackSucces}" />
+    <input  name="CallbackSuccess" value="${formData?.callbackSuccess}" />
     <p>callbackCancel</p>
     <input  name="CallbackCancel" value="${formData?.callbackCancel}" />
     <p>Comercio</p>
@@ -68,9 +85,9 @@ export const FormularioPagos = () => {
     <input  name="Monto" value="${formData?.monto}" /> 
     <p>cuotas</p>
     ${
-        cuotasSeleccionadas.length ?
-        cuotasSeleccionadas.map((item,index)=>{
-            console.log(`Producto[${index}]`)
+        data.selected.length ?
+        data.selected.map((item,index)=>{
+            console.log(`Producto[${item.cuota}]`)
             return `<input key=${index}  name=Producto[${index}] value=${item.cuota}/>`
         })
         :

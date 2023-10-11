@@ -1,4 +1,4 @@
-import React,{useContext} from 'react';
+import React,{useContext, useEffect} from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import {Box, Text} from 'native-base';
 import { LoginScreen } from '../screens/LoginScreen';
@@ -59,7 +59,7 @@ export type RootStackParams = {
     Escribanos:undefined,
     CrearInmueble:{inmuebles:any},
     CrearComercio:{comercios:any},
-    FormularioPagos:undefined,
+    FormularioPagos:{data:any} | undefined,
     EditarReferencia:{id:number,ruta:string, referencia:string ,updateInfo:object,deuda:any},
     Registro:undefined,
 }
@@ -70,6 +70,10 @@ const user = null;
 export const StackNavigation = () => {
   const {R18,textoTotal} = useResponsiveSize();
   const {user,carouselStatus} = useContext(UserContext)
+  useEffect(() => {
+   console.log('carousel',carouselStatus)
+  }, [carouselStatus])
+  
   return (
     <Stack.Navigator
     screenOptions={{
@@ -84,9 +88,9 @@ export const StackNavigation = () => {
         {
           !user ? 
           <>
+           {/* <Stack.Screen name="Inicio" options={{headerShown:false}} component={InitialScreen}/>  */}
             {!carouselStatus.estado ? 
             <>
-            <Stack.Screen name="Inicio" options={{headerShown:false}} component={InitialScreen}/>
              <Stack.Screen name="Carousel" options={{headerShown:false}} component={CarouselScreen}/>
              </>
              :

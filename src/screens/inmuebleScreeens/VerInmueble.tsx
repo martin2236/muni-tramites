@@ -1,5 +1,6 @@
 import React, { useEffect, memo, useState, useContext} from 'react';
 import { Divider, Box, Text, Pressable, Button, FlatList } from 'native-base';
+import RNFetchBlob from 'react-native-blob-util';
 
 //@ts-ignore
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
@@ -12,6 +13,28 @@ import { useFetch } from '../../hooks/useFetch';
 import { UserContext } from '../../context/usuario/Usercontext';
 import { useResponsiveSize } from '../../hooks/useResponsiveSize';
 import { background } from '../../../App';
+import { Platform } from 'react-native';
+import { PermissionsAndroid } from 'react-native';
+
+async function requestStoragePermission() {
+  try {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+      {
+        title: "Permisos de almacenamiento",
+        message: "Esta App necesita acceso al almacenamiento para descargar PDFs.",
+      }
+    );
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      console.log("Storage permission granted");
+    } else {
+      console.log("Storage permission denied");
+    }
+  } catch (err) {
+    console.warn(err);
+  }
+}
+
 
 interface Props extends StackScreenProps<RootStackParams,'VerInmueble'>{}
 
@@ -140,40 +163,75 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
         return listaAnios;
       };
       
-      // Llamar a la función y almacenar el resultado en una variable
-
+      
     // verifica que haya alguna deuda seleccionada y que se haya 
     // elegido algun metodo de pago antes de pagar
-    const imprimirPDF = async() => {
-        if(!selected.length){
-            setError({...error,cuota:true})
+    const descargarPDF = async ()=>{
+        if (!selected.length) {
+            setError({ ...error, cuota: true })
             console.log('no se selecciono ninguna cuota')
         }
-            const cunica = selected.map(item => parseInt(item.cunica));
-            const cuenta = (updateInfo as UpdateInfo).cuenta;
-            //! cambiar a una fecha dinamica
-            const vencimiento = new Date();
-            const data = {
-                cuenta,
-                cunica
-            }
-            // console.log('Imprimir pdf',{cunica})
-
-            // makePost('/inmuebles/imprimirRecibo',{cuenta,vencimiento,cunica}, user?.token, 'pdf' );
-            // setError({...error,pago:false});
-            console.log('pidiendoPdf',data);
-            let response = await fetch(`https://backend.tramites.lacosta.gob.ar/inmuebles/ImprimirRecibo`,{
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization':`Bearer ${user?.token}`,
+        const cunica = selected.map(item => parseInt(item.cunica));
+        const cuenta = (updateInfo as UpdateInfo).cuenta;
+        const data = {
+            cuenta,
+            cunica
+        }
+    
+        const { dirs } = RNFetchBlob.fs;
+        const dirToSave = Platform.OS == 'ios' ? dirs.DocumentDir : dirs.DownloadDir
+        const configfb = {
+            fileCache:true,
+            addAndroidDownloads: {
+            notification:true,
+            title:'nuevo',
+            description: 'comprobante de pago',
+            mime: 'application/pdf',
+            mediaScannable:true,
             },
-            body: JSON.stringify(data),
+            path: `${dirToSave}/comprobante3.pdf`,
+        }
+        const configOptions = Platform.select({
+            ios:{
+                fileCache: configfb.fileCache,
+                title: configfb.addAndroidDownloads.title,
+                path: configfb.path,
+                appendExt: 'pdf',
+            },
+            android: configfb,
+        });
+    
+        RNFetchBlob.config(configOptions)
+        .fetch('POST', `https://backend.tramites.lacosta.gob.ar/inmuebles/ImprimirRecibo`, {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${user?.token}`,
+        }, JSON.stringify(data))
+        .then((res) => {
+            console.log('File downloaded');
+            console.log('The file saved to ', res);
         })
-        const datos = await response.json();
-        console.log('respuesta del back', datos)
+        .catch((e) => {
+            console.log('The file saved to ERROR', e.message)
+        });
+    }
+    const imprimirPDF = async () => {
+        requestStoragePermission();
+        descargarPDF();
     };
 
+    const pagarCuotas = () => {
+        if (!selected.length) {
+            setError({ ...error, cuota: true })
+            console.log('no se selecciono ninguna cuota')
+        }
+        
+        const cuenta = (updateInfo as UpdateInfo).cuenta;
+        const data = {
+            cuenta,
+            selected
+        }
+        navigation.navigate('FormularioPagos',{data})
+    }
   return (
     <Box flex={3} backgroundColor={'gray.200'}>
     <Divider backgroundColor={'gray.600'} height={'1.5'}/>
@@ -302,7 +360,7 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
                         }
             </Box>
               <Box mb={5} mt={5} width={'full'} display={'flex'} flexDir={'row'} alignItems={'center'} justifyContent={'space-around'}>
-                <Button py={1} width={'45%'} background={background} borderRadius={50} onPress={()=> navigation.navigate('FormularioPagos')}>
+                <Button py={1} width={'45%'} background={background} borderRadius={50} onPress={()=> pagarCuotas()}>
                         <Text fontWeight={'bold'} textAlign={'center'} fontSize={R14}>PAGAR CON TARJETA DE CRÉDITO / DÉBITO</Text>
                     </Button>
                     <Button py={1} width={'45%'} background={background} borderRadius={50} onPress={()=>imprimirPDF()}>
