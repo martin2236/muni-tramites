@@ -149,7 +149,12 @@ export const TableItem = ({item, navigation,setData, pantalla}:Props) => {
           return  setDatos({
                 ...datos,
             id: parseInt((item.item as Vehiculo).pkvehiculo),
-            ruta:'Vehiculo'
+            ruta:'Vehiculo',
+            updateInfo:{
+                dominio:(item.item as Vehiculo).dominio,
+                descripcion: (item.item as Vehiculo).descripcion,
+                tipo:(item.item as Vehiculo).tipo
+            }
             })
         } else if( pantalla === 'Cementerio'){
             return setDatos({

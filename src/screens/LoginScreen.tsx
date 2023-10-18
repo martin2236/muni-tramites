@@ -90,14 +90,14 @@ export const LoginScreen = ({navigation}:Props) => {
        <Box flex={2} display={'flex'} flexDirection={'column'} justifyContent={'space-around'} bg={background}>
             <Image style={{ width: loginImageWidth, height: LoginImageHeight }} resizeMode='contain' alignSelf={'center'} source={logo} alt='logo'/>
             <Box width={230} alignSelf={'center'} bg={background}>
-            <Text fontSize={R32} fontWeight={'bold'} textAlign={'center'} color={'white'} lineHeight={'sm'}>
-                PORTAL DE TRÁMITES
-            </Text>
-            <Divider background={'white'} height={'0.5'}/>
-            <Text textAlign={'center'} fontSize={R13} color={'white'}>
-                Secretaria de Recursos Públicos Dirección de Informática
-            </Text>
-        </Box>
+                <Text fontSize={R32} fontWeight={'bold'} textAlign={'center'} color={'white'} lineHeight={'sm'}>
+                    PORTAL DE TRÁMITES
+                </Text>
+                <Divider background={'white'} height={'0.5'}/>
+                <Text textAlign={'center'} fontSize={R13} color={'white'}>
+                    Secretaria de Recursos Públicos Dirección de Informática
+                </Text>
+            </Box>
         </Box>
         <Box flex={3} >
         {

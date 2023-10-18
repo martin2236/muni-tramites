@@ -5,11 +5,14 @@ import React,{useContext} from 'react'
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import { UserContext } from '../context/usuario/Usercontext';
 import { DatosContext } from '../context/datos/DatosContext';
+import { background } from '../../App';
+import { useResponsiveSize } from '../hooks/useResponsiveSize';
 
 
 export const DrawerMenu = ({navigation}:DrawerContentComponentProps) => {
 
   const {user,setUser} = useContext(UserContext);
+  const {R20,R13} = useResponsiveSize();
   const {setInmuebles,setComercios,setCementerios,setVehiculos} = useContext(DatosContext);
 
   const cerrarSesion = () => {
@@ -23,7 +26,15 @@ export const DrawerMenu = ({navigation}:DrawerContentComponentProps) => {
   return (
     <Box flex={1}>
         <Center height={140} bg={'#3FB2E8ff'}>
-            <Image height={'32'} width={'32'} source={require('../assets/logoDrawer.jpeg')} alt='imagen'/>
+          <Box width={230} alignSelf={'center'} bg={background}>
+                  <Text fontSize={R20} fontWeight={'bold'} textAlign={'center'} color={'white'} lineHeight={'sm'}>
+                      PORTAL DE TRÁMITES
+                  </Text>
+                  <Divider background={'white'} height={'0.5'}/>
+                  <Text textAlign={'center'} fontSize={R13} color={'white'}>
+                      Secretaria de Recursos Públicos Dirección de Informática
+                  </Text>
+            </Box>
         </Center>
         <Center>
             

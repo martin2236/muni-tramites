@@ -4,12 +4,13 @@ import React, { useEffect, useContext, useState } from 'react'
 import { CustomInputForm } from '../../components/CustomInputForm'
 import { UserContext } from '../../context/usuario/Usercontext'
 import { useFetch } from '../../hooks/useFetch'
-import { AgregarInmuebleSchema } from '../../schemas/ValidationSchema'
+import { AgregarCementerioSchema } from '../../schemas/ValidationSchema'
 import { useResponsiveSize } from '../../hooks/useResponsiveSize'
 import { background } from '../../../App'
 import { StackScreenProps } from '@react-navigation/stack'
 import { RootStackParams } from '../../navigation/StackNavigation'
 import { DatosContext } from '../../context/datos/DatosContext'
+import { CustomAlert } from '../../components/CustomAlert'
 
 interface Props extends StackScreenProps<RootStackParams,'CrearCementerio'>{}
 
@@ -38,8 +39,8 @@ export const CrearCementerioScreen = ({navigation,route}:Props) => {
 
    useEffect(() =>{
     //! revisar el dato del cementerio
-    const vehiculosRegistrados = cementerios.map((vehiculo:any) => vehiculo.partida) 
-    setRegistrados(vehiculosRegistrados)
+    const cementeriosRegistrados = cementerios.map((cementerio:any) => cementerio.num_orden) 
+    setRegistrados(cementeriosRegistrados)
    },[cementerios])
 
     useEffect(() => {
@@ -75,13 +76,13 @@ export const CrearCementerioScreen = ({navigation,route}:Props) => {
         }
     }, [data]);
 
+    console.log('estos son los cementeriios',cementerios)
     const crearCementerio = ( values: NuevoInmueble, resetForm:any) => {
-        //! revisar los valores del filtro
-        const vehiculoExistente = registrados.find(item => item == values.padron)
-        if(vehiculoExistente){
+        const cementerioExistente = registrados.find(item => item == Number(values.padron))
+        if(cementerioExistente){
             setAlert({
                 status:'error',
-                title:'el vehiculo ya se encuentra registrado'
+                title:'La sepultura ya se encuentra registrada'
             })
             setTimeout(() => {
                 setAlert({
@@ -92,7 +93,7 @@ export const CrearCementerioScreen = ({navigation,route}:Props) => {
             return
         }
         let datos = {
-            padron: values.padron,
+            padron: Number(values.padron),
             descripcion: values.descripcion
         }
         makePost('/cementerios', datos, user?.token,'cementerios');
@@ -107,6 +108,12 @@ export const CrearCementerioScreen = ({navigation,route}:Props) => {
             width={'90%'} 
             alignSelf={'center'} 
             backgroundColor={'white'}>
+                {
+                alert.status != '' && 
+                <Box alignSelf={'center'} mt={10} width={'80%'}>
+                    <CustomAlert setAlert={setAlert} status={alert.status} title={alert.title}/>
+                </Box>
+                }
                 <Text
                     mt={7}
                     alignSelf={'center'}
@@ -124,7 +131,7 @@ export const CrearCementerioScreen = ({navigation,route}:Props) => {
                         initialValues={{ padron:'', descripcion:'' }}
                         validateOnChange={false}
                         onSubmit={crearCementerio}
-                        validationSchema={AgregarInmuebleSchema}
+                        validationSchema={AgregarCementerioSchema}
                    >
                     {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
                         <>

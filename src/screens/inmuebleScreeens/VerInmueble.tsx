@@ -23,6 +23,7 @@ async function requestStoragePermission() {
       {
         title: "Permisos de almacenamiento",
         message: "Esta App necesita acceso al almacenamiento para descargar PDFs.",
+        buttonPositive: "Aceptar"
       }
     );
     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
@@ -78,7 +79,7 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
         referencia,
         updateInfo
     }
-
+    console.log({updateInfo})
     useEffect(() => {
         if(anios){
             pagarPorAnios(anios);
@@ -132,8 +133,6 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
    
     useEffect(() => {
         // Organiza las deudas por año
-        console.log('cambio deudas y acomodo todas las cuentas')
-        
       const listaAnios = organizeDataByYear(deuda);
          // Actualiza los estados con los datos organizados
         setListaAnios(listaAnios);
@@ -222,7 +221,6 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
     const pagarCuotas = () => {
         if (!selected.length) {
             setError({ ...error, cuota: true })
-            console.log('no se selecciono ninguna cuota')
         }
         
         const cuenta = (updateInfo as UpdateInfo).cuenta;
@@ -296,7 +294,7 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
                         CUENTA
                     </Text>
                     <Text width={'30%'} fontSize={R14} textAlign={'center'}>
-                        456254/4
+                       {(updateInfo as any).cuenta}
                     </Text>
                 </Box>
                 <Box 
@@ -313,7 +311,7 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
                         PARTIDA
                     </Text>
                     <Text width={'30%'} fontSize={R14} textAlign={'center'}>
-                        157420
+                        {(updateInfo as any).partida}
                     </Text>
                 </Box>
             </Box>

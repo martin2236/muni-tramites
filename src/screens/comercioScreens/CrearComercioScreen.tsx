@@ -4,12 +4,13 @@ import React, { useEffect, useContext, useState } from 'react'
 import { CustomInputForm } from '../../components/CustomInputForm'
 import { UserContext } from '../../context/usuario/Usercontext'
 import { useFetch } from '../../hooks/useFetch'
-import { AgregarInmuebleSchema } from '../../schemas/ValidationSchema'
+import { AgregarComercioSchema } from '../../schemas/ValidationSchema'
 import { useResponsiveSize } from '../../hooks/useResponsiveSize'
 import { background } from '../../../App'
 import { StackScreenProps } from '@react-navigation/stack'
 import { RootStackParams } from '../../navigation/StackNavigation'
 import { DatosContext } from '../../context/datos/DatosContext'
+import { CustomAlert } from '../../components/CustomAlert'
 
 interface Props extends StackScreenProps<RootStackParams,'CrearComercio'>{}
 
@@ -21,7 +22,6 @@ interface Data {
     estado: boolean;
     msj:    string;
 }
-
 
 export const CrearComercioScreen = ({navigation,route}:Props) => {
 
@@ -38,7 +38,7 @@ export const CrearComercioScreen = ({navigation,route}:Props) => {
 
    useEffect(() =>{
     //! revisar el dato del cementerio
-    const comerciosRegistrados = comercios.map((comercio:any) => comercio.partida) 
+    const comerciosRegistrados = comercios.map((comercio:any) => comercio.padron) 
     setRegistrados(comerciosRegistrados)
    },[comercios])
 
@@ -77,8 +77,8 @@ export const CrearComercioScreen = ({navigation,route}:Props) => {
 
     const crearComercio = ( values: NuevoInmueble, resetForm:any) => {
         //! revisar los valores del filtro
-        const vehiculoExistente = registrados.find(item => item == values.padron)
-        if(vehiculoExistente){
+        const comercioExistente = registrados.find(item => item == Number(values.padron))
+        if(comercioExistente){
             setAlert({
                 status:'error',
                 title:'el comercio ya se encuentra registrado'
@@ -92,9 +92,10 @@ export const CrearComercioScreen = ({navigation,route}:Props) => {
             return
         }
         let datos = {
-            padron: values.padron,
+            padron: Number(values.padron),
             descripcion: values.descripcion
         }
+        console.log('creando comercio', datos)
         makePost('/comercios', datos, user?.token,'comercios');
     }
 
@@ -107,6 +108,12 @@ export const CrearComercioScreen = ({navigation,route}:Props) => {
             width={'90%'} 
             alignSelf={'center'} 
             backgroundColor={'white'}>
+                 {
+                alert.status != '' && 
+                <Box alignSelf={'center'} mt={10} width={'80%'}>
+                    <CustomAlert setAlert={setAlert} status={alert.status} title={alert.title}/>
+                </Box>
+                }
                 <Text
                     mt={7}
                     alignSelf={'center'}
@@ -124,7 +131,7 @@ export const CrearComercioScreen = ({navigation,route}:Props) => {
                         initialValues={{ padron:'', descripcion:'' }}
                         validateOnChange={false}
                         onSubmit={crearComercio}
-                        validationSchema={AgregarInmuebleSchema}
+                        validationSchema={AgregarComercioSchema}
                    >
                     {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
                         <>

@@ -52,9 +52,9 @@ export const useResponsiveSize = () => {
          R25 = RFValue(25,width);
          R32 = RFValue(16,width);
     }else{
-        R10 = RFValue(12,width);
-         R12 = RFValue(4,width);
-         R13 = RFValue(10,width);
+        R10 = RFValue(4,width);
+         R12 = RFValue(6,width);
+         R13 = RFValue(8,width);
          R14 = RFValue(10,width);
          R15 = RFValue(6,width);
          R16 = RFValue(10,width);

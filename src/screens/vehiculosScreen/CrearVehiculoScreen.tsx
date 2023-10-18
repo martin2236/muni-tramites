@@ -4,7 +4,7 @@ import React, {useState, useEffect, useContext } from 'react';
 import { CustomInputForm } from '../../components/CustomInputForm';
 import { UserContext } from '../../context/usuario/Usercontext';
 import { useFetch } from '../../hooks/useFetch';
-import { AgregarInmuebleSchema } from '../../schemas/ValidationSchema';
+import { AgregarVehiculoSchema } from '../../schemas/ValidationSchema';
 import { DatosContext } from '../../context/datos/DatosContext';
 import { CustomAlert } from '../../components/CustomAlert';
 import { background } from '../../../App';
@@ -32,7 +32,7 @@ export const CrearVehiculoScreen = ({navigation,route}:Props) => {
     const {vehiculos} = route.params;
     const {makePost, data} = useFetch();
     const {user} = useContext(UserContext);
-    const {textoBoton} = useResponsiveSize();
+    const {textoBoton,R18} = useResponsiveSize();
     const {traerVehiculos} = useContext(DatosContext);
     const [tipoVehiculo, setTipoVehiculo] = useState("");
     const [registrados, setRegistrados] = useState([])
@@ -43,7 +43,7 @@ export const CrearVehiculoScreen = ({navigation,route}:Props) => {
 
    useEffect(() =>{
     //! revisar el dato del vehiculo
-    const vehiculosRegistrados = vehiculos.map((vehiculo:any) => vehiculo.partida) 
+    const vehiculosRegistrados = vehiculos.map((vehiculo:any) => vehiculo.dominio.trim()) 
     setRegistrados(vehiculosRegistrados)
    },[vehiculos])
 
@@ -81,7 +81,6 @@ export const CrearVehiculoScreen = ({navigation,route}:Props) => {
     }, [data]);
 
     const crearVehiculo = ( values: NuevoInmueble, resetForm:any) => {
-        //! revisar los valores del filtro
         const vehiculoExistente = registrados.find(item => item == values.dominio)
         if(vehiculoExistente){
             setAlert({
@@ -100,7 +99,6 @@ export const CrearVehiculoScreen = ({navigation,route}:Props) => {
             dominio: values.dominio,
             tipo:values.tipo,
             descripcion: values.descripcion,
-            titular: true
         }
         makePost('/vehiculos', datos, user?.token,'vehiculos');
     }
@@ -137,7 +135,7 @@ export const CrearVehiculoScreen = ({navigation,route}:Props) => {
                         initialValues={{ dominio:'', tipo:'', descripcion:''}}
                         validateOnChange={false}
                         onSubmit={(values, resetForm) => crearVehiculo(values, resetForm)}
-                        validationSchema={AgregarInmuebleSchema}
+                        validationSchema={AgregarVehiculoSchema}
                    >
                     {({ handleChange, setFieldValue, handleSubmit, values, errors }) => (
                         <Box flex={1}>
@@ -152,7 +150,7 @@ export const CrearVehiculoScreen = ({navigation,route}:Props) => {
                                                 value={values.dominio}
                                                 placeholder={'DOMINIO'}
                                                 type={'dominio'}
-                                                keyboardType='numeric'
+                                                keyboardType='default'
                                                 errorCheck={errors.dominio}
                                                 margin={5}
                                             />
@@ -166,7 +164,7 @@ export const CrearVehiculoScreen = ({navigation,route}:Props) => {
                                     borderRadius={'3xl'}
                                     backgroundColor={'white'}
                                     placeholderTextColor={'muted.400'}
-                                    fontSize={11}
+                                    fontSize={R18}
                                     width={width * 0.85}
                                     marginTop={4}
                                     _selectedItem={{
@@ -174,13 +172,13 @@ export const CrearVehiculoScreen = ({navigation,route}:Props) => {
                                         endIcon: <CheckIcon size="5" />
                                     }} mt={1} onValueChange={itemValue => {
                                             setTipoVehiculo(itemValue);
-                                            setFieldValue("tipo_cuit", itemValue);
+                                            setFieldValue("tipo", itemValue);
                                         }}>
                                     <Select.Item label="VEHICULO PARTICULAR" value="auto" />
                                     <Select.Item label="MOTO" value="moto" />
                                     <Select.Item label="PUBLICO" value="publico" />
                                 </Select>
-                                {'tipo_cuit' in errors ? <Text ml={8} color={'red.500'}> {errors.tipo} </Text> : null} 
+                                {'tipo' in errors ? <Text ml={3} color={'red.500'}> {errors.tipo} </Text> : null} 
                                 </Box>
                                     
                                     <Box>

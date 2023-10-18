@@ -31,7 +31,7 @@ export const CarouselScreen = ({navigation}:Props) => {
           } catch (e) {
             console.log('error al guardre el estado del tutorial')
           };
-          setCarouselVerification(!carouselVerification)
+          navigation.navigate('Login');
   };
 
   useEffect(()=>{

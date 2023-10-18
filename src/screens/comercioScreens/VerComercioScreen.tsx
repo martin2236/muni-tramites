@@ -11,6 +11,8 @@ import { useFetch } from '../../hooks/useFetch';
 import { UpdateInfo } from '../../components/TableItem';
 import { useResponsiveSize } from '../../hooks/useResponsiveSize';
 import { background } from '../../../App';
+import { PermissionsAndroid,Platform } from 'react-native';
+import RNFetchBlob from 'react-native-blob-util';
 
 interface Props extends StackScreenProps<RootStackParams,'VerComercio'>{}
 
@@ -23,6 +25,26 @@ anio: number;
 cuotas: CuotaAño[];
 cantidadCuotas:number
 }
+
+async function requestStoragePermission() {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        {
+          title: "Permisos de almacenamiento",
+          message: "Esta App necesita acceso al almacenamiento para descargar PDFs.",
+          buttonPositive: "Aceptar"
+        }
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log("Storage permission granted");
+      } else {
+        console.log("Storage permission denied");
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  }
 
 export const VerComercioScreen = ({navigation, route}:Props) => {
     const {R13,R14,R16} = useResponsiveSize();
@@ -144,37 +166,59 @@ export const VerComercioScreen = ({navigation, route}:Props) => {
   
       // verifica que haya alguna deuda seleccionada y que se haya 
       // elegido algun metodo de pago antes de pagar
-      const imprimirPDF = async() => {
-          if(!selected.length){
-              setError({...error,cuota:true})
-              console.log('no se selecciono ninguna cuota')
-          }
-              const cunica = selected.map(item => parseInt(item.cunica));
-              const cuenta = (updateInfo as UpdateInfo).cuenta;
-              //! cambiar a una fecha dinamica
-              const vencimiento = new Date();
-              const data = {
-                  cuenta,
-                  vencimiento,
-                  cunica
-              }
-              // console.log('Imprimir pdf',{cunica})
-  
-              // makePost('/inmuebles/imprimirRecibo',{cuenta,vencimiento,cunica}, user?.token, 'pdf' );
-              // setError({...error,pago:false});
-              console.log('pidiendoPdf',data);
-              let response = await fetch(`https://backend.tramites.lacosta.gob.ar/inmuebles/ImprimirRecibo`,{
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization':`Bearer ${user?.token}`,
-              },
-              body: JSON.stringify(data),
-          })
-          const datos = await response.json();
-          console.log('respuesta del back', datos)
-      };
-  
+      const descargarPDF = async ()=>{
+        if (!selected.length) {
+            setError({ ...error, cuota: true })
+            console.log('no se selecciono ninguna cuota')
+        }
+        const cunica = selected.map(item => parseInt(item.cunica));
+        const cuenta = (updateInfo as UpdateInfo).cuenta;
+        const data = {
+            cuenta,
+            cunica
+        }
+    
+        const { dirs } = RNFetchBlob.fs;
+        const dirToSave = Platform.OS == 'ios' ? dirs.DocumentDir : dirs.DownloadDir
+        const configfb = {
+            fileCache:true,
+            addAndroidDownloads: {
+            notification:true,
+            title:'nuevo',
+            description: 'comprobante de pago',
+            mime: 'application/pdf',
+            mediaScannable:true,
+            },
+            path: `${dirToSave}/comprobante3.pdf`,
+        }
+        const configOptions = Platform.select({
+            ios:{
+                fileCache: configfb.fileCache,
+                title: configfb.addAndroidDownloads.title,
+                path: configfb.path,
+                appendExt: 'pdf',
+            },
+            android: configfb,
+        });
+    
+        RNFetchBlob.config(configOptions)
+        .fetch('POST', `https://backend.tramites.lacosta.gob.ar/comercios/ImprimirRecibo`, {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${user?.token}`,
+        }, JSON.stringify(data))
+        .then((res) => {
+            console.log('File downloaded');
+            console.log('The file saved to ', res);
+        })
+        .catch((e) => {
+            console.log('The file saved to ERROR', e.message)
+        });
+    }
+    const imprimirPDF = async () => {
+        requestStoragePermission();
+        descargarPDF();
+    };
+    const algo = ' '
     
       return (
         <Box flex={3} backgroundColor={'gray.200'}>
@@ -237,10 +281,10 @@ export const VerComercioScreen = ({navigation, route}:Props) => {
                         backgroundColor={'gray.300'}>
                             <Box width={'15%'}></Box>
                         <Text ml={3}  width={'40%'} fontWeight={'bold'} fontSize={R14} >
-                            CUENTA
+                            PADRON
                         </Text>
                         <Text width={'30%'} fontSize={R14} textAlign={'center'}>
-                            456254/4
+                            {(updateInfo as any).padron}
                         </Text>
                     </Box>
                     <Box 
@@ -254,10 +298,7 @@ export const VerComercioScreen = ({navigation, route}:Props) => {
                         backgroundColor={'gray.300'}>
                             <Box width={'15%'}></Box>
                         <Text ml={3} width={'40%'} fontWeight={'bold'} fontSize={R14} >
-                            PARTIDA
-                        </Text>
-                        <Text width={'30%'} fontSize={R14} textAlign={'center'}>
-                            157420
+                           {algo}
                         </Text>
                     </Box>
                 </Box>

@@ -41,7 +41,7 @@ export const FormularioPagos = ({navigation,route}:Props) => {
         };
 
         let cunica = data.selected.map(item => parseInt(item.cunica));
-        let datosBack = {cuenta:data.cuenta,cunica}
+        let datosBack = {cuenta:data.cuenta,cunica, tipo:'sandbox'}
         try {
           const res = await axios.post('https://backend.tramites.lacosta.gob.ar/inmuebles/pagarCuotas', datosBack, config);
           const datos = res.data;
@@ -68,27 +68,27 @@ export const FormularioPagos = ({navigation,route}:Props) => {
 </head>
 <form id="form" style="width:100% height:100%;"  method="post" action="https://sandboxpp.asjservicios.com.ar/"> 
 <p>callbackSuccess</p>
-    <input  name="CallbackSuccess" value="${formData?.callbackSuccess}" />
+    <input  name="CallbackSuccess" value="${formData?.callbackSuccess}"></input>
     <p>callbackCancel</p>
-    <input  name="CallbackCancel" value="${formData?.callbackCancel}" />
+    <input  name="CallbackCancel" value="${formData?.callbackCancel}"></input>
     <p>Comercio</p>
-    <input  name="Comercio" value="e18ee849-644e-4dc9-a9d4-d687c9aa892b" /> 
+    <input  name="Comercio" value="e18ee849-644e-4dc9-a9d4-d687c9aa892b"></input> 
     <p>sucursalComercio</p>
-    <input  name="SucursalComercio" value="${formData?.sucursalComercio}" /> 
+    <input  name="SucursalComercio" value="${formData?.sucursalComercio}"></input> 
     <p>hash</p>
-    <input  name="Hash" value="${formData?.hash}" /> 
+    <input  name="Hash" value="${formData?.hash}"></input> 
     <p>transaccion comercio id</p>
-    <input  name="TransaccionComercioId" value="${randomNumber}" />
+    <input  name="TransaccionComercioId" value="${randomNumber}"></input>
     <p>userId</p>
-    <input  name="UserId" value="${formData?.id_user}" /> 
+    <input  name="UserId" value="${formData?.id_user}" ></input> 
     <p>monto</p>
-    <input  name="Monto" value="${formData?.monto}" /> 
+    <input  name="Monto" value="${formData?.monto}" ></input> 
     <p>cuotas</p>
     ${
         data.selected.length ?
         data.selected.map((item,index)=>{
             console.log(`Producto[${item.cuota}]`)
-            return `<input key=${index}  name=Producto[${index}] value=${item.cuota}/>`
+            return `<input key=${index}  name=Producto[${index}] value=${item.cuota}></input>`
         })
         :
         console.log('no hay cuotas')
@@ -96,15 +96,6 @@ export const FormularioPagos = ({navigation,route}:Props) => {
     <button style=" display:block; margin-left:auto; margin-right:auto; border-radius:15px; padding-top:10px; padding-bottom:10px; background-color:#71717a; color:white; font-size:25px; height:50px; width:80%;" type="submit">prueba</button>
 </form> 
 `
-
-const ordenarFecha = (fecha:string) => {
-    if(fecha){
-        const fechaArray = fecha.split('-');
-    const dia = fechaArray[2].split('T')[0];
-    return `${dia}/${fechaArray[1]}/${fechaArray[0]}`
-    }
-    return 'Sin fecha';   
-}
 
   return (
     <Box flex={1}  >

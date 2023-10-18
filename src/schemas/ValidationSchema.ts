@@ -7,11 +7,11 @@ export const loginSchema = object({
     string()
     .required('Ingrese un numero de CUIT')
     .max(12,'El CUIT debe tener menos de 11 caracteres')
-    // .test('isvalidCUIT','El cuit ingresado no es valido', function(value){return new Promise((resolve, reject) => {
-    //     axios.get(`https://backend.tramites.lacosta.gob.ar/users/controlCuit/${parseInt(value)}`)
-    //     .then(res => {resolve(res.data)})
-    // })}
-    //)
+    .test('isvalidCUIT','El cuit ingresado no es valido', function(value){return new Promise((resolve, reject) => {
+        axios.get(`https://backend.tramites.lacosta.gob.ar/users/controlCuit/${parseInt(value)}`)
+        .then(res => {resolve(res.data)})
+    })}
+    )
     ,
     clave: string().min(5,'La contraseña debe tener mas de 5 caracteres').required('ingrese una contraseña'),
   });
@@ -72,7 +72,42 @@ export const AgregarInmuebleSchema = object({
   .min(5,'El nombre debe tener más de 5 caracteres'),
   
 })
-
+export const AgregarComercioSchema = object({
+  padron:
+  number()
+  .required('Ingrese un numero de padrón')
+  .min(1,'La padón debe tener más de 1 caracterer'),
+  descripcion:
+  string()
+  .required('Ingrese una descripcion o nombre')
+  .min(5,'El nombre debe tener más de 5 caracteres'),
+  
+})
+export const AgregarVehiculoSchema = object({
+  dominio:
+  string()
+  .required('Ingrese el dominio del vehiculo')
+  .min(3,'La dominio debe tener más de 3 caracterer'),
+  tipo:
+  string()
+  .required('Seleccione el un tipo de vehiculo'),
+  descripcion:
+  string()
+  .required('Ingrese una descripcion o nombre')
+  .min(5,'El nombre debe tener más de 5 caracteres'),
+  
+})
+export const AgregarCementerioSchema = object({
+  padron:
+  number()
+  .required('Ingrese un numero de padrón')
+  .min(1,'La padón debe tener más de 1 caracterer'),
+  descripcion:
+  string()
+  .required('Ingrese una descripcion o nombre')
+  .min(5,'El nombre debe tener más de 5 caracteres'),
+  
+})
 //* OLVIDE CONTRASEÑA
 export const olvideContraseñaSchema = object({
   cuit:

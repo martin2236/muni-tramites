@@ -16,10 +16,25 @@ interface Props{
 
 export const CustomModal = ({info,setInfo}:Props) => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [titulo, setTitulo] = useState<string | null>(null);
   const {R20,R18, R16} = useResponsiveSize();
+  
   useEffect(() =>{
+    if(info.tipoModal == 'inmueble'){
+      setTitulo('INFORMACION DEL INMUEBLE')
+    }
+    if(info.tipoModal == 'comercio'){
+      setTitulo('INFORMACION DEL COMERCIO')
+    }
+    if(info.tipoModal == 'vehiculo'){
+      setTitulo('INFORMACION DEL VEHICULO')
+    }
+    if(info.tipoModal == 'cementerio'){
+      setTitulo('INFORMACION DE LA SEPULTURA')
+    }
     setModalVisible(info.modal)
   },[info])
+
     const cambiarModal = () => {
       setModalVisible(false);
       setInfo(null);
@@ -29,7 +44,7 @@ export const CustomModal = ({info,setInfo}:Props) => {
         <Modal.Content minH='300' borderColor={background} borderWidth={2}>
           <Box flexDir={'row'} alignItems={'center'} justifyContent={'space-around'} >
             <Image size={7} mt={3} source={icono} alt='icono'/>
-            <Text fontSize={R20} mt={3} width={'80%'} fontWeight={'bold'}  color={background}>INFORMACION DEL INMUEBLE</Text>
+            <Text fontSize={R20} mt={3} width={'80%'} fontWeight={'bold'}  color={background}>{titulo}</Text>
             <Modal.CloseButton onPress={() => setModalVisible(false)}/>
           </Box>
           <Divider mt={2} alignSelf={'center'} width={'94%'} height={'0.5'} bg={background}/>
