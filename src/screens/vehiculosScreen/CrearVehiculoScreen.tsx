@@ -176,9 +176,9 @@ export const CrearVehiculoScreen = ({navigation,route}:Props) => {
                                             setTipoVehiculo(itemValue);
                                             setFieldValue("tipo", itemValue);
                                         }}>
-                                    <Select.Item label="VEHICULO PARTICULAR" value="auto" />
-                                    <Select.Item label="MOTO" value="moto" />
-                                    <Select.Item label="PUBLICO" value="publico" />
+                                    <Select.Item label="VEHICULO PARTICULAR" value="a" />
+                                    <Select.Item label="MOTO" value="m" />
+                                    <Select.Item label="PUBLICO" value="p" />
                                 </Select>
                                 {'tipo' in errors ? <Text ml={3} color={'red.500'}> {errors.tipo} </Text> : null} 
                                 </Box>
