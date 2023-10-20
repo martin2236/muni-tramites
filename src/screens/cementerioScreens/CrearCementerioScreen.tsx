@@ -56,7 +56,7 @@ export const CrearCementerioScreen = ({navigation,route}:Props) => {
         if(peticion.cementerios){
             setAlert({
                 status:'success',
-                title:'VEHICULO agregado con Éxito'
+                title:'Sepultura agregada con Éxito'
             })
             traerCementerios();
             setTimeout(() => {

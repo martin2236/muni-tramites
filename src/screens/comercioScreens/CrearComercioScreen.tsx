@@ -38,8 +38,10 @@ export const CrearComercioScreen = ({navigation,route}:Props) => {
 
    useEffect(() =>{
     //! revisar el dato del cementerio
-    const comerciosRegistrados = comercios.map((comercio:any) => comercio.padron) 
-    setRegistrados(comerciosRegistrados)
+    if(comercios.length){
+        const comerciosRegistrados = comercios.map((comercio:any) => comercio.padron) 
+        setRegistrados(comerciosRegistrados)
+    }
    },[comercios])
 
     useEffect(() => {
@@ -55,7 +57,7 @@ export const CrearComercioScreen = ({navigation,route}:Props) => {
         if(peticion.comercios){
             setAlert({
                 status:'success',
-                title:'COMERCIO agregado con Éxito'
+                title:'Comercio agregado con Éxito'
             })
             traerComercios();
             setTimeout(() => {
@@ -77,7 +79,11 @@ export const CrearComercioScreen = ({navigation,route}:Props) => {
 
     const crearComercio = ( values: NuevoInmueble, resetForm:any) => {
         //! revisar los valores del filtro
-        const comercioExistente = registrados.find(item => item == Number(values.padron))
+        let comercioExistente ;
+        if(registrados.length){
+            comercioExistente  = registrados.find(item => item == Number(values.padron))
+        }
+        
         if(comercioExistente){
             setAlert({
                 status:'error',

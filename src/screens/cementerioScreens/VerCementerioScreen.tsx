@@ -13,6 +13,7 @@ import { useResponsiveSize } from '../../hooks/useResponsiveSize';
 import { background } from '../../../App';
 import { PermissionsAndroid,Platform } from 'react-native';
 import RNFetchBlob from 'react-native-blob-util';
+import { CustomAlert } from '../../components/CustomAlert';
 
 interface Props extends StackScreenProps<RootStackParams,'VerCementerio'>{}
 
@@ -48,18 +49,20 @@ async function requestStoragePermission() {
 
 export const VerCementerioScreen = ({navigation, route}:Props) => {
     const {R13,R14,R16} = useResponsiveSize();
-
     const {user}= useContext(UserContext)
     const {makePost,data} = useFetch()
     const [selected, setSelected] = useState<Cuota[]>([]);
     const [anios, setAnios] = useState<string[] | null>(null);
     const [totalSelected, setTotalSelected] = useState(0);
     const [listaAnios,setListaAnios] = useState<AnioConCuotas[] | []>([]);
-    const [opcion, setOpcion] = useState<string | undefined>(undefined);
     const [error, setError]= useState({
         pago: false,
         cuota:false
       });
+    const [alert,setAlert] = useState({
+        status:'',
+        title:''
+    });
       
   
       useEffect(() =>{
@@ -130,8 +133,6 @@ export const VerCementerioScreen = ({navigation, route}:Props) => {
      
       useEffect(() => {
           // Organiza las deudas por año
-          console.log('cambio deudas y acomodo todas las cuentas')
-          
         const listaAnios = organizeDataByYear(deuda);
            // Actualiza los estados con los datos organizados
           setListaAnios(listaAnios);
@@ -156,8 +157,6 @@ export const VerCementerioScreen = ({navigation, route}:Props) => {
   
               listaAnios.push({ anio, cuotas, cantidadCuotas });
           }
-  
-        
           return listaAnios;
         };
         
@@ -166,9 +165,12 @@ export const VerCementerioScreen = ({navigation, route}:Props) => {
       // verifica que haya alguna deuda seleccionada y que se haya 
       // elegido algun metodo de pago antes de pagar
       const descargarPDF = async ()=>{
+        console.log(selected.length)
         if (!selected.length) {
-            setError({ ...error, cuota: true })
-            console.log('no se selecciono ninguna cuota')
+         return  setAlert({
+            status:'error',
+            title:'no se seleccionaron cuotas'
+           })
         }
         const cunica = selected.map(item => parseInt(item.cunica));
         const cuenta = (updateInfo as UpdateInfo).cuenta;
@@ -229,6 +231,12 @@ export const VerCementerioScreen = ({navigation, route}:Props) => {
                 alignSelf={'center'} 
                 backgroundColor={'white'}>
             {/* nuevo box */}
+                {
+                alert.status != '' && 
+                <Box alignSelf={'center'} mt={10} width={'80%'}>
+                    <CustomAlert setAlert={setAlert} status={alert.status} title={alert.title}/>
+                </Box>
+                }
                 <Box flex={1} >
                 <Text
                     mt={5}

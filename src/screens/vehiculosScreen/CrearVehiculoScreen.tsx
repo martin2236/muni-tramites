@@ -60,7 +60,7 @@ export const CrearVehiculoScreen = ({navigation,route}:Props) => {
         if(peticion.vehiculos){
             setAlert({
                 status:'success',
-                title:'VEHICULO agregado con Éxito'
+                title:'Vehiculo agregado con Éxito'
             })
             traerVehiculos();
             setTimeout(() => {
@@ -81,6 +81,7 @@ export const CrearVehiculoScreen = ({navigation,route}:Props) => {
     }, [data]);
 
     const crearVehiculo = ( values: NuevoInmueble, resetForm:any) => {
+        console.log(values)
         const vehiculoExistente = registrados.find(item => item == values.dominio)
         if(vehiculoExistente){
             setAlert({
@@ -100,6 +101,7 @@ export const CrearVehiculoScreen = ({navigation,route}:Props) => {
             tipo:values.tipo,
             descripcion: values.descripcion,
         }
+        console.log('creando vehiculo',datos)
         makePost('/vehiculos', datos, user?.token,'vehiculos');
     }
 

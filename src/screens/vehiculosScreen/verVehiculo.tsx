@@ -60,13 +60,6 @@ export const VerVehiculo = ({navigation, route}:Props) => {
         pago: false,
         cuota:false
       });
-      
-  
-      useEffect(() =>{
-          if(data && data.pdf){
-              console.log(data)
-          }
-      },[data]);
   
       const {id,ruta, referencia, updateInfo,deuda} =  route.params;
   
@@ -77,8 +70,6 @@ export const VerVehiculo = ({navigation, route}:Props) => {
           referencia,
           updateInfo
       }
-
-      console.log(updateInfo)
   
       useEffect(() => {
           if(anios){
@@ -129,14 +120,14 @@ export const VerVehiculo = ({navigation, route}:Props) => {
       }
       
       const infoByAnio:any = {};
-      //organiza las deudas por año
+        //organiza las deudas por año
      
       useEffect(() => {
-          // Organiza las deudas por año
+        // Organiza las deudas por año
           console.log('cambio deudas y acomodo todas las cuentas')
           
         const listaAnios = organizeDataByYear(deuda);
-           // Actualiza los estados con los datos organizados
+        // Actualiza los estados con los datos organizados
           setListaAnios(listaAnios);
         }, []);
         
@@ -159,12 +150,10 @@ export const VerVehiculo = ({navigation, route}:Props) => {
   
               listaAnios.push({ anio, cuotas, cantidadCuotas });
           }
-  
-        
           return listaAnios;
         };
         
-        // Llamar a la función y almacenar el resultado en una variable
+      // Llamar a la función y almacenar el resultado en una variable
   
       // verifica que haya alguna deuda seleccionada y que se haya 
       // elegido algun metodo de pago antes de pagar

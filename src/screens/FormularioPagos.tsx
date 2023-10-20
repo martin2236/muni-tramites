@@ -93,7 +93,7 @@ export const FormularioPagos = ({navigation,route}:Props) => {
         :
         console.log('no hay cuotas')
     }
-    <button style=" display:block; margin-left:auto; margin-right:auto; border-radius:15px; padding-top:10px; padding-bottom:10px; background-color:#71717a; color:white; font-size:25px; height:50px; width:80%;" type="submit">prueba</button>
+    <input style=" display:block;margin-top:20px; margin-left:auto; margin-right:auto; border-radius:15px; padding-top:10px; padding-bottom:10px; background-color:#71717a; color:white; font-size:25px; height:50px; width:80%;" type="submit" value="enviar"></input>
 </form> 
 `
 
@@ -103,7 +103,16 @@ export const FormularioPagos = ({navigation,route}:Props) => {
             formData ?
             <WebView
                 source={{ html: html }}
-                style={{ flex:1}}y
+                style={{ flex:1}}
+                javaScriptEnabled={true}
+                domStorageEnabled={true}
+                startInLoadingState={true}
+                onLoad={() => {
+                  console.log('La página se ha cargado correctamente');
+                }}
+                onMessage={(event) => {
+                  console.log("Mensaje de WebView:", event.nativeEvent.data);
+                }}
             />
             :
             <Box  flex={1}>
