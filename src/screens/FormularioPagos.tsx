@@ -62,29 +62,32 @@ export const FormularioPagos = ({navigation,route}:Props) => {
     const inputStyles = " color:blue;margin:0; font-size:15px; height:20px; width:80%;";
     
     let html =`
-    <head>
-<meta name="referrer" content="no-referrer">
-<meta name='viewport' content='width=device-width, initial-scale=1.0'>
-</head>
-<form id="form" style="width:100% height:100%;"  method="post" action="https://sandboxpp.asjservicios.com.ar/"> 
-<p>callbackSuccess</p>
-    <input  name="CallbackSuccess" value="${formData?.callbackSuccess}"></input>
-    <p>callbackCancel</p>
-    <input  name="CallbackCancel" value="${formData?.callbackCancel}"></input>
-    <p>Comercio</p>
-    <input  name="Comercio" value="e18ee849-644e-4dc9-a9d4-d687c9aa892b"></input> 
-    <p>sucursalComercio</p>
-    <input  name="SucursalComercio" value="${formData?.sucursalComercio}"></input> 
-    <p>hash</p>
-    <input  name="Hash" value="${formData?.hash}"></input> 
-    <p>transaccion comercio id</p>
-    <input  name="TransaccionComercioId" value="${randomNumber}"></input>
-    <p>userId</p>
-    <input  name="UserId" value="${formData?.id_user}" ></input> 
-    <p>monto</p>
-    <input  name="Monto" value="${formData?.monto}" ></input> 
-    <p>cuotas</p>
-    ${
+    <html lang="en">
+      <head>
+      <meta name="referrer" content="no-referrer">
+      <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+      </head>
+      <body>
+      <form id="form" style="width:100% height:100%;"  method="post" action="https://sandboxpp.asjservicios.com.ar/"> 
+      <p>callbackSuccess</p>
+          <input  name="CallbackSuccess" value="${formData?.callbackSuccess}"></input>
+          <p>callbackCancel</p>
+          <input  name="CallbackCancel" value="${formData?.callbackCancel}"></input>
+          <p>Comercio</p>
+          <input  name="Comercio" value="${formData?.comercio}"></input> 
+          <p>sucursalComercio</p>
+          <input  name="SucursalComercio" value="${formData?.sucursalComercio}"></input> 
+          <p>hash</p>
+          <input  name="Hash" value="${formData?.hash}"></input> 
+          <p>transaccion comercio id</p>
+          <input  name="TransaccionComercioId" value="${randomNumber}"></input>
+          <p>userId</p>
+          <input  name="UserId" value="${formData?.id_user}" ></input> 
+          <p>monto</p>
+          <input  name="Monto" value="${formData?.monto}" ></input> 
+          <p>cuotas</p>
+      
+      ${
         data.selected.length ?
         data.selected.map((item,index)=>{
             console.log(`Producto[${item.cuota}]`)
@@ -95,7 +98,15 @@ export const FormularioPagos = ({navigation,route}:Props) => {
     }
     <input style=" display:block;margin-top:20px; margin-left:auto; margin-right:auto; border-radius:15px; padding-top:10px; padding-bottom:10px; background-color:#71717a; color:white; font-size:25px; height:50px; width:80%;" type="submit" value="enviar"></input>
 </form> 
+</body>
+</html>
 `
+let jsCode = `
+  document.getElementById('form').onsubmit = function() {
+    window.ReactNativeWebView.postMessage('Form submitted');
+    return true;
+  };
+`;
 
   return (
     <Box flex={1}  >
@@ -107,12 +118,11 @@ export const FormularioPagos = ({navigation,route}:Props) => {
                 javaScriptEnabled={true}
                 domStorageEnabled={true}
                 startInLoadingState={true}
-                onLoad={() => {
-                  console.log('La página se ha cargado correctamente');
-                }}
+                injectedJavaScript={jsCode}
                 onMessage={(event) => {
-                  console.log("Mensaje de WebView:", event.nativeEvent.data);
+                  console.log("Message from WebView:", event.nativeEvent.data);
                 }}
+                onError={(error) => console.log(error)}
             />
             :
             <Box  flex={1}>
