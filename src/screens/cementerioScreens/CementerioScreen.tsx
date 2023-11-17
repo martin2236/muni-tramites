@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Text, Box, Divider, Button, Center, FlatList} from 'native-base';
 //@ts-ignore
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
@@ -39,8 +39,9 @@ export const CementerioScreen = ({navigation,route}:Props) => {
     const [info, setInfo] = useState<InfoCementerio | null>(null);
     const renderItem = (item:ListProps)=> {return (<TableItem item={item} pantalla={'Cementerio'} setData={setInfo} navigation={navigation}/>)};  
     const keyExtractor = (item:Cementerio, index:number)=> `${item.pkcementerio}${index}` 
-
-        
+    useEffect(()=>{
+        cementerios?.map(item => console.log('este es el item',item))
+    },[])
 
     return (
         <Box flex={1} backgroundColor={'gray.200'}>
@@ -51,7 +52,6 @@ export const CementerioScreen = ({navigation,route}:Props) => {
                 width={'90%'} 
                 alignSelf={'center'} 
                 backgroundColor={'white'}>
-              
                  <>
                        <Text
                         mt={7}

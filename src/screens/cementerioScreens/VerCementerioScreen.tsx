@@ -1,5 +1,5 @@
 import React, { useContext, useState,useEffect } from 'react';
-import { Divider, Box, Text, Pressable, Button, Radio, FlatList } from 'native-base';
+import { Divider, Box, Text, Pressable, Button, Radio, FlatList, Spinner } from 'native-base';
 //@ts-ignore
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -14,14 +14,15 @@ import { background } from '../../../App';
 import { PermissionsAndroid,Platform } from 'react-native';
 import RNFetchBlob from 'react-native-blob-util';
 import { CustomAlert } from '../../components/CustomAlert';
+import { Cementerio } from '../../context/datos/DatosContext';
 
 interface Props extends StackScreenProps<RootStackParams,'VerCementerio'>{}
 
-interface CuotaAño {
+export interface CuotaAño {
     anio: number;
   }
 
-interface AnioConCuotas {
+export interface AnioConCuotas {
 anio: number;
 cuotas: CuotaAño[];
 cantidadCuotas:number
@@ -48,12 +49,13 @@ async function requestStoragePermission() {
   }
 
 export const VerCementerioScreen = ({navigation, route}:Props) => {
-    const {R13,R14,R16} = useResponsiveSize();
+    const {R13,R14,R16,R20} = useResponsiveSize();
     const {user}= useContext(UserContext)
     const {makePost,data} = useFetch()
     const [selected, setSelected] = useState<Cuota[]>([]);
     const [anios, setAnios] = useState<string[] | null>(null);
     const [totalSelected, setTotalSelected] = useState(0);
+    const [pdf, setPdf] = useState<boolean>(false);
     const [listaAnios,setListaAnios] = useState<AnioConCuotas[] | []>([]);
     const [error, setError]= useState({
         pago: false,
@@ -63,15 +65,9 @@ export const VerCementerioScreen = ({navigation, route}:Props) => {
         status:'',
         title:''
     });
-      
+    
   
-      useEffect(() =>{
-          if(data && data.pdf){
-              console.log(data)
-          }
-      },[data]);
-  
-      const {id,ruta, referencia, updateInfo,deuda} =  route.params;
+    const {id,ruta, referencia, updateInfo,deuda} =  route.params;
   
       let editar = {
           id,
@@ -165,36 +161,39 @@ export const VerCementerioScreen = ({navigation, route}:Props) => {
       // verifica que haya alguna deuda seleccionada y que se haya 
       // elegido algun metodo de pago antes de pagar
       const descargarPDF = async ()=>{
-        console.log(selected.length)
         if (!selected.length) {
-         return  setAlert({
-            status:'error',
-            title:'no se seleccionaron cuotas'
-           })
+            setError({ ...error, cuota: true })
         }
+        setPdf(true)
         const cunica = selected.map(item => parseInt(item.cunica));
-        const cuenta = (updateInfo as UpdateInfo).cuenta;
+        //en el componente TableItem establezcon que updateInfo.padron es el num_orden
+        const orden = (updateInfo as UpdateInfo).padron;
         const data = {
-            cuenta,
+            orden,
             cunica
         }
-    
+        console.log('datos que envio',data)
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        const timeStr = now.toLocaleTimeString('es-AR', { hour12: false, hour: '2-digit', minute: '2-digit' });
+        const dateTimeStr = `${dateStr}-${timeStr}`;
         const { dirs } = RNFetchBlob.fs;
         const dirToSave = Platform.OS == 'ios' ? dirs.DocumentDir : dirs.DownloadDir
         const configfb = {
             fileCache:true,
             addAndroidDownloads: {
             notification:true,
-            title:'nuevo',
-            description: 'comprobante de pago',
+            title:`Comprobante de pago de sepulturas ${dateTimeStr}`,
+            description: `Comprobante de pago de sepulturas`,
             mime: 'application/pdf',
             mediaScannable:true,
             },
-            path: `${dirToSave}/comprobante3.pdf`,
+            path: `${dirToSave}/comprobante de pago de sepulturas ${dateTimeStr}.pdf`,
         }
         const configOptions = Platform.select({
             ios:{
                 fileCache: configfb.fileCache,
+                //@ts-ignore
                 title: configfb.addAndroidDownloads.title,
                 path: configfb.path,
                 appendExt: 'pdf',
@@ -208,17 +207,44 @@ export const VerCementerioScreen = ({navigation, route}:Props) => {
             'Authorization': `Bearer ${user?.token}`,
         }, JSON.stringify(data))
         .then((res) => {
-            console.log('File downloaded');
-            console.log('The file saved to ', res);
+            setPdf(false)
         })
         .catch((e) => {
             console.log('The file saved to ERROR', e.message)
+            setPdf(false)
         });
     }
     const imprimirPDF = async () => {
+        if(!selected.length){
+           return setAlert({
+                status:'error',
+                title:'Seleccione alguna cuota antes de continuar'
+            })
+        }
+        const cuenta = (updateInfo as UpdateInfo).cuenta;
+        const data = {
+            cuenta,
+            selected
+        }
         requestStoragePermission();
         descargarPDF();
     };
+
+    const pagarCuotas = () => {
+        if(!selected.length){
+            console.log('algo')
+           return setAlert({
+                status:'error',
+                title:'Seleccione alguna cuota antes de continuar'
+            })
+        }
+        const cuenta = (updateInfo as UpdateInfo).cuenta;
+        const data = {
+            cuenta,
+            selected
+        }
+        navigation.navigate('FormularioPagos',{data})
+    }
   
     const relleno = ' ';
       return (
@@ -355,15 +381,24 @@ export const VerCementerioScreen = ({navigation, route}:Props) => {
                             }
                 </Box>
                   <Box mb={5} mt={5} width={'full'} display={'flex'} flexDir={'row'} alignItems={'center'} justifyContent={'space-around'}>
-                    <Button py={1} width={'45%'} background={background} borderRadius={50} onPress={()=> navigation.navigate('FormularioPagos')}>
-                            <Text fontWeight={'bold'} textAlign={'center'} fontSize={R13}>PAGAR CON TARJETA DE CRÉDITO / DÉBITO</Text>
+                    <Button py={1} width={'45%'} background={background} borderRadius={50} onPress={()=> pagarCuotas()}>
+                            <Text fontWeight={'bold'} textAlign={'center'} fontSize={R14}>PAGAR CON TARJETA DE CRÉDITO / DÉBITO</Text>
                         </Button>
                         <Button py={1} width={'45%'} background={background} borderRadius={50} onPress={()=>imprimirPDF()}>
-                            <Text fontWeight={'bold'} textAlign={'center'} fontSize={R13}>DESCARGAR / IMPRIMIR RECIBO PARA PAGO</Text>
+                            <Text fontWeight={'bold'} textAlign={'center'} fontSize={R14}>DESCARGAR / IMPRIMIR RECIBO PARA PAGO</Text>
                         </Button>
                   </Box>
+                  {
+                    pdf ? 
+                    <Box position={'absolute'} zIndex={100} flexDir={'column'} justifyContent={'center'} height={'100%'} width={'100%'} backgroundColor={'#FFF'}>
+                        <Spinner mb={5} size={80} color={background}/>
+                        <Text fontSize={R20} mb={10} textAlign={'center'} color={background}>Descargando comprobante</Text>
+                    </Box>
+                    :
+                    null
+                 }
                        
                 </Box>      
             </Box>
-    )
-    }
+        )
+}

@@ -38,11 +38,13 @@ export const RegisterScreen = ({navigation}:Props) => {
     };
 
    useEffect(() => {
-    console.log(data)
+    console.log({data})
     if(data && !data.msj){
+        let mensaje;
+        data.title.message == 'USER_EXIST' ? mensaje ='El usuario ya se encuentra registrado' : mensaje = 'Ocurrió por favor intente mas tarde';
        setAlert({
         status:'error',
-        title:'Ocurrió por favor intente mas tarde'
+        title: mensaje
        });
     }else if(data && data.msj){
         setAlert({

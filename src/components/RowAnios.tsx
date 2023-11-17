@@ -8,7 +8,7 @@ import { TouchableOpacity } from 'react-native';
 import { useResponsiveSize } from '../hooks/useResponsiveSize';
 
 interface Props {
-    item:{anio:string, cuotas:Cuota[]},
+    item:{anio:number, cuotas:Cuota[] , cantidadCuotas:number},
     selected:any,
     anios:string[] | null,
     toggleCuota: (cuota: Cuota) => void
@@ -125,21 +125,26 @@ export const RowAnios = memo(({item, selected,anios, toggleCuota,setAnios }:Prop
                     keyboardShouldPersistTaps='always'
                     >
                         <Box>
-                            {item.cuotas.map((cuota:Cuota, index) => (
+                            {item.cuotas.map((cuota:Cuota, index:number) => (
                                 <Box key={index} alignSelf={'center'} width={'95%'} mt={2} display={'flex'} flexDirection={'row'} justifyContent={'space-around'} alignItems={'center'}>
                                         <Box ml={1} width={'29%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'flex-start'}>
-                                            <TouchableOpacity
-                                                onPress={() => handleToggle(cuota)}
-                                                style={{height:16, width:16,borderColor:'#2596be',backgroundColor:selected.findIndex((item:Cuota) => item.cunica == cuota.cunica) !== -1 ?'#2596be':'#fff' ,borderWidth:selected.findIndex((item:Cuota) => item.cunica == cuota.cunica) !== -1 ? 0:1, alignItems:'center', justifyContent:'center', marginLeft:2}}>
-                                                    {
-                                                        selected.findIndex((item:Cuota) => item.cunica == cuota.cunica) !== -1 ?
-                                                        <Icon name={'check'} size={15} color={'white'}/> : null
-                                                    }
-                                            </TouchableOpacity>
-                                            <Text textAlign={'center'} marginLeft={3} fontSize={R14} >
-                                                {cuota.cuota}
-                                            </Text>
-                                        </Box>
+                                                {
+                                                    cuota.convenio && cuota.convenio > 0 || cuota.estado == "4" || cuota.apliMiru && cuota.apliMiru == '0' || cuota.pagoElectronico && cuota.pagoElectronico == 1 ?
+                                                    null :
+                                                    <TouchableOpacity
+                                                        onPress={() => handleToggle(cuota)}
+                                                        style={{height:16, width:16,borderColor:'#2596be',backgroundColor:selected.findIndex((item:Cuota) => item.cunica == cuota.cunica) !== -1 ?'#2596be':'#fff' ,borderWidth:selected.findIndex((item:Cuota) => item.cunica == cuota.cunica) !== -1 ? 0:1, alignItems:'center', justifyContent:'center', marginLeft:2}}
+                                                        disabled={selected.findIndex((item:Cuota) => item.cunica == cuota.cunica && item.tasa == '1') !== -1 && cuota.tasa == '8'}>
+                                                            {
+                                                                selected.findIndex((item:Cuota) => item.cunica == cuota.cunica) !== -1 ?
+                                                                <Icon name={'check'} size={15} color={'white'}/> : null
+                                                            }
+                                                    </TouchableOpacity> 
+                                                }
+                                                <Text textAlign={'center'} marginLeft={3} fontSize={R14} >
+                                                    {cuota.cuota}
+                                                </Text>
+                                            </Box>
 
                                             <Box width={'20%'} display={'flex'} alignItems={'center'} >
                                                 <Text textAlign={'center'} fontSize={R14} >

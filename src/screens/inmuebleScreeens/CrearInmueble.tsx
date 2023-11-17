@@ -42,8 +42,10 @@ export const CrearInmueble = ({navigation,route}:Props) => {
     });
 
    useEffect(() =>{
-    const inmueblesRegistrados = inmuebles.map((inmueble:any) => inmueble.partida) 
-    setRegistrados(inmueblesRegistrados)
+    if(inmuebles && inmuebles.lenght){
+        const inmueblesRegistrados = inmuebles.map((inmueble:any) => inmueble.partida) 
+        setRegistrados(inmueblesRegistrados)
+    }
    },[inmuebles])
 
     useEffect(() => {

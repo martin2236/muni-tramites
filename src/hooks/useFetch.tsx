@@ -66,8 +66,6 @@ export const useFetch = () => {
         } catch (error:any) {
           console.log(error);
           if (error.response) {
-            // The request was made and the server responded with a status code
-            // that falls out of the range of 2xx
             console.log(error.response.data);
             setData({status:'error',title:error.response.data})
           } else if (error.request) {
@@ -97,8 +95,9 @@ export const useFetch = () => {
             setData({status:'error',title:error.request["_response"]})
           } else {
             console.log('Error', error.message);
+            setData(error.message)
           }
-          setData(error)
+          
           setCargando(false);
         }
       }else{
@@ -106,6 +105,7 @@ export const useFetch = () => {
           const res = await instance.post(uri, data, config);
           const datos = await res.data;
           const objData = {[`${tipo}`]: datos}
+          console.log(objData);
           setData(objData);
           setCargando(false);
         } catch (error:any) {

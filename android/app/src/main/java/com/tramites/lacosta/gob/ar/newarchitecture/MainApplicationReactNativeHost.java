@@ -1,4 +1,4 @@
-package com.tramites.newarchitecture;
+package com.tramites.lacosta.gob.ar.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.fabric.ReactNativeConfig;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.tramites.BuildConfig;
-import com.tramites.newarchitecture.components.MainComponentsRegistry;
-import com.tramites.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.tramites.lacosta.gob.ar.BuildConfig;
+import com.tramites.lacosta.gob.ar.newarchitecture.components.MainComponentsRegistry;
+import com.tramites.lacosta.gob.ar.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 

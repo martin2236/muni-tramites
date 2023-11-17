@@ -47,7 +47,7 @@ export const VehiculoScreen = ({navigation,route}:Props) => {
             backgroundColor={'white'}>
           
              <>
-                   <Text
+                <Text
                     mt={7}
                     alignSelf={'center'}
                     fontWeight={'bold'} 

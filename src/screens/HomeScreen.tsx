@@ -11,7 +11,6 @@ import { useResponsiveSize } from '../hooks/useResponsiveSize';
 
 interface Props extends DrawerScreenProps<RootDrawerParams,'Home'>{}
 
-
 export const HomeScreen = ({navigation}:Props) => {
     const {user} = useContext(UserContext);
     const [cuenta, setCuenta]= useState<any>(null);
@@ -23,12 +22,7 @@ export const HomeScreen = ({navigation}:Props) => {
 
     //pide los datos a mostrar en la siguiente pantalla y desabilita la navegacion a otras
     //pantallas mientras los datos se cargan 
-    useEffect(()=>{
-      if(feed){
-        console.log('esto es feed', feed)
-      }
-    },[feed])
-
+   
     const pedirInformacion = (data: string) =>{
       setFeed(data)
       setDisabled(data)
@@ -82,6 +76,7 @@ export const HomeScreen = ({navigation}:Props) => {
      useEffect(()=>{
         if(cuenta && pantalla){
           console.log(cuenta,pantalla)
+          //@ts-ignore
            navigation.navigate(pantalla as never,cuenta as never);
            setCuenta(null)
         }

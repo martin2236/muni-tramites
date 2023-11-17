@@ -30,6 +30,8 @@ export interface Cuota {
     recargo:     number;
     totalcuota:  number;
     checked?:    boolean;
+    apliMiru?:   string;
+    pagoElectronico?: number;
 }
 
 export enum EstaDeta {

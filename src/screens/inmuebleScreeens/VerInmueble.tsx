@@ -1,5 +1,5 @@
 import React, { useEffect, memo, useState, useContext} from 'react';
-import { Divider, Box, Text, Pressable, Button, FlatList } from 'native-base';
+import { Divider, Box, Text, Pressable, Button, FlatList, Spinner } from 'native-base';
 import RNFetchBlob from 'react-native-blob-util';
 
 //@ts-ignore
@@ -15,6 +15,7 @@ import { useResponsiveSize } from '../../hooks/useResponsiveSize';
 import { background } from '../../../App';
 import { Platform } from 'react-native';
 import { PermissionsAndroid } from 'react-native';
+import { CustomAlert } from '../../components/CustomAlert';
 
 async function requestStoragePermission() {
   try {
@@ -36,7 +37,6 @@ async function requestStoragePermission() {
   }
 }
 
-
 interface Props extends StackScreenProps<RootStackParams,'VerInmueble'>{}
 
 interface CuotaAño {
@@ -52,96 +52,101 @@ cantidadCuotas:number
 
 export const VerInmueble = memo(({navigation, route}:Props) => {
     const {user}= useContext(UserContext);
-    const {R14,R16} = useResponsiveSize();
+    const {R14,R16,R20} = useResponsiveSize();
     const {makePost,data} = useFetch();
     const [selected, setSelected] = useState<Cuota[]>([]);
     const [anios, setAnios] = useState<string[] | null>(null);
     const [totalSelected, setTotalSelected] = useState(0);
     const [listaAnios,setListaAnios] = useState<AnioConCuotas[] | []>([]);
-    const [opcion, setOpcion] = useState<string | undefined>(undefined);
+    const [pdf, setPdf] = useState<boolean>(false);
     const [error, setError]= useState({
         pago: false,
         cuota:false
       });
-
-    useEffect(() =>{
-        if(data && data.pdf){
-            console.log(data)
-        }
-    },[data]);
+    const [alert,setAlert] = useState({
+        status:'',
+        title:''
+    });
 
     const {id,ruta, referencia, updateInfo,deuda} =  route.params;
 
-    let editar = {
-        id,
-        ruta,
-        deuda,
-        referencia,
-        updateInfo
-    }
-    console.log({updateInfo})
-    useEffect(() => {
-        if(anios){
-            pagarPorAnios(anios);
-        };
-    },[anios])
-
-    const toggleCuota = (cuota:Cuota) => {
-        const index = selected.findIndex((item: Cuota) => item.cunica === cuota.cunica);
-
-        let newSelected = [];
-
-         newSelected = [...selected];
-
-        if (index !== -1) {
-            newSelected.splice(index, 1);
-        } else {
-            newSelected.push(cuota as never);
-            if(cuota.tasa == '1'){
-                const anio = listaAnios.filter((item) => {return item.anio == Number(cuota.anio)});
-                const tasa8 = anio[0].cuotas.filter(item => item.tasa == '8' && item.cuota == cuota.cuota)
-                tasa8.length && newSelected.push(...tasa8);
-            } 
+        let editar = {
+            id,
+            ruta,
+            deuda,
+            referencia,
+            updateInfo
         }
-        const anosUnicos = new Set();
 
-        // Iteramos sobre la lista de cuotas para agregar los años al conjunto
-        newSelected.forEach((cuota) => {
-        anosUnicos.add(cuota.anio);
-        });
+        useEffect(()=>{
+            console.log('selected',selected)
+        },[selected])
 
-        const total = newSelected.reduce((acc, curr) => acc + curr.totalcuota, 0);
-        setSelected(newSelected);
-        setTotalSelected(total);
-    }
+        useEffect(() => {
+            if(anios){
+                pagarPorAnios(anios);
+            };
+        },[anios])
 
-   const pagarPorAnios = (anios:String[]) => {
-    if(!anios.length){
-        setSelected([]);
-        setTotalSelected(0);
-        return
-    };
-    const nuevaLista = deuda.filter((deuda:Cuota) => anios.includes(deuda.anio +''));
-    //nuevaLista.forEach((item:Cuenta) => console.log(item.cunica))
-    const total = nuevaLista.reduce((acc:number,curr:Cuota)=> acc + curr['totalcuota'] ,0);
-    setSelected(nuevaLista);
-    setTotalSelected(total);
-    }
+        const toggleCuota = (cuota:Cuota) => {
+            const index = selected.findIndex((item: Cuota) => item.cunica === cuota.cunica);
+            let newSelected = [...selected];
     
-    const infoByAnio:any = {};
-    //organiza las deudas por año
+            if (index !== -1) {
+                newSelected.splice(index, 1);
+                // If the cuota being removed has a tasa of 8
+                if(cuota.tasa == '8'){
+                    // Find the corresponding cuota with a tasa of 1
+                    const indexTasa1 = newSelected.findIndex((item: Cuota) => item.cuota === cuota.cuota && item.tasa == '1');
+                    // If found, remove it
+                    if(indexTasa1 !== -1){
+                        newSelected.splice(indexTasa1, 1);
+                    }
+                }
+            } else {
+                newSelected.push(cuota as Cuota);
+                if(cuota.tasa == '1'){
+                    const anio = listaAnios.filter((item) => {return Number(item.anio) == Number(cuota.anio)});
+                    const tasa8 = anio[0].cuotas.filter((item : any) => item.tasa == '8' && item.cuota == cuota.cuota)
+                    tasa8.length && newSelected.push(...tasa8);
+                } 
+            }
+            const anosUnicos = new Set();
+            newSelected.forEach((cuota) => {
+            anosUnicos.add(cuota.anio);
+            });
+            const total = newSelected.reduce((acc, curr) => acc + curr.totalcuota, 0);
+            setSelected(newSelected);
+            setTotalSelected(total); 
+        }
+    
+
+        const pagarPorAnios = (anios:String[]) => {
+            if(!anios.length){
+                setSelected([]);
+                setTotalSelected(0);
+                return
+            };
+            const nuevaLista = deuda.filter((deuda:Cuota) => anios.includes(deuda.anio +''));
+            const total = nuevaLista.reduce((acc:number,curr:Cuota)=> acc + curr['totalcuota'] ,0);
+            setSelected(nuevaLista);
+            setTotalSelected(total);
+        }
+    
+        const infoByAnio:any = {};
+        //organiza las deudas por año
    
-    useEffect(() => {
-        // Organiza las deudas por año
-      const listaAnios = organizeDataByYear(deuda);
-         // Actualiza los estados con los datos organizados
-        setListaAnios(listaAnios);
-      }, []);
+        useEffect(() => {
+            // Organiza las deudas por año
+            const listaAnios = organizeDataByYear(deuda);
+            // Actualiza los estados con los datos organizados
+            setListaAnios(listaAnios);
+        }, []);
       
-      const organizeDataByYear = (deuda: CuotaAño[]): AnioConCuotas[] => {
+        const organizeDataByYear = (deuda: CuotaAño[]): AnioConCuotas[] => {
         const infoByAnio: { [anio: number]: CuotaAño[] } = {};
-      
-         deuda.forEach((item) => {
+    
+        deuda.forEach((item) => {
             const anio = item.anio;
             if (!infoByAnio[anio]) {
             infoByAnio[anio] = [];
@@ -157,44 +162,44 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
 
             listaAnios.push({ anio, cuotas, cantidadCuotas });
         }
-
-      
         return listaAnios;
-      };
-      
-      
+    };
+
     // verifica que haya alguna deuda seleccionada y que se haya 
     // elegido algun metodo de pago antes de pagar
     const descargarPDF = async ()=>{
         if (!selected.length) {
-            setError({ ...error, cuota: true })
-            console.log('no se selecciono ninguna cuota')
-        }
+            setError({ ...error, cuota: true });
+        };
+        setPdf(true)
         const cunica = selected.map(item => parseInt(item.cunica));
         const cuenta = (updateInfo as UpdateInfo).cuenta;
         const data = {
             cuenta,
             cunica
-        }
-    
+        };
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        const timeStr = now.toLocaleTimeString('es-AR', { hour12: false, hour: '2-digit', minute: '2-digit' });
+        const dateTimeStr = `${dateStr}-${timeStr}`;
         const { dirs } = RNFetchBlob.fs;
         const dirToSave = Platform.OS == 'ios' ? dirs.DocumentDir : dirs.DownloadDir
         const configfb = {
             fileCache:true,
             addAndroidDownloads: {
             notification:true,
-            title:'nuevo',
-            description: 'comprobante de pago',
+            title:`Comprobante de pago de inmuebles ${dateTimeStr}`,
+            description: `Comprobante de pago de inmuebles`,
             mime: 'application/pdf',
             mediaScannable:true,
             },
-            path: `${dirToSave}/comprobante3.pdf`,
+            path: `${dirToSave}/comprobante de pago inmuebles ${dateTimeStr}.pdf`,
         }
         const configOptions = Platform.select({
             ios:{
                 fileCache: configfb.fileCache,
-                title: configfb.addAndroidDownloads.title,
                 path: configfb.path,
+                //@ts-ignore
                 appendExt: 'pdf',
             },
             android: configfb,
@@ -206,23 +211,37 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
             'Authorization': `Bearer ${user?.token}`,
         }, JSON.stringify(data))
         .then((res) => {
-            console.log('File downloaded');
-            console.log('The file saved to ', res);
+            setPdf(false)
         })
         .catch((e) => {
             console.log('The file saved to ERROR', e.message)
+            setPdf(false)
         });
     }
     const imprimirPDF = async () => {
+        if(!selected.length){
+           return setAlert({
+                status:'error',
+                title:'Seleccione alguna cuota antes de continuar'
+            })
+        }
+        const cuenta = (updateInfo as UpdateInfo).cuenta;
+        const data = {
+            cuenta,
+            selected
+        }
         requestStoragePermission();
         descargarPDF();
     };
 
     const pagarCuotas = () => {
-        if (!selected.length) {
-            setError({ ...error, cuota: true })
+        if(!selected.length){
+            console.log('algo')
+           return setAlert({
+                status:'error',
+                title:'Seleccione alguna cuota antes de continuar'
+            })
         }
-        
         const cuenta = (updateInfo as UpdateInfo).cuenta;
         const data = {
             cuenta,
@@ -230,6 +249,7 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
         }
         navigation.navigate('FormularioPagos',{data})
     }
+
   return (
     <Box flex={3} backgroundColor={'gray.200'}>
     <Divider backgroundColor={'gray.600'} height={'1.5'}/>
@@ -240,6 +260,12 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
             alignSelf={'center'} 
             backgroundColor={'white'}>
         {/* nuevo box */}
+            {
+                alert.status != '' && 
+                <Box alignSelf={'center'} mt={10} width={'80%'}>
+                    <CustomAlert setAlert={setAlert} status={alert.status} title={alert.title}/>
+                </Box>
+            }
             <Box flex={1} >
             <Text
                 mt={5}
@@ -365,7 +391,15 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
                         <Text fontWeight={'bold'} textAlign={'center'} fontSize={R14}>DESCARGAR / IMPRIMIR RECIBO PARA PAGO</Text>
                     </Button>
               </Box>
-                   
+                 {
+                    pdf ? 
+                    <Box position={'absolute'} zIndex={100} flexDir={'column'} justifyContent={'center'} height={'100%'} width={'100%'} backgroundColor={'#FFF'}>
+                        <Spinner mb={5} size={80} color={background}/>
+                        <Text fontSize={R20} mb={10} textAlign={'center'} color={background}>Descargando comprobante</Text>
+                    </Box>
+                    :
+                    null
+                 }
             </Box>
         </Box>
         )

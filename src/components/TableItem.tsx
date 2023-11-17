@@ -101,6 +101,7 @@ export const TableItem = ({item, navigation,setData, pantalla}:Props) => {
     // verifica que se hayan acomodados los datos cuando se ejecuta el switch y navega a otra pantalla
     useEffect(()=> {
         if(datos.deuda){
+            //@ts-ignore
             navigation.navigate(`Ver${pantalla}` as never, datos as never )
         }
     },[datos.deuda])

@@ -11,7 +11,7 @@ interface Props {
 }
 
 export const CustomAlert = ({status,title,setAlert}:Props) => {
-      return <Stack space={3} w="100%" position={'absolute'} zIndex={200} top={2}>
+      return <Stack space={3} w="100%" position={'absolute'} zIndex={200} >
           <Alert w="100%" status={status}>
                 <VStack space={2} flexShrink={1} w="100%">
                   <HStack flexShrink={1} alignItems={'center'} space={2} justifyContent="space-between">

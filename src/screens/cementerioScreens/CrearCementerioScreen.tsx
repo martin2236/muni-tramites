@@ -38,9 +38,10 @@ export const CrearCementerioScreen = ({navigation,route}:Props) => {
     });
 
    useEffect(() =>{
-    //! revisar el dato del cementerio
-    const cementeriosRegistrados = cementerios.map((cementerio:any) => cementerio.num_orden) 
-    setRegistrados(cementeriosRegistrados)
+    if(cementerios && cementerios.lenght){
+        const cementeriosRegistrados = cementerios.map((cementerio:any) => cementerio.num_orden) 
+        setRegistrados(cementeriosRegistrados)
+    }
    },[cementerios])
 
     useEffect(() => {
@@ -76,7 +77,6 @@ export const CrearCementerioScreen = ({navigation,route}:Props) => {
         }
     }, [data]);
 
-    console.log('estos son los cementeriios',cementerios)
     const crearCementerio = ( values: NuevoInmueble, resetForm:any) => {
         const cementerioExistente = registrados.find(item => item == Number(values.padron))
         if(cementerioExistente){

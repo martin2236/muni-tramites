@@ -42,9 +42,10 @@ export const CrearVehiculoScreen = ({navigation,route}:Props) => {
     });
 
    useEffect(() =>{
-    //! revisar el dato del vehiculo
+   if(vehiculos && vehiculos.lenght){
     const vehiculosRegistrados = vehiculos.map((vehiculo:any) => vehiculo.dominio.trim()) 
     setRegistrados(vehiculosRegistrados)
+   }
    },[vehiculos])
 
     useEffect(() => {

@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect, memo } from 'react';
-import { Divider, Box, Text, Pressable, Radio, Button, FlatList } from 'native-base';
+import { Divider, Box, Text, Pressable, Radio, Button, FlatList, Spinner } from 'native-base';
 //@ts-ignore
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -13,6 +13,8 @@ import { useResponsiveSize } from '../../hooks/useResponsiveSize';
 import { background } from '../../../App';
 import { PermissionsAndroid,Platform } from 'react-native';
 import RNFetchBlob from 'react-native-blob-util';
+import { CustomAlert } from '../../components/CustomAlert';
+import { Vehiculo } from '../../context/datos/DatosContext';
 
 interface Props extends StackScreenProps<RootStackParams,'VerVehiculo'>{}
 
@@ -47,19 +49,23 @@ async function requestStoragePermission() {
   }
 
 export const VerVehiculo = ({navigation, route}:Props) => {
-    const {R13,R14,R16} = useResponsiveSize();
+    const {R13,R14,R16,R20} = useResponsiveSize();
 
     const {user}= useContext(UserContext)
     const {makePost,data} = useFetch()
     const [selected, setSelected] = useState<Cuota[]>([]);
     const [anios, setAnios] = useState<string[] | null>(null);
     const [totalSelected, setTotalSelected] = useState(0);
+    const [pdf, setPdf] = useState<boolean>(false);
     const [listaAnios,setListaAnios] = useState<AnioConCuotas[] | []>([]);
-    const [opcion, setOpcion] = useState<string | undefined>(undefined);
     const [error, setError]= useState({
         pago: false,
         cuota:false
       });
+    const [alert,setAlert] = useState({
+        status:'',
+        title:''
+    });
   
       const {id,ruta, referencia, updateInfo,deuda} =  route.params;
   
@@ -160,27 +166,44 @@ export const VerVehiculo = ({navigation, route}:Props) => {
       const descargarPDF = async ()=>{
         if (!selected.length) {
             setError({ ...error, cuota: true })
-            console.log('no se selecciono ninguna cuota')
         }
+        setPdf(true)
         const cunica = selected.map(item => parseInt(item.cunica));
-        const cuenta = (updateInfo as UpdateInfo).cuenta;
+        const dominio = (updateInfo as Vehiculo).dominio;
+        let tipo ;
+            switch ((updateInfo as Vehiculo).tipo) {
+                case "Vehiculo Particular":
+                  tipo = "auto"
+                  break;
+                case "Moto":
+                  tipo = "moto"
+                  break;
+                default:
+                  tipo = "publico"
+                  break;
+              }
         const data = {
-            cuenta,
+            dominio,
+            tipo,
             cunica
         }
-    
+        console.log('datos para imprimir el pdf',data);
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        const timeStr = now.toLocaleTimeString('es-AR', { hour12: false, hour: '2-digit', minute: '2-digit' });
+        const dateTimeStr = `${dateStr}-${timeStr}`;
         const { dirs } = RNFetchBlob.fs;
         const dirToSave = Platform.OS == 'ios' ? dirs.DocumentDir : dirs.DownloadDir
         const configfb = {
             fileCache:true,
             addAndroidDownloads: {
             notification:true,
-            title:'nuevo',
-            description: 'comprobante de pago',
+            title:`Comprobante de pago de vehiculos ${dateTimeStr}`,
+            description: `Comprobante de pago de vehiculos`,
             mime: 'application/pdf',
             mediaScannable:true,
             },
-            path: `${dirToSave}/comprobante3.pdf`,
+            path: `${dirToSave}/comprobante de pago vehiculos ${dateTimeStr}.pdf`,
         }
         const configOptions = Platform.select({
             ios:{
@@ -198,17 +221,44 @@ export const VerVehiculo = ({navigation, route}:Props) => {
             'Authorization': `Bearer ${user?.token}`,
         }, JSON.stringify(data))
         .then((res) => {
-            console.log('File downloaded');
-            console.log('The file saved to ', res);
+            setPdf(false)
         })
         .catch((e) => {
+            setPdf(false)
             console.log('The file saved to ERROR', e.message)
         });
     }
     const imprimirPDF = async () => {
+        if(!selected.length){
+           return setAlert({
+                status:'error',
+                title:'Seleccione alguna cuota antes de continuar'
+            })
+        }
+        const cuenta = (updateInfo as UpdateInfo).cuenta;
+        const data = {
+            cuenta,
+            selected
+        }
         requestStoragePermission();
         descargarPDF();
     };
+
+    const pagarCuotas = () => {
+        if(!selected.length){
+            console.log('algo')
+           return setAlert({
+                status:'error',
+                title:'Seleccione alguna cuota antes de continuar'
+            })
+        }
+        const cuenta = (updateInfo as UpdateInfo).cuenta;
+        const data = {
+            cuenta,
+            selected
+        }
+        navigation.navigate('FormularioPagos',{data})
+    }
     
     const relleno = ' ';
     
@@ -221,6 +271,12 @@ export const VerVehiculo = ({navigation, route}:Props) => {
                 width={'90%'} 
                 alignSelf={'center'} 
                 backgroundColor={'white'}>
+                    {
+                alert.status != '' && 
+                <Box alignSelf={'center'} mt={10} width={'80%'}>
+                    <CustomAlert setAlert={setAlert} status={alert.status} title={alert.title}/>
+                </Box>
+                }
             {/* nuevo box */}
                 <Box flex={1} >
                 <Text
@@ -337,13 +393,22 @@ export const VerVehiculo = ({navigation, route}:Props) => {
                             }
                 </Box>
                   <Box mb={5} mt={5} width={'full'} display={'flex'} flexDir={'row'} alignItems={'center'} justifyContent={'space-around'}>
-                    <Button py={1} width={'45%'} background={background} borderRadius={50} onPress={()=> navigation.navigate('FormularioPagos')}>
-                            <Text fontWeight={'bold'} textAlign={'center'} fontSize={R13}>PAGAR CON TARJETA DE CRÉDITO / DÉBITO</Text>
+                    <Button py={1} width={'45%'} background={background} borderRadius={50} onPress={()=> pagarCuotas()}>
+                            <Text fontWeight={'bold'} textAlign={'center'} fontSize={R14}>PAGAR CON TARJETA DE CRÉDITO / DÉBITO</Text>
                         </Button>
                         <Button py={1} width={'45%'} background={background} borderRadius={50} onPress={()=>imprimirPDF()}>
-                            <Text fontWeight={'bold'} textAlign={'center'} fontSize={R13}>DESCARGAR / IMPRIMIR RECIBO PARA PAGO</Text>
+                            <Text fontWeight={'bold'} textAlign={'center'} fontSize={R14}>DESCARGAR / IMPRIMIR RECIBO PARA PAGO</Text>
                         </Button>
                   </Box>
+                  {
+                    pdf ? 
+                    <Box position={'absolute'} zIndex={100} flexDir={'column'} justifyContent={'center'} height={'100%'} width={'100%'} backgroundColor={'#FFF'}>
+                        <Spinner mb={5} size={80} color={background}/>
+                        <Text fontSize={R20} mb={10} textAlign={'center'} color={background}>Descargando comprobante</Text>
+                    </Box>
+                    :
+                    null
+                 }
                        
                 </Box>
             </Box>

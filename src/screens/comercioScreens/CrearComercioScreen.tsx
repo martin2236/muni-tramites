@@ -28,7 +28,7 @@ export const CrearComercioScreen = ({navigation,route}:Props) => {
     const {comercios} = route.params;
     const {makePost, data} = useFetch();
     const {user} = useContext(UserContext);
-    const {R14} = useResponsiveSize();
+    const {R14,R20} = useResponsiveSize();
     const {traerComercios} = useContext(DatosContext);
     const [registrados, setRegistrados] = useState([])
     const [alert,setAlert] = useState({
@@ -38,7 +38,7 @@ export const CrearComercioScreen = ({navigation,route}:Props) => {
 
    useEffect(() =>{
     //! revisar el dato del cementerio
-    if(comercios.length){
+    if(comercios && comercios.length){
         const comerciosRegistrados = comercios.map((comercio:any) => comercio.padron) 
         setRegistrados(comerciosRegistrados)
     }

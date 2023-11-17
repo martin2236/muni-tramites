@@ -1,4 +1,7 @@
-package com.tramites;
+//package com.tramites;
+
+package com.tramites.lacosta.gob.ar;
+
 import android.os.Bundle;
 
 import com.facebook.react.ReactActivity;
