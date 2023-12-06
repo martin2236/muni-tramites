@@ -15,6 +15,7 @@ import { PermissionsAndroid,Platform } from 'react-native';
 import RNFetchBlob from 'react-native-blob-util';
 import { CustomAlert } from '../../components/CustomAlert';
 import { Vehiculo } from '../../context/datos/DatosContext';
+import * as _ from 'lodash'
 
 interface Props extends StackScreenProps<RootStackParams,'VerVehiculo'>{}
 
@@ -134,6 +135,8 @@ export const VerVehiculo = ({navigation, route}:Props) => {
           
         const listaAnios = organizeDataByYear(deuda);
         // Actualiza los estados con los datos organizados
+        const anios = _.findLastIndex(listaAnios.cuotas, function(o) { return o.anio == '2021'; });
+        console.log('ANIOS',anios)
           setListaAnios(listaAnios);
         }, []);
         

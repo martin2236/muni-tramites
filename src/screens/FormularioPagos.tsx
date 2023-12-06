@@ -54,15 +54,16 @@ export const FormularioPagos = ({navigation, route}: Props) => {
   const {user} = useContext(UserContext);
   const { data } = route.params!;
   const [formData, setFormData] = useState<FormData | null>(null);
-  const totalRecargo = data.selected.reduce(
-    (acc: any, curr: any) => acc + curr.totalcuota + curr.recargo,
-    0,
-  );
+  
   const randomNumber = Math.floor(Math.random() * 100000) + 1;
 
   useEffect(() => {
     getData();
   }, []);
+
+  useEffect(() => {
+    console.log({formData})
+  }, [formData]);
 
   const getData = async () => {
     const config = {
@@ -73,14 +74,13 @@ export const FormularioPagos = ({navigation, route}: Props) => {
     console.log(data);
     let cunica = data.selected.map((item:Selected) => parseInt(item.cunica));
     let datosBack = {cuenta: data.cuenta, cunica, tipo: 'sandbox'};
+    const totalRecargo = data.selected.reduce(
+      (acc: any, curr: any) => acc + curr.totalcuota + curr.recargo,
+      0,
+    );
     console.log(user?.token, datosBack);
     try {
       const res = await axios.post('https://backend.tramites.lacosta.gob.ar/inmuebles/pagarCuotas', datosBack, config);
-      //const res = await axios.post(
-      //   'http://11.11.15.8:4000/inmuebles/pagarCuotas',
-      //   datosBack,
-      //   config,
-      // );
       const datos = res.data;
       setFormData(datos);
     } catch (error: any) {

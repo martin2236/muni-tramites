@@ -69,6 +69,7 @@ export const TableItem = ({item, navigation,setData, pantalla}:Props) => {
             return makePost('/cementerios/traerCuotas',{orden,vencimiento}, user?.token, 'deudas' );
         }
         if((valor as Vehiculo).dominio){
+            console.log({valor})
             const dominio = (valor as Vehiculo).dominio;
             const vencimiento = new Date()
             let tipo;
@@ -101,7 +102,7 @@ export const TableItem = ({item, navigation,setData, pantalla}:Props) => {
     // verifica que se hayan acomodados los datos cuando se ejecuta el switch y navega a otra pantalla
     useEffect(()=> {
         if(datos.deuda){
-            //@ts-ignore
+            //@ts-ignore 
             navigation.navigate(`Ver${pantalla}` as never, datos as never )
         }
     },[datos.deuda])
@@ -125,6 +126,7 @@ export const TableItem = ({item, navigation,setData, pantalla}:Props) => {
         })
        setCuotas(datos);
     }
+
     //acomoda los datos para usarse en la pantalla `ver${pantalla}`
    useEffect(()=>{
         if(pantalla === 'Inmueble'){
@@ -171,7 +173,6 @@ export const TableItem = ({item, navigation,setData, pantalla}:Props) => {
     
     //guarda la informacion que se va a mostrar en el custom modal
     const guardarInfo = () => {
-        console.log(item.item.descripcion);
         if(deuda && deuda.deudas.datosPadron.baseimpo){
             const {deudas} = deuda;
             const informacion = {
@@ -222,7 +223,6 @@ export const TableItem = ({item, navigation,setData, pantalla}:Props) => {
         }
         if(deuda && deuda.deudas.datosPadron.fallfech){
             const {deudas} = deuda;
-            console.log(deuda)
             const informacion = {
                 modal:true,
                 tipoModal:'cementerio',

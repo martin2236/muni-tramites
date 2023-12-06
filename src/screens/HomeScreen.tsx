@@ -40,13 +40,13 @@ export const HomeScreen = ({navigation}:Props) => {
                 setPantalla('Cementerio');
               break;
             case 'Vehiculo':
+              //! revisar que falta cunica
                 makeGet('/vehiculos/traerVehiculos', user?.token, undefined, 'Vehiculo')
                 setPantalla('Vehiculo');
               break;
             default:
               console.log(`No se encontro el tipo ${data}.`);
           }
-          console.log('ESTO ES FEED',feed);
     };
 
     //recibe los datos que trae la funcion traerInformaciony los procesa
@@ -75,7 +75,6 @@ export const HomeScreen = ({navigation}:Props) => {
      //verifica la existencia de una cuenta para navegar a la pantalla seleccionada
      useEffect(()=>{
         if(cuenta && pantalla){
-          console.log(cuenta,pantalla)
           //@ts-ignore
            navigation.navigate(pantalla as never,cuenta as never);
            setCuenta(null)

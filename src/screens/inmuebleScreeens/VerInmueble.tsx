@@ -37,6 +37,7 @@ async function requestStoragePermission() {
   }
 }
 
+
 interface Props extends StackScreenProps<RootStackParams,'VerInmueble'>{}
 
 interface CuotaAño {
@@ -139,6 +140,7 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
         useEffect(() => {
             // Organiza las deudas por año
             const listaAnios = organizeDataByYear(deuda);
+           
             // Actualiza los estados con los datos organizados
             setListaAnios(listaAnios);
         }, []);

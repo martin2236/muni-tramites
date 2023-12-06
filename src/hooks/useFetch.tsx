@@ -105,7 +105,7 @@ export const useFetch = () => {
           const res = await instance.post(uri, data, config);
           const datos = await res.data;
           const objData = {[`${tipo}`]: datos}
-          console.log(objData);
+          console.log('MAKEPOST RESP DEL BACK',objData.deudas.cuotas)
           setData(objData);
           setCargando(false);
         } catch (error:any) {
