@@ -8,17 +8,6 @@ const {width} = Dimensions.get('window');
 console.log(height, width)
 //! en el revisar 800 x 360 el input se rompe por que el resultado es 11 y no es una altura permitida
 export const useResponsiveSize = () => {
-   // const R10 = RFValue(12,height);
-   // const R12 = RFValue(12,height);
-   // const R13 = RFValue(13,height);
-   // const R14 = RFValue(14,width);
-   // const R15 = RFValue(15,height);
-   // const R16 = RFValue(16,height);
-   // const R18 = RFValue(18,height);
-   // const R20 = RFValue(20,height);
-   // const R25 = RFValue(25,height);
-   // const R32 = RFValue(32,height);
-
 
    let R10 ;
    let R12 ;

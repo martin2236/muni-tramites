@@ -171,7 +171,7 @@ export const VerVehiculo = ({navigation, route}:Props) => {
             setError({ ...error, cuota: true })
         }
         setPdf(true)
-        const cunica = selected.map(item => parseInt(item.cunica));
+        const cunica = selected.map(item => item.cunica);
         const dominio = (updateInfo as Vehiculo).dominio;
         let tipo ;
             switch ((updateInfo as Vehiculo).tipo) {
@@ -260,6 +260,7 @@ export const VerVehiculo = ({navigation, route}:Props) => {
             cuenta,
             selected
         }
+        console.log({cuenta})
         navigation.navigate('FormularioPagos',{data})
     }
     
@@ -375,7 +376,7 @@ export const VerVehiculo = ({navigation, route}:Props) => {
                             {/* lista */}
                             <FlatList
                                 data={listaAnios}
-                                renderItem={({item}) => <RowAnios item={item}  anios={anios} setAnios={setAnios} toggleCuota={toggleCuota} selected={selected} setSelected={setSelected}/>}
+                                renderItem={({item}) => <RowAnios item={item} screen={"vehiculos"}  anios={anios} setAnios={setAnios} toggleCuota={toggleCuota} selected={selected} setSelected={setSelected}/>}
                                 keyExtractor={(item,index) => ` ${index}`}
                                 nestedScrollEnabled={true}
                             />

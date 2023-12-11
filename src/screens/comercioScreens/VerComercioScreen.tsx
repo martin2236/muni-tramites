@@ -20,12 +20,12 @@ interface Props extends StackScreenProps<RootStackParams,'VerComercio'>{}
 
 interface CuotaAño {
     anio: number;
-  }
+}
 
 interface AnioConCuotas {
-anio: number;
-cuotas: CuotaAño[];
-cantidadCuotas:number
+    anio: number;
+    cuotas: CuotaAño[];
+    cantidadCuotas:number
 }
 
 async function requestStoragePermission() {
@@ -62,17 +62,17 @@ export const VerComercioScreen = ({navigation, route}:Props) => {
         pago: false,
         cuota:false
       });
+
     const [alert,setAlert] = useState({
         status:'',
         title:''
     });
-      
-  
-      useEffect(() =>{
+
+    useEffect(() =>{
           if(data && data.pdf){
               console.log(data)
           }
-      },[data]);
+    },[data]);
   
       const {id,ruta, referencia, updateInfo,deuda} =  route.params;
   
@@ -133,12 +133,10 @@ export const VerComercioScreen = ({navigation, route}:Props) => {
       }
       
       const infoByAnio:any = {};
+
       //organiza las deudas por año
-     
       useEffect(() => {
-          // Organiza las deudas por año
-          console.log('cambio deudas y acomodo todas las cuentas')
-          
+           // Organiza las deudas por año
         const listaAnios = organizeDataByYear(deuda);
            // Actualiza los estados con los datos organizados
           setListaAnios(listaAnios);
@@ -163,27 +161,25 @@ export const VerComercioScreen = ({navigation, route}:Props) => {
   
               listaAnios.push({ anio, cuotas, cantidadCuotas });
           }
-  
-        
           return listaAnios;
         };
         
-        // Llamar a la función y almacenar el resultado en una variable
-  
+      // Llamar a la función y almacenar el resultado en una variable
       // verifica que haya alguna deuda seleccionada y que se haya 
       // elegido algun metodo de pago antes de pagar
-      const descargarPDF = async ()=>{
-        if (!selected.length) {
-            setError({ ...error, cuota: true })
+        const descargarPDF = async ()=>{
+            if (!selected.length) {
+                setError({ ...error, cuota: true })
         }
+
         setPdf(true)
-        const cunica = selected.map(item => parseInt(item.cunica));
+        const cunica = selected.map(item => item.cunica);
         const padron = (updateInfo as Comercio).padron;
         const data = {
             padron,
             cunica
         }
-    console.log('datos que envio para el pdf',data)
+
         const now = new Date();
         const dateStr = now.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
         const timeStr = now.toLocaleTimeString('es-AR', { hour12: false, hour: '2-digit', minute: '2-digit' });
@@ -367,7 +363,7 @@ export const VerComercioScreen = ({navigation, route}:Props) => {
                             {/* lista */}
                             <FlatList
                                 data={listaAnios}
-                                renderItem={({item}) => <RowAnios item={item}  anios={anios} setAnios={setAnios} toggleCuota={toggleCuota} selected={selected} setSelected={setSelected}/>}
+                                renderItem={({item}) => <RowAnios item={item} screen={"comercios"} anios={anios} setAnios={setAnios} toggleCuota={toggleCuota} selected={selected} setSelected={setSelected}/>}
                                 keyExtractor={(item,index) => ` ${index}`}
                                 nestedScrollEnabled={true}
                             />

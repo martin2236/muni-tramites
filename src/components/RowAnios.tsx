@@ -10,12 +10,13 @@ import { useResponsiveSize } from '../hooks/useResponsiveSize';
 interface Props {
     item:{anio:number, cuotas:Cuota[] , cantidadCuotas:number},
     selected:any,
+    screen:string,
     anios:string[] | null,
     toggleCuota: (cuota: Cuota) => void
     setAnios: React.Dispatch<React.SetStateAction<string[] | null>>
 }   
 
-export const RowAnios = memo(({item, selected,anios, toggleCuota,setAnios }:Props) => {
+export const RowAnios = memo(({item, selected,anios, screen,toggleCuota,setAnios }:Props) => {
      const [show, setShow] = useState({
         anio:'',
         mostrar:false,
@@ -24,8 +25,24 @@ export const RowAnios = memo(({item, selected,anios, toggleCuota,setAnios }:Prop
 
      const total = item.cuotas.reduce((acc,curr)=> acc + curr.totalcuota,0);
      const recargo = item.cuotas.reduce((acc,curr)=> acc + curr.totalcuota + curr.recargo,0);
-     const handleToggle = useCallback((item:any)=>{toggleCuota(item)},[toggleCuota])
-       
+     const handleToggle = useCallback((item:any)=>{toggleCuota(item)},[toggleCuota]);
+     //en esta variable filtro las cuotas segun los parametros requeridos si el length de esta variable es igual
+     //al length del array de cuotas que envio al componente quiere decir que ninguna cuota es seleccionable
+     //con esto puedo mostrar o no el checkbox de seleccion multiple 
+     let cuotasFiltradas: any[] | null = null;
+
+        if (screen === "inmuebles") {
+        cuotasFiltradas = item.cuotas.filter(cuota => {
+            return cuota.convenio && cuota.convenio > 0 ||
+                cuota.estado == "4" ||
+                cuota.apliMiru && cuota.apliMiru == '0' ||
+                cuota.pagoElectronico && cuota.pagoElectronico == 1;
+        });
+        } else if (screen === "comercios") {
+        cuotasFiltradas = item.cuotas.filter(cuota => cuota.estado == "5");
+        }
+
+     
 
         const ordenarFecha = (fecha:string) => {
             if(fecha){
@@ -94,7 +111,23 @@ export const RowAnios = memo(({item, selected,anios, toggleCuota,setAnios }:Prop
                 <Animatable.View animation='fadeInDown' style={{backgroundColor:'white'}}>
                     <Box  mt={2} alignSelf={'center'} width={'95%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'flex-start'}>
                         <Box width={'25%'}  display={'flex'} flexDirection={'row'} justifyContent={'flex-start'} alignItems={'center'}>
-                            <TouchableOpacity
+                            {
+                                cuotasFiltradas ? 
+                                
+                                    item.cuotas.length != cuotasFiltradas.length ?
+                                    <TouchableOpacity
+                                    onPress={() => nueva()}
+                                    style={{height:18, width:18,borderColor:'#2596be',backgroundColor:anios && anios?.findIndex((cuota:any) => item.cuotas[0].anio == cuota) !== -1 ?'#2596be':'#fff' ,borderWidth:2, alignItems:'center', justifyContent:'center', marginLeft:2}}>
+                                        {
+                                          anios && anios?.findIndex((cuota:any) => cuota == item.cuotas[0].anio) !== -1 ?
+                                            <Icon name={'check'} size={16} color={'white'}/> : null
+                                        }
+                                </TouchableOpacity>
+                               
+                                :
+                                null
+                                :
+                                <TouchableOpacity
                                 onPress={() => nueva()}
                                 style={{height:18, width:18,borderColor:'#2596be',backgroundColor:anios && anios?.findIndex((cuota:any) => item.cuotas[0].anio == cuota) !== -1 ?'#2596be':'#fff' ,borderWidth:2, alignItems:'center', justifyContent:'center', marginLeft:2}}>
                                     {
@@ -102,6 +135,7 @@ export const RowAnios = memo(({item, selected,anios, toggleCuota,setAnios }:Prop
                                         <Icon name={'check'} size={16} color={'white'}/> : null
                                     }
                             </TouchableOpacity>
+                            }
                             <Text fontSize={R14}  ml={3} color={'#2596be'} textAlign={'center'} fontWeight={'bold'}>
                                 CUOTAS
                             </Text>
@@ -128,7 +162,9 @@ export const RowAnios = memo(({item, selected,anios, toggleCuota,setAnios }:Prop
                             {item.cuotas.map((cuota:Cuota, index:number) => (
                                 <Box key={index} alignSelf={'center'} width={'95%'} mt={2} display={'flex'} flexDirection={'row'} justifyContent={'space-around'} alignItems={'center'}>
                                         <Box ml={1} width={'29%'} display={'flex'} flexDirection={'row'} alignItems={'center'} justifyContent={'flex-start'}>
-                                                {
+                                               {
+                                                screen == "inmuebles" ?
+                                                    //FILTRO PARA LA PANTALLA DE INMUEBLES
                                                     cuota.convenio && cuota.convenio > 0 || cuota.estado == "4" || cuota.apliMiru && cuota.apliMiru == '0' || cuota.pagoElectronico && cuota.pagoElectronico == 1 ?
                                                     null :
                                                     <TouchableOpacity
@@ -140,7 +176,32 @@ export const RowAnios = memo(({item, selected,anios, toggleCuota,setAnios }:Prop
                                                                 <Icon name={'check'} size={15} color={'white'}/> : null
                                                             }
                                                     </TouchableOpacity> 
-                                                }
+                                                :
+                                                screen == "comercio" ?
+                                                //FILTRO PARA LA PANTALLA DE COMERCIOS
+                                                    cuota.convenio && cuota.convenio > 0 || cuota.estado == "4" || cuota.apliMiru && cuota.apliMiru == '0' || cuota.pagoElectronico && cuota.pagoElectronico == 1 ?
+                                                    null :
+                                                    <TouchableOpacity
+                                                        onPress={() => handleToggle(cuota)}
+                                                        style={{height:16, width:16,borderColor:'#2596be',backgroundColor:selected.findIndex((item:Cuota) => item.cunica == cuota.cunica) !== -1 ?'#2596be':'#fff' ,borderWidth:selected.findIndex((item:Cuota) => item.cunica == cuota.cunica) !== -1 ? 0:1, alignItems:'center', justifyContent:'center', marginLeft:2}}
+                                                        disabled={selected.findIndex((item:Cuota) => item.cunica == cuota.cunica && item.tasa == '1') !== -1 && cuota.tasa == '8'}>
+                                                            {
+                                                                selected.findIndex((item:Cuota) => item.cunica == cuota.cunica) !== -1 ?
+                                                                <Icon name={'check'} size={15} color={'white'}/> : null
+                                                            }
+                                                    </TouchableOpacity> 
+                                                :
+                                                // SIN FILTRO PARA LAS DEMAS PANTALLAS
+                                                <TouchableOpacity
+                                                        onPress={() => handleToggle(cuota)}
+                                                        style={{height:16, width:16,borderColor:'#2596be',backgroundColor:selected.findIndex((item:Cuota) => item.cunica == cuota.cunica) !== -1 ?'#2596be':'#fff' ,borderWidth:selected.findIndex((item:Cuota) => item.cunica == cuota.cunica) !== -1 ? 0:1, alignItems:'center', justifyContent:'center', marginLeft:2}}
+                                                        disabled={selected.findIndex((item:Cuota) => item.cunica == cuota.cunica && item.tasa == '1') !== -1 && cuota.tasa == '8'}>
+                                                            {
+                                                                selected.findIndex((item:Cuota) => item.cunica == cuota.cunica) !== -1 ?
+                                                                <Icon name={'check'} size={15} color={'white'}/> : null
+                                                            }
+                                                    </TouchableOpacity> 
+                                               }
                                                 <Text textAlign={'center'} marginLeft={3} fontSize={R14} >
                                                     {cuota.cuota}
                                                 </Text>

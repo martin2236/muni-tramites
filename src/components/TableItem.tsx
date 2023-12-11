@@ -69,7 +69,6 @@ export const TableItem = ({item, navigation,setData, pantalla}:Props) => {
             return makePost('/cementerios/traerCuotas',{orden,vencimiento}, user?.token, 'deudas' );
         }
         if((valor as Vehiculo).dominio){
-            console.log({valor})
             const dominio = (valor as Vehiculo).dominio;
             const vencimiento = new Date()
             let tipo;

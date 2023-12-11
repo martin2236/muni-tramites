@@ -174,7 +174,7 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
             setError({ ...error, cuota: true });
         };
         setPdf(true)
-        const cunica = selected.map(item => parseInt(item.cunica));
+        const cunica = selected.map(item => item.cunica);
         const cuenta = (updateInfo as UpdateInfo).cuenta;
         const data = {
             cuenta,
@@ -365,7 +365,7 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
                         {/* lista */}
                         <FlatList
                             data={listaAnios}
-                            renderItem={({item}) => <RowAnios item={item}  anios={anios} setAnios={setAnios} toggleCuota={toggleCuota} selected={selected} setSelected={setSelected}/>}
+                            renderItem={({item}) => <RowAnios item={item} screen={"inmuebles"}  anios={anios} setAnios={setAnios} toggleCuota={toggleCuota} selected={selected} setSelected={setSelected}/>}
                             keyExtractor={(item,index) => ` ${index}`}
                             nestedScrollEnabled={true}
                         />

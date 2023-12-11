@@ -165,8 +165,7 @@ export const VerCementerioScreen = ({navigation, route}:Props) => {
             setError({ ...error, cuota: true })
         }
         setPdf(true)
-        const cunica = selected.map(item => parseInt(item.cunica));
-        //en el componente TableItem establezcon que updateInfo.padron es el num_orden
+        const cunica = selected.map(item => item.cunica);
         const orden = (updateInfo as UpdateInfo).padron;
         const data = {
             orden,
@@ -360,7 +359,7 @@ export const VerCementerioScreen = ({navigation, route}:Props) => {
                             {/* lista */}
                             <FlatList
                                 data={listaAnios}
-                                renderItem={({item}) => <RowAnios item={item}  anios={anios} setAnios={setAnios} toggleCuota={toggleCuota} selected={selected} setSelected={setSelected}/>}
+                                renderItem={({item}) => <RowAnios item={item} screen={"cementerios"}  anios={anios} setAnios={setAnios} toggleCuota={toggleCuota} selected={selected} setSelected={setSelected}/>}
                                 keyExtractor={(item,index) => ` ${index}`}
                                 nestedScrollEnabled={true}
                             />
