@@ -239,6 +239,7 @@ export const VerVehiculo = ({navigation, route}:Props) => {
             })
         }
         const cuenta = (updateInfo as UpdateInfo).cuenta;
+        
         const data = {
             cuenta,
             selected
@@ -255,10 +256,25 @@ export const VerVehiculo = ({navigation, route}:Props) => {
                 title:'Seleccione alguna cuota antes de continuar'
             })
         }
-        const cuenta = (updateInfo as UpdateInfo).cuenta;
+        console.log({updateInfo})
+        let tipo ;
+            switch ((updateInfo as Vehiculo).tipo) {
+                case "Vehiculo Particular":
+                  tipo = "auto"
+                  break;
+                case "Moto":
+                  tipo = "moto"
+                  break;
+                default:
+                  tipo = "publico"
+                  break;
+              }
+        const cuenta = (updateInfo as UpdateInfo).dominio;
         const data = {
             cuenta,
-            selected
+            selected,
+            tipo,
+            pantalla:"vehiculo"
         }
         console.log({cuenta})
         navigation.navigate('FormularioPagos',{data})

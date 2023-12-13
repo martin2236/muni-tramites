@@ -5,8 +5,7 @@ import { RFValue } from "react-native-responsive-fontsize";
 
 const {height} = Dimensions.get('screen');
 const {width} = Dimensions.get('window');
-console.log(height, width)
-//! en el revisar 800 x 360 el input se rompe por que el resultado es 11 y no es una altura permitida
+console.log(height, width);
 export const useResponsiveSize = () => {
 
    let R10 ;
@@ -77,19 +76,10 @@ export const useResponsiveSize = () => {
         R32 = RFValue(25,width);
    }
 
-
-
-
-
-
    const medida =width < 370 ? 5 : 6;
    const total =  width < 370 ? 7 : 8;
    const boton = width < 370 ? 7 : 8;
    const titulo = width < 370 ? 9 : 10;
-
-
-  
-
 
    const loginImageWidth = height <650 ? width * 0.5 : width * 0.4;
    const LoginImageHeight =  height <650 ? width * 0.5 : width * 0.4;

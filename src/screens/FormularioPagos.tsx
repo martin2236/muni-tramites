@@ -61,9 +61,6 @@ export const FormularioPagos = ({navigation, route}: Props) => {
     getData();
   }, []);
 
-  useEffect(() => {
-    console.log({formData})
-  }, [formData]);
 
   const getData = async () => {
     const config = {
@@ -71,14 +68,33 @@ export const FormularioPagos = ({navigation, route}: Props) => {
         Authorization: `Bearer ${user?.token}`,
       },
     };
-    console.log(data);
-    let cunica = data.selected.map((item:Selected) => parseInt(item.cunica));
-    let datosBack = {cuenta: data.cuenta, cunica, tipo: 'sandbox'};
+
+    let cunica = data.selected.map((item:Selected) => item.cunica);
+    let datosBack;
+    switch (data.pantalla) {
+      case "inmueble":
+        datosBack = {cuenta: data.cuenta, cunica, tipo: 'sandbox'};
+        break;
+      case "comercio":
+        datosBack = {cuenta: data.cuenta, cunica, tipo: 'sandbox'};
+        break;
+      case "cementerio":
+        console.log("data cementerio",data)
+        datosBack = {orden: data.cuenta, cunica, tipo: 'sandbox'};
+        break;
+      case "vehiculo":
+        console.log("data vehiculo",data)
+        datosBack = {dominio: data.cuenta, cunica, tipo:data.tipo ,tipo_impresion: 'sandbox'};
+        break;
+    
+      default:
+        break;
+    }
     const totalRecargo = data.selected.reduce(
       (acc: any, curr: any) => acc + curr.totalcuota + curr.recargo,
       0,
     );
-    console.log(user?.token, datosBack);
+    console.log("DATOS DEL BACK",datosBack);
     try {
       const res = await axios.post('https://backend.tramites.lacosta.gob.ar/inmuebles/pagarCuotas', datosBack, config);
       const datos = res.data;

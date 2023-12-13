@@ -64,7 +64,7 @@ export const TableItem = ({item, navigation,setData, pantalla}:Props) => {
             return makePost('/comercios/traerCuotas',{padron,vencimiento}, user?.token, 'deudas' );
         }
         if((valor as Cementerio).num_orden){
-            const orden = (valor as Cementerio).num_orden;
+            const orden = (valor as Cementerio).fnrorden;
             const vencimiento = new Date()
             return makePost('/cementerios/traerCuotas',{orden,vencimiento}, user?.token, 'deudas' );
         }
@@ -164,7 +164,7 @@ export const TableItem = ({item, navigation,setData, pantalla}:Props) => {
                 id:(item.item as Cementerio).pkcementerio,
                 ruta:'Cementerio',
                 updateInfo:{
-                    padron:(item.item as Cementerio).num_orden
+                    padron:(item.item as Cementerio).fnrorden
                 }
             })
         }

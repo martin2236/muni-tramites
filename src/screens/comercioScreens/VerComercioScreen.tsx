@@ -248,7 +248,8 @@ export const VerComercioScreen = ({navigation, route}:Props) => {
         const cuenta = (updateInfo as UpdateInfo).padron;
         const data = {
             cuenta,
-            selected
+            selected,
+            pantalla:"comercio"
         }
         navigation.navigate('FormularioPagos',{data})
     }

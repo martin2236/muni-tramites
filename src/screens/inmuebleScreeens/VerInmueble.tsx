@@ -247,7 +247,8 @@ export const VerInmueble = memo(({navigation, route}:Props) => {
         const cuenta = (updateInfo as UpdateInfo).cuenta;
         const data = {
             cuenta,
-            selected
+            selected,
+            pantalla:"inmueble"
         }
         navigation.navigate('FormularioPagos',{data})
     }

@@ -20,6 +20,8 @@ interface Props extends StackScreenProps<RootStackParams,'VerCementerio'>{}
 
 export interface CuotaAño {
     anio: number;
+    tasa?:string,
+    cuota?:string
   }
 
 export interface AnioConCuotas {
@@ -85,7 +87,7 @@ export const VerCementerioScreen = ({navigation, route}:Props) => {
       const toggleCuota = (cuota:Cuota) => {
           const index = selected.findIndex((item: Cuota) => item.cunica === cuota.cunica);
   
-          let newSelected = [];
+          let newSelected= [];
   
            newSelected = [...selected];
   
@@ -117,6 +119,8 @@ export const VerCementerioScreen = ({navigation, route}:Props) => {
           setTotalSelected(0);
           return
       };
+      if(!deuda){return console.log("no hay deuda")}
+
       const nuevaLista = deuda.filter((deuda:Cuota) => anios.includes(deuda.anio +''));
       //nuevaLista.forEach((item:Cuenta) => console.log(item.cunica))
       const total = nuevaLista.reduce((acc:number,curr:Cuota)=> acc + curr['totalcuota'] ,0);
@@ -129,6 +133,7 @@ export const VerCementerioScreen = ({navigation, route}:Props) => {
      
       useEffect(() => {
           // Organiza las deudas por año
+        if(!deuda){return console.log("no hay deuda")}
         const listaAnios = organizeDataByYear(deuda);
            // Actualiza los estados con los datos organizados
           setListaAnios(listaAnios);
@@ -237,10 +242,15 @@ export const VerCementerioScreen = ({navigation, route}:Props) => {
                 title:'Seleccione alguna cuota antes de continuar'
             })
         }
-        const cuenta = (updateInfo as UpdateInfo).cuenta;
+        
+        console.log("esto es el update info",updateInfo)
+        const cuenta = (updateInfo as UpdateInfo).padron;
+        
+
         const data = {
             cuenta,
-            selected
+            selected,
+            pantalla:"cementerio"
         }
         navigation.navigate('FormularioPagos',{data})
     }
